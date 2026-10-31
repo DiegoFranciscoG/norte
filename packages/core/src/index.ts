@@ -6,3 +6,5 @@ export * from './classify.js';
 export * from './salary.js';
 export * from './groups.js';
 export * from './search.js';
+export * from './github.js';
+export * from './cv.js';

@@ -1,0 +1,220 @@
+{
+  "escoVersion": "v1.2.1",
+  "generatedAt": "2026-10-31T21:54:40.957Z",
+  "method": "api",
+  "source": "ESCO — European Skills, Competences, Qualifications and Occupations, © Unión Europea",
+  "sourceUrl": "https://esco.ec.europa.eu/",
+  "license": "Reutilización conforme a la Decisión 2011/833/EU de la Comisión, con atribución.",
+  "matched": 52,
+  "total": 393,
+  "mappings": {
+    "java": {
+      "uri": "http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389",
+      "label": "Java (programación informática)"
+    },
+    "scala": {
+      "uri": "http://data.europa.eu/esco/skill/ffddfc7c-a9dd-449f-9e96-882dc447c8b6",
+      "label": "Scala"
+    },
+    "groovy": {
+      "uri": "http://data.europa.eu/esco/skill/52cf3037-ab53-4806-85ed-7fd21ea7f6a1",
+      "label": "Groovy"
+    },
+    "python": {
+      "uri": "http://data.europa.eu/esco/skill/ccd0a1d9-afda-43d9-b901-96344886e14d",
+      "label": "Python (programación informática)"
+    },
+    "javascript": {
+      "uri": "http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7",
+      "label": "JavaScript"
+    },
+    "typescript": {
+      "uri": "http://data.europa.eu/esco/skill/867137fb-ff1b-4ca3-99f3-cb6969aa2c68",
+      "label": "TypeScript"
+    },
+    "csharp": {
+      "uri": "http://data.europa.eu/esco/skill/4c016b68-4116-468c-9dc6-42710c239e4a",
+      "label": "C#"
+    },
+    "cpp": {
+      "uri": "http://data.europa.eu/esco/skill/b633eb55-8f1f-4ae6-ab4c-2022ffe2cb7f",
+      "label": "C++"
+    },
+    "php": {
+      "uri": "http://data.europa.eu/esco/skill/4350c38d-0fe9-4ca7-bab9-40ed7f72b04f",
+      "label": "PHP"
+    },
+    "ruby": {
+      "uri": "http://data.europa.eu/esco/skill/0ccdfe98-f845-4598-84a1-3dca66e9d9a3",
+      "label": "Ruby (programación informática)"
+    },
+    "swift": {
+      "uri": "http://data.europa.eu/esco/skill/be80acfc-b6f2-4411-9b8d-b19d9cd2556a",
+      "label": "Swift (programación informática)"
+    },
+    "objective-c": {
+      "uri": "http://data.europa.eu/esco/skill/9973a5a2-7822-4161-99e9-95c781eb63f8",
+      "label": "Objective-C"
+    },
+    "matlab": {
+      "uri": "http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d",
+      "label": "MATLAB"
+    },
+    "perl": {
+      "uri": "http://data.europa.eu/esco/skill/401eb8d8-6daa-4f8b-90ad-60afc71eb4f8",
+      "label": "Perl"
+    },
+    "sql": {
+      "uri": "http://data.europa.eu/esco/skill/598de5b0-5b58-4ea7-8058-a4bc4d18c742",
+      "label": "SQL"
+    },
+    "cobol": {
+      "uri": "http://data.europa.eu/esco/skill/def007fa-5fed-4a5f-91a2-b0d7e3db1be1",
+      "label": "COBOL"
+    },
+    "solidity": {
+      "uri": "http://data.europa.eu/esco/skill/605399ce-4736-4b41-b41e-92ecf2139454",
+      "label": "Solidity"
+    },
+    "haskell": {
+      "uri": "http://data.europa.eu/esco/skill/000f1d3d-220f-4789-9c0a-cc742521fb02",
+      "label": "Haskell"
+    },
+    "css": {
+      "uri": "http://data.europa.eu/esco/skill/e5d1f825-60ed-4bdd-872a-e748c387f777",
+      "label": "CSS"
+    },
+    "sass": {
+      "uri": "http://data.europa.eu/esco/skill/1110c92f-3059-445a-9436-0f4200d365f5",
+      "label": "Sass"
+    },
+    "angular": {
+      "uri": "http://data.europa.eu/esco/skill/1ffac4ac-fda7-407d-8ed1-ca8f4a8dc146",
+      "label": "Angular"
+    },
+    "aspnet": {
+      "uri": "http://data.europa.eu/esco/skill/56a7f561-1d55-43c9-9cd7-36a0a9bc6c50",
+      "label": "ASP.NET"
+    },
+    "tomcat": {
+      "uri": "http://data.europa.eu/esco/skill/0fb753a1-2ef2-4429-84d2-ecb2b24daf7a",
+      "label": "Apache Tomcat"
+    },
+    "wildfly": {
+      "uri": "http://data.europa.eu/esco/skill/b16bcbcb-1d3f-42b3-a6a5-b91348a72b70",
+      "label": "Wildfly"
+    },
+    "weblogic": {
+      "uri": "http://data.europa.eu/esco/skill/70de94f5-9575-4edd-bca7-c797b023b9d6",
+      "label": "Oracle WebLogic"
+    },
+    "websphere": {
+      "uri": "http://data.europa.eu/esco/skill/a4e31589-3632-4926-91d0-15b889c90b9b",
+      "label": "IBM WebSphere"
+    },
+    "wordpress": {
+      "uri": "http://data.europa.eu/esco/skill/6d289e8b-2cc1-4eda-ab1f-ad1090ef98f0",
+      "label": "WordPress"
+    },
+    "drupal": {
+      "uri": "http://data.europa.eu/esco/skill/1de3942b-99d8-41e8-9ef0-fbc9e9f6307b",
+      "label": "Drupal"
+    },
+    "android": {
+      "uri": "http://data.europa.eu/esco/skill/d8829a1d-dbde-435b-b921-29d6462f35c9",
+      "label": "Android (sistemas operativos móviles)"
+    },
+    "ios": {
+      "uri": "http://data.europa.eu/esco/skill/ce26e71f-2d47-474e-89b6-7920931ac4fc",
+      "label": "iOS"
+    },
+    "databases": {
+      "uri": "http://data.europa.eu/esco/skill/43ae58b9-5e56-4524-b45a-b422777a0576",
+      "label": "base de datos"
+    },
+    "postgresql": {
+      "uri": "http://data.europa.eu/esco/skill/a8d07b5a-c1a1-42c6-9d53-db9c7a2ca996",
+      "label": "PostgreSQL"
+    },
+    "mysql": {
+      "uri": "http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f",
+      "label": "MySQL"
+    },
+    "sql-server": {
+      "uri": "http://data.europa.eu/esco/skill/c062bab3-3ea0-4291-9220-a2d8fef4bead",
+      "label": "SQL Server"
+    },
+    "nosql": {
+      "uri": "http://data.europa.eu/esco/skill/76ef6ed3-1658-4a1a-9593-204d799c6d0c",
+      "label": "NoSQL"
+    },
+    "db2": {
+      "uri": "http://data.europa.eu/esco/skill/3cee858e-79e8-4a4b-b99f-93c7f735d58b",
+      "label": "DB2"
+    },
+    "ansible": {
+      "uri": "http://data.europa.eu/esco/skill/6f8a40d6-f9ce-43ec-a72f-d4213a53f3ed",
+      "label": "Ansible"
+    },
+    "jenkins": {
+      "uri": "http://data.europa.eu/esco/skill/f47a1998-0beb-43be-9f46-380aa4d183da",
+      "label": "Jenkins (herramientas para la gestión de la configuración del software)"
+    },
+    "devops": {
+      "uri": "http://data.europa.eu/esco/skill/f0de4973-0a70-4644-8fd4-3a97080476f4",
+      "label": "DevOps"
+    },
+    "maven": {
+      "uri": "http://data.europa.eu/esco/skill/0d168770-4d9c-4096-b048-a6577818d306",
+      "label": "Apache Maven"
+    },
+    "hadoop": {
+      "uri": "http://data.europa.eu/esco/skill/e46291c7-52b9-4174-bd59-178884861038",
+      "label": "Hadoop"
+    },
+    "data-warehouse": {
+      "uri": "http://data.europa.eu/esco/skill/3ec2e4d6-7000-4905-bf1a-c5b1679416de",
+      "label": "almacén de datos"
+    },
+    "data-analysis": {
+      "uri": "http://data.europa.eu/esco/skill/97bd1c21-66b2-4b7e-ad0f-e3cda590e378",
+      "label": "análisis de datos"
+    },
+    "statistics": {
+      "uri": "http://data.europa.eu/esco/skill/7ee4c2ea-b349-4bd2-81a3-ec31475d4833",
+      "label": "estadística"
+    },
+    "data-science": {
+      "uri": "http://data.europa.eu/esco/skill/edebd83d-35f6-4ed5-a940-6c203d178c01",
+      "label": "ciencia de datos"
+    },
+    "cybersecurity": {
+      "uri": "http://data.europa.eu/esco/skill/8088750d-8388-4170-a76f-48354c469c44",
+      "label": "ciberseguridad"
+    },
+    "project-management": {
+      "uri": "http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388",
+      "label": "gestión de proyectos"
+    },
+    "system-design": {
+      "uri": "http://data.europa.eu/esco/skill/fae27053-8924-4bfd-b565-c9fe502044c9",
+      "label": "diseño de sistemas"
+    },
+    "iot": {
+      "uri": "http://data.europa.eu/esco/skill/f049d050-12da-4e40-813a-2b5eb6df6b51",
+      "label": "Internet de las Cosas"
+    },
+    "photoshop": {
+      "uri": "http://data.europa.eu/esco/skill/14ced458-5f4b-495f-bd3d-9c240614bda0",
+      "label": "Adobe Photoshop"
+    },
+    "illustrator": {
+      "uri": "http://data.europa.eu/esco/skill/27b913f0-3c52-448b-ad27-fc6ef08fb326",
+      "label": "Adobe Illustrator"
+    },
+    "sap-abap": {
+      "uri": "http://data.europa.eu/esco/skill/eb0e5615-1575-4a86-a1a2-7d39595033c5",
+      "label": "ABAP"
+    }
+  }
+}
