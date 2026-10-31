@@ -25,6 +25,9 @@ test-results/
 site/
 .cache/
 data/esco/raw/
+# ---- Frontend: copiados en cada build
+web/public/assets/pdfjs/
+web/public/data/
 # ---- IDE / SO
 .idea/
 *.iml

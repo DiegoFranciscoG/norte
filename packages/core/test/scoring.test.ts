@@ -93,7 +93,7 @@ describe('T-03 el puntaje cuadra', () => {
 
   it('explica sin rodeos la experiencia y el idioma que faltan', () => {
     const r = scoreJob(buildJob(golden.cases[2]!.job), buildProfile(golden.cases[2]!.profile), ctx);
-    expect(r.components.find((x) => x.key === 'experience')?.detail).toBe('Pide 5 años; tienes 1. Te faltan 4.');
+    expect(r.components.find((x) => x.key === 'experience')?.detail).toBe('Pide 5 años; tienes 1. Te faltan 4 años.');
     expect(r.components.find((x) => x.key === 'language')?.detail).toContain('declaras B1');
     expect(r.skills).toEqual({ demonstrated: [], declaredOnly: ['react', 'typescript'], missing: [], missingOptional: ['nextjs'] });
   });

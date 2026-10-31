@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -20,8 +21,17 @@ function walk(dir: string, out: string[] = []): string[] {
   return out;
 }
 
+/** Archivos del repositorio (versionados o nuevos) sin los ignorados: copias generadas no cuentan. */
+function repoFiles(): string[] {
+  try {
+    return execSync('git ls-files -co --exclude-standard', { cwd: ROOT, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean);
+  } catch {
+    return walk(ROOT);
+  }
+}
+
 describe('T-01 ninguna fuente prohibida', () => {
-  const files = walk(ROOT).filter((f) => CODE_EXT.test(f) && !f.startsWith('docs/'));
+  const files = repoFiles().filter((f) => CODE_EXT.test(f) && !f.startsWith('docs/'));
 
   it('ningún archivo de código o configuración menciona LinkedIn, Multitrabajos o Computrabajo fuera de las listas permitidas', () => {
     const offenders = files.filter((f) => !ALLOWED.has(f) && FORBIDDEN.test(readFileSync(join(ROOT, f), 'utf8')));

@@ -1,0 +1,141 @@
+<div class="filters-bar">
+  <div class="container filters" role="group" aria-label="Filtros">
+    <span class="pill active">
+      <label class="visually-hidden" for="f-group">Grupo</label>
+      <select id="f-group" [value]="f().group" (change)="setGroup($any($event.target).value)">
+        @for (g of groups; track g) {
+          <option [value]="g">{{ groupLabel(g) }}</option>
+        }
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().maxDays !== null">
+      <label class="visually-hidden" for="f-days">Fecha de publicación</label>
+      <select id="f-days" [value]="f().maxDays ?? ''" (change)="setNullable('maxDays', $any($event.target).value)">
+        <option value="">Fecha de publicación</option>
+        <option value="1">Últimas 24 horas</option>
+        <option value="7">Última semana</option>
+        <option value="30">Último mes</option>
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().company !== null">
+      <label class="visually-hidden" for="f-company">Empresa</label>
+      <select id="f-company" [value]="f().company ?? ''" (change)="setNullable('company', $any($event.target).value)">
+        <option value="">Empresa</option>
+        @for (c of search.options().companies; track c.name) {
+          <option [value]="c.name">{{ c.name }} ({{ c.n }})</option>
+        }
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().modality !== null">
+      <label class="visually-hidden" for="f-modality">Modalidad</label>
+      <select id="f-modality" [value]="f().modality ?? ''" (change)="setNullable('modality', $any($event.target).value)">
+        <option value="">Modalidad</option>
+        @for (m of modalities; track m) {
+          <option [value]="m">{{ modalityLabel[m] }}</option>
+        }
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().seniority !== null">
+      <label class="visually-hidden" for="f-level">Nivel</label>
+      <select id="f-level" [value]="f().seniority ?? ''" (change)="setNullable('seniority', $any($event.target).value)">
+        <option value="">Nivel</option>
+        @for (s of seniorities; track s) {
+          <option [value]="s">{{ seniorityLabel[s] }}</option>
+        }
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().skill !== null">
+      <label class="visually-hidden" for="f-skill">Habilidad</label>
+      <select id="f-skill" [value]="f().skill ?? ''" (change)="setNullable('skill', $any($event.target).value)">
+        <option value="">Habilidad</option>
+        @for (s of search.options().skills; track s.id) {
+          <option [value]="s.id">{{ s.name }} ({{ s.n }})</option>
+        }
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().city !== null">
+      <label class="visually-hidden" for="f-city">Ciudad</label>
+      <select id="f-city" [value]="f().city ?? ''" (change)="setNullable('city', $any($event.target).value)">
+        <option value="">Ciudad</option>
+        @for (c of search.options().cities; track c.name) {
+          <option [value]="c.name">{{ c.name }} ({{ c.n }})</option>
+        }
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().minSalary !== null">
+      <label class="visually-hidden" for="f-salary">Salario mínimo</label>
+      <select id="f-salary" [value]="f().minSalary ?? ''" (change)="setNullable('minSalary', $any($event.target).value)">
+        <option value="">Salario mínimo</option>
+        <option value="800">Desde $800/mes</option>
+        <option value="1200">Desde $1.200/mes</option>
+        <option value="2000">Desde $2.000/mes</option>
+        <option value="3500">Desde $3.500/mes</option>
+      </select>
+    </span>
+    <span class="pill" [class.active]="f().english !== 'any'">
+      <label class="visually-hidden" for="f-english">Idioma</label>
+      <select id="f-english" [value]="f().english" (change)="search.set('english', $any($event.target).value)">
+        <option value="any">Idioma</option>
+        <option value="none">Sin inglés</option>
+        <option value="mine">Hasta mi nivel de inglés</option>
+      </select>
+    </span>
+    <span class="pill">
+      <label class="visually-hidden" for="f-sort">Ordenar</label>
+      <select id="f-sort" [value]="f().sort" (change)="search.set('sort', $any($event.target).value)">
+        <option value="score">Mejor encaje</option>
+        <option value="recent">Más recientes</option>
+      </select>
+    </span>
+    @if (search.activeFilterCount()) {
+      <button type="button" class="pill clear" (click)="search.reset()">Limpiar filtros ({{ search.activeFilterCount() }})</button>
+    }
+  </div>
+</div>
+
+<div class="container results-head">
+  <p class="count">{{ total() }} resultados · <app-icon name="pin" [size]="16" /> {{ data.homeCity() }}</p>
+  <div class="tabs" role="tablist" aria-label="Grupos de resultados">
+    @for (g of groups; track g) {
+      <button type="button" role="tab" [attr.aria-selected]="f().group === g" [class.active]="f().group === g" (click)="setGroup(g)">
+        {{ groupLabel(g) }} <b>{{ search.counts()[g] }}</b>
+      </button>
+    }
+  </div>
+</div>
+
+<div class="container">
+  @if (!profiles.hasProfile()) {
+    <p class="notice">Para ordenar por encaje y ver qué te falta, <a routerLink="/perfil">sube tu CV o conecta tu GitHub</a>. Todo se procesa en tu navegador.</p>
+  }
+  <div class="panes card">
+    <section class="list" aria-label="Vacantes">
+      @if (f().group === 'remote' && search.unknownScopeCount() > 0) {
+        <label class="scope-toggle small">
+          <input type="checkbox" [checked]="f().includeUnknownScope" (change)="search.set('includeUnknownScope', $any($event.target).checked)" />
+          Incluir {{ search.unknownScopeCount() }} remotos sin alcance geográfico declarado
+        </label>
+      }
+      @for (r of search.results(); track r.job.id) {
+        <app-job-card [job]="r.job" [score]="r.score" [selected]="search.selected()?.job?.id === r.job.id" (open)="open(r.job.id)" (dismiss)="search.dismiss(r.job.id)" />
+      } @empty {
+        <div class="empty">
+          <p><strong>No hay vacantes en este grupo con estos filtros.</strong></p>
+          @if (f().group === 'home') {
+            <p class="small muted">Las vacantes presenciales de TI en {{ data.homeCity() }} son escasas en fuentes abiertas. Revisa las páginas de empleo de empresas locales en <a routerLink="/fuentes" fragment="paginas">Fuentes</a> o busca en los portales enlazados.</p>
+          }
+          @if (search.dismissed().size) {
+            <button type="button" class="btn ghost" (click)="search.restoreDismissed()">Mostrar {{ search.dismissed().size }} ocultas</button>
+          }
+        </div>
+      }
+    </section>
+    <section class="detail-pane" aria-label="Detalle de la vacante">
+      @if (search.selected(); as sel) {
+        <app-job-detail [job]="sel.job" [score]="sel.score" />
+      } @else {
+        <p class="empty muted">Selecciona una vacante para ver el detalle.</p>
+      }
+    </section>
+  </div>
+</div>

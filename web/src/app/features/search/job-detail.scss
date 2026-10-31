@@ -1,0 +1,159 @@
+.detail {
+  padding: 20px 24px 32px;
+}
+.company-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+}
+.company {
+  font-weight: 600;
+}
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+.meta {
+  color: var(--text-2);
+  margin: 6px 0 12px;
+}
+.tags {
+  margin-bottom: 14px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.block {
+  padding: 18px 20px;
+  margin-top: 16px;
+}
+.block h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.match-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+.match h2 span.good {
+  color: var(--accent);
+}
+.ring {
+  --p: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  background: conic-gradient(var(--brand) calc(var(--p) * 1%), var(--surface-2) 0);
+  position: relative;
+}
+.ring.good {
+  background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--surface-2) 0);
+}
+.ring::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.ring {
+  isolation: isolate;
+}
+.ring::before {
+  z-index: -1;
+}
+.toggle {
+  margin-top: 8px;
+  padding-left: 0;
+}
+.breakdown {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  gap: 12px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 14px;
+}
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+  margin: 4px 0;
+}
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+}
+.bar span.ok,
+.bar span.not-declared {
+  background: var(--accent);
+}
+.bar span.missing {
+  background: var(--danger);
+}
+.summary {
+  margin: 0 0 8px;
+}
+.recs {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+.gain {
+  margin-left: 6px;
+}
+.recs a {
+  margin-right: 8px;
+}
+.legend {
+  margin-top: 10px;
+}
+.reqs {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--text-2);
+}
+.excerpt {
+  margin: 0 0 8px;
+  color: var(--text);
+}
+.sources {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+@media (max-width: 560px) {
+  .detail {
+    padding: 16px;
+  }
+  h1 {
+    font-size: 21px;
+  }
+}
