@@ -1,0 +1,19 @@
+{
+  "optionalMarkers": [
+    "nice to have", "nice-to-have", "deseable", "deseables", "plus", "es un plus", "is a plus", "would be a plus", "bonus", "bonus points", "valorable", "se valorara", "se valora", "preferred", "preferible",
+    "it would be great", "seria ideal", "suma puntos", "opcional", "optional", "desirable", "good to have", "ideally"
+  ],
+  "requiredHeaders": [
+    "requirements", "requisitos", "requerimientos", "qualifications", "calificaciones", "what you bring", "what you'll need", "what we're looking for", "lo que buscamos", "buscamos", "must have", "must-have",
+    "responsibilities", "responsabilidades", "funciones", "what you'll do", "tu rol", "your role", "skills", "habilidades", "conocimientos", "tech stack", "stack", "experience", "experiencia",
+    "benefits", "beneficios", "about us", "sobre nosotros", "acerca de", "about the role", "acerca del rol", "ofrecemos", "we offer"
+  ],
+  "contextWindow": 80,
+  "fuzzy": {
+    "minLength": 8,
+    "maxDistance": 1,
+    "longMinLength": 11,
+    "longMaxDistance": 2,
+    "stopwords": ["experience", "experiencia", "requirements", "requisitos", "development", "desarrollo", "strategies", "estrategias", "solutions", "soluciones", "excellent", "excelente", "knowledge", "conocimiento", "conocimientos", "personal", "personales", "professional", "profesional", "technical", "tecnologia", "tecnologias", "technologies", "management", "applications", "aplicaciones", "information", "informacion", "integration", "integracion", "integrations", "communication", "comunicacion", "including", "industria", "industry", "services", "servicios", "software", "platform", "plataforma", "products", "productos", "customers", "clientes"]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@norte/ingest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ingesta de NORTE: consulta fuentes legales, normaliza, deduplica y publica el índice estático.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node --enable-source-maps dist/cli.js",
+    "demo": "node --enable-source-maps dist/cli.js --demo"
+  },
+  "dependencies": {
+    "@norte/core": "0.1.0",
+    "fast-xml-parser": "5.11.2",
+    "minisearch": "7.2.0"
+  }
+}

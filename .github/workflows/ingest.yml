@@ -1,0 +1,72 @@
+name: Ingesta y publicación
+
+on:
+  schedule:
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    name: Consultar fuentes y publicar el índice
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      HAS_ALERTS: ${{ secrets.NORTE_ALERTS_URL != '' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26'
+          cache: npm
+      - run: npm ci
+      - id: pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Restaurar caché HTTP (ETag)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .cache/http
+          key: http-cache-${{ github.run_id }}
+          restore-keys: http-cache-
+      - name: Ingesta (el estado anterior se lee del sitio publicado)
+        env:
+          NORTE_PREVIOUS_URL: ${{ steps.pages.outputs.base_url }}/data/v1
+          NORTE_OUT_DIR: site/data/v1
+          NORTE_BUILD_VERSION: ${{ github.run_number }}
+        run: npm run ingest
+      - name: Construir el frontend
+        if: hashFiles('web/package.json') != ''
+        run: |
+          npm run web:build -- --base-href "${{ steps.pages.outputs.base_path }}/"
+          cp -r web/dist/norte/browser/. site/
+          cp site/index.html site/404.html
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+      - name: Respaldo del índice publicado
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: indice-${{ github.run_number }}
+          path: site/data/v1
+          retention-days: 30
+      - name: Disparar las alertas por correo en la API
+        if: env.HAS_ALERTS == 'true'
+        env:
+          ALERTS_URL: ${{ secrets.NORTE_ALERTS_URL }}
+          ALERTS_TOKEN: ${{ secrets.NORTE_ALERTS_TRIGGER_TOKEN }}
+        run: curl -fsS --max-time 120 -X POST -H "Authorization: Bearer ${ALERTS_TOKEN}" "${ALERTS_URL}" || echo "::warning::La API no respondió; las alertas se enviarán en la próxima ejecución."
