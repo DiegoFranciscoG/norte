@@ -1,0 +1,13 @@
+{
+  "policy": "Enlaces profundos: solo se construye la URL y el navegador del usuario la abre en una pestaña nueva. Ningún cliente HTTP de NORTE consulta estos dominios (prueba T-01).",
+  "links": [
+    { "id": "linkedin", "name": "LinkedIn Empleos", "template": "https://www.linkedin.com/jobs/search/?keywords={q}&location={loc}", "slugify": false },
+    { "id": "computrabajo", "name": "Computrabajo Ecuador", "template": "https://ec.computrabajo.com/trabajo-de-{q}", "slugify": true },
+    { "id": "multitrabajos", "name": "Multitrabajos", "template": "https://www.multitrabajos.com/empleos-busqueda-{q}.html", "slugify": true },
+    { "id": "encuentra-empleo", "name": "Encuentra Empleo (Ministerio del Trabajo)", "template": "https://encuentraempleo.trabajo.gob.ec/", "slugify": false },
+    { "id": "getonboard", "name": "Get on Board", "template": "https://www.getonbrd.com/empleos", "slugify": false },
+    { "id": "workana", "name": "Workana (freelance)", "template": "https://www.workana.com/jobs?query={q}", "slugify": false },
+    { "id": "upwork", "name": "Upwork (freelance)", "template": "https://www.upwork.com/nx/search/jobs/?q={q}", "slugify": false },
+    { "id": "torre", "name": "Torre", "template": "https://torre.ai/", "slugify": false }
+  ]
+}
