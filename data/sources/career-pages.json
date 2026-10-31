@@ -1,0 +1,27 @@
+{
+  "verifiedAt": "2026-10-31",
+  "policy": "Solo enlace y revisión manual programada. Nunca se descarga ni se extrae el contenido de estas páginas.",
+  "reviewEveryDays": 14,
+  "pages": [
+    { "id": "jardin-azuayo", "name": "Cooperativa Jardín Azuayo", "city": "Cuenca", "sector": "cooperativa-financiera", "url": "https://www.jardinazuayo.fin.ec/empleo/" },
+    { "id": "graiman", "name": "Graiman", "city": "Cuenca", "sector": "manufactura", "url": "https://graiman.hiringroom.com/jobs", "notes": "Usa HiringRoom, cuya API requiere credenciales de la empresa." },
+    { "id": "indurama", "name": "Indurama", "city": "Cuenca", "sector": "manufactura", "url": "https://www.indurama.com/trabaja-con-nosotros" },
+    { "id": "ucuenca", "name": "Universidad de Cuenca", "city": "Cuenca", "sector": "educacion", "url": "https://www.ucuenca.edu.ec/direccion-de-gestion-del-talento-humano/" },
+    { "id": "pichincha", "name": "Banco Pichincha", "city": "Quito", "sector": "banca", "url": "https://vacantes.pichincha.com/" },
+    { "id": "produbanco", "name": "Produbanco", "city": "Quito", "sector": "banca", "url": "https://empleos.produbanco.com/" },
+    { "id": "banco-internacional", "name": "Banco Internacional", "city": "Quito", "sector": "banca", "url": "https://www.bancointernacional.com.ec/trabaja-con-nosotros/" },
+    { "id": "kushki", "name": "Kushki", "city": "Quito", "sector": "fintech", "url": "https://kushkipagos.com/trabaja-con-nosotros" },
+    { "id": "jobsity", "name": "Jobsity", "city": "Quito", "sector": "software", "url": "https://careers.jobsity.com/" },
+    { "id": "datafast", "name": "Datafast", "city": "Quito", "sector": "fintech", "url": "https://www.datafast.com.ec/Nosotros/AmbienteLaboral" },
+    { "id": "payphone", "name": "Payphone", "city": "Quito", "sector": "fintech", "url": "https://payphone.app/trabaja-con-nosotros" },
+    { "id": "netlife", "name": "Netlife", "city": "Quito", "sector": "telecomunicaciones", "url": "https://netlife.ec/trabaja-con-nosotros/" },
+    { "id": "jelou", "name": "Jelou", "city": "Guayaquil", "sector": "software", "url": "https://careers.jlu.ai/" },
+    { "id": "siigo-contifico", "name": "Siigo (Contífico)", "city": "Guayaquil", "sector": "software", "url": "https://talentosiigo.siigo.com/" }
+  ],
+  "notFound": [
+    "Banco del Austro (certificado TLS no válido al verificar)",
+    "Cooperativa JEP (sin página de empleo enlazada desde su sitio)",
+    "ETAPA EP, CNT, Claro, Corporación El Rosado, Diners Club, Telconet, Tipti, Mercately, ioet (sin enlace de empleo detectable en su portada)",
+    "Banco Guayaquil (protección anti-bots en la página de empleo)"
+  ]
+}
