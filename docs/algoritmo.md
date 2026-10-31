@@ -48,7 +48,7 @@ Si el total queda por debajo de **60** (`fitThreshold`), NORTE lo dice: «No enc
 4. **Herramienta concreta**: si el hueco es una práctica (p. ej. «pruebas de integración»), se sugiere una herramienta del catálogo que la implica y encaja con ese repo (Testcontainers si el repo usa Docker y JUnit).
 5. **Recursos gratuitos**: documentación oficial verificada ([`learning.json`](../data/skills/learning.json)).
 
-Ejemplo real de salida: *«Piden Kubernetes y Pruebas de integración y no aparecen en tu perfil. De tus repos, banca-microservicios es el más cercano: añadirle Testcontainers cubre uno de los 2 huecos y sube tu encaje de 71 a 80.»*
+Ejemplo real de salida: *«Piden Kubernetes y Pruebas de integración y no aparecen en tu perfil. De tus repos, banca-microservicios es el más cercano: añadirle Testcontainers cubre uno de los 2 huecos y sube tu encaje de 78 a 89.»* (es el caso de la prueba T-04: puntaje calculado, no ilustrativo).
 
 La prueba **T-04** recorre 300 combinaciones de vacantes y perfiles y verifica que toda habilidad listada como faltante está en la vacante y no está en el perfil, y que cada ganancia coincide con un recálculo real.
 

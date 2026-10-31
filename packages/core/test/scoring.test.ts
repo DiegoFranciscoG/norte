@@ -160,7 +160,7 @@ describe('T-04 la brecha es real', () => {
     expect(top.resources.map((r) => r.url)).toContain('https://testcontainers.com/getting-started/');
     expect(gap.summary).toContain('Piden Kubernetes y Pruebas de integración');
     expect(gap.summary).toContain('De tus repos, banca-microservicios es el más cercano: añadirle Testcontainers cubre uno de los 2 huecos');
-    expect(gap.summary).toMatch(/sube tu encaje de \d+ a \d+/);
+    expect(gap.summary).toContain('y sube tu encaje de 78 a 89.');
   });
 
   it('dice claramente cuando no encajas todavía', () => {
