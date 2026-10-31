@@ -69,6 +69,7 @@ export async function publish(opts: PublishOptions): Promise<string[]> {
     'skills.json': { version: data.catalog.version, extraction: data.extraction, skills: data.catalog.skills },
     'scoring.json': data.scoring,
     'learning.json': data.learning,
+    'dependencies.json': data.dependencies,
     'career-pages.json': data.careerPages,
     'deep-links.json': data.deepLinks,
     'companies.json': {

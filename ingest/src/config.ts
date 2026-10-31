@@ -80,6 +80,7 @@ export interface LoadedData {
   geo: GeoData;
   scoring: object;
   learning: object;
+  dependencies: object;
   curricula: object;
 }
 
@@ -100,6 +101,12 @@ function readOptional<T>(dataDir: string, fallback: T, ...parts: string[]): T {
   }
 }
 
+/** Añade a cada habilidad su equivalente ESCO (generado una sola vez por scripts/esco-fetch.mjs). */
+function withEsco(catalog: SkillCatalog, dataDir: string): SkillCatalog {
+  const esco = readOptional<{ escoVersion?: string; mappings: Record<string, { uri: string; label: string }> }>(dataDir, { mappings: {} }, 'esco', 'esco-skills-es.json');
+  return { ...catalog, skills: catalog.skills.map((s) => ({ ...s, esco: esco.mappings[s.id] ?? null })) };
+}
+
 export function loadData(dataDir = defaultDataDir()): LoadedData {
   return {
     dataDir,
@@ -109,10 +116,11 @@ export function loadData(dataDir = defaultDataDir()): LoadedData {
     deepLinks: readJson(dataDir, 'sources', 'deep-links.json'),
     ingest: readJson(dataDir, 'config', 'ingest.json'),
     extraction: readJson(dataDir, 'skills', 'extraction.json'),
-    catalog: readOptional(dataDir, { version: '0', skills: [] }, 'skills', 'catalog.json'),
+    catalog: withEsco(readOptional(dataDir, { version: '0', skills: [] }, 'skills', 'catalog.json'), dataDir),
     geo: readJson(dataDir, 'geo', 'geo.json'),
     scoring: readOptional(dataDir, {}, 'config', 'scoring.json'),
     learning: readOptional(dataDir, { resources: [] }, 'skills', 'learning.json'),
+    dependencies: readOptional(dataDir, {}, 'skills', 'dependencies.json'),
     curricula: readOptional(dataDir, { curricula: [] }, 'academia', 'curricula.json'),
   };
 }
