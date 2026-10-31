@@ -1,0 +1,742 @@
+{
+  "verifiedAt": "2026-10-31",
+  "note": "Recursos gratuitos verificados con respuesta HTTP 200. Se priorizan documentación oficial y guías en español cuando existen.",
+  "resources": [
+    {
+      "skillId": "java",
+      "title": "Documentación oficial: Java",
+      "url": "https://dev.java/learn/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "spring-boot",
+      "title": "Spring: Spring Boot",
+      "url": "https://spring.io/guides/gs/spring-boot",
+      "provider": "Spring",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "spring-security",
+      "title": "Spring: Spring Security",
+      "url": "https://spring.io/guides/gs/securing-web",
+      "provider": "Spring",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "spring-data",
+      "title": "Spring: Spring Data",
+      "url": "https://spring.io/guides/gs/accessing-data-jpa",
+      "provider": "Spring",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "docker",
+      "title": "Documentación oficial: Docker",
+      "url": "https://docs.docker.com/get-started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "kubernetes",
+      "title": "Documentación oficial: Kubernetes",
+      "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "helm",
+      "title": "Documentación oficial: Helm",
+      "url": "https://helm.sh/docs/intro/quickstart/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "testcontainers",
+      "title": "Documentación oficial: Testcontainers",
+      "url": "https://testcontainers.com/getting-started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "junit",
+      "title": "Documentación oficial: JUnit",
+      "url": "https://docs.junit.org/current/user-guide/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "mockito",
+      "title": "Documentación oficial: Mockito",
+      "url": "https://site.mockito.org/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "python",
+      "title": "Documentación oficial: Python",
+      "url": "https://docs.python.org/es/3/tutorial/",
+      "provider": "Documentación oficial",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "javascript",
+      "title": "MDN Web Docs: JavaScript",
+      "url": "https://developer.mozilla.org/es/docs/Web/JavaScript/Guide",
+      "provider": "MDN Web Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "typescript",
+      "title": "Documentación oficial: TypeScript",
+      "url": "https://www.typescriptlang.org/docs/handbook/intro.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "angular",
+      "title": "Documentación oficial: Angular",
+      "url": "https://angular.dev/tutorials",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "react",
+      "title": "Documentación oficial: React",
+      "url": "https://es.react.dev/learn",
+      "provider": "Documentación oficial",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "vue",
+      "title": "Documentación oficial: Vue.js",
+      "url": "https://vuejs.org/guide/introduction.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "nodejs",
+      "title": "Documentación oficial: Node.js",
+      "url": "https://nodejs.org/en/learn/getting-started/introduction-to-nodejs",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "nestjs",
+      "title": "Documentación oficial: NestJS",
+      "url": "https://docs.nestjs.com/first-steps",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "postgresql",
+      "title": "Documentación oficial: PostgreSQL",
+      "url": "https://www.postgresql.org/docs/current/tutorial.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "sql",
+      "title": "Documentación oficial: SQL",
+      "url": "https://www.postgresql.org/docs/current/tutorial-sql.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "mongodb",
+      "title": "Documentación oficial: MongoDB",
+      "url": "https://www.mongodb.com/docs/manual/tutorial/getting-started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "redis",
+      "title": "Documentación oficial: Redis",
+      "url": "https://redis.io/docs/latest/get-started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "git",
+      "title": "Documentación oficial: Git",
+      "url": "https://git-scm.com/book/es/v2",
+      "provider": "Documentación oficial",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "github-actions",
+      "title": "GitHub Docs: GitHub Actions",
+      "url": "https://docs.github.com/es/actions/get-started/quickstart",
+      "provider": "GitHub Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "cicd",
+      "title": "GitHub Docs: CI/CD",
+      "url": "https://docs.github.com/es/actions/get-started/continuous-integration",
+      "provider": "GitHub Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "aws",
+      "title": "AWS: AWS",
+      "url": "https://aws.amazon.com/es/getting-started/",
+      "provider": "AWS",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "azure",
+      "title": "Microsoft Learn: Microsoft Azure",
+      "url": "https://learn.microsoft.com/es-es/training/azure/",
+      "provider": "Microsoft Learn",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "gcp",
+      "title": "Google Cloud: Google Cloud",
+      "url": "https://cloud.google.com/docs/get-started",
+      "provider": "Google Cloud",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "terraform",
+      "title": "Documentación oficial: Terraform",
+      "url": "https://developer.hashicorp.com/terraform/tutorials",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "ansible",
+      "title": "Documentación oficial: Ansible",
+      "url": "https://docs.ansible.com/ansible/latest/getting_started/index.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "linux",
+      "title": "Ubuntu: Linux",
+      "url": "https://ubuntu.com/tutorials/command-line-for-beginners",
+      "provider": "Ubuntu",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "kafka",
+      "title": "Documentación oficial: Apache Kafka",
+      "url": "https://kafka.apache.org/quickstart",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "rabbitmq",
+      "title": "Documentación oficial: RabbitMQ",
+      "url": "https://www.rabbitmq.com/tutorials",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "graphql",
+      "title": "Documentación oficial: GraphQL",
+      "url": "https://graphql.org/learn/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "openapi",
+      "title": "Documentación oficial: OpenAPI / Swagger",
+      "url": "https://learn.openapis.org/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "rest-api",
+      "title": "MDN Web Docs: APIs REST",
+      "url": "https://developer.mozilla.org/es/docs/Glossary/REST",
+      "provider": "MDN Web Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "flutter",
+      "title": "Documentación oficial: Flutter",
+      "url": "https://docs.flutter.dev/get-started",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "dart",
+      "title": "Documentación oficial: Dart",
+      "url": "https://dart.dev/language",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "android",
+      "title": "Documentación oficial: Android",
+      "url": "https://developer.android.com/courses",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "kotlin",
+      "title": "Documentación oficial: Kotlin",
+      "url": "https://kotlinlang.org/docs/getting-started.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "swift",
+      "title": "Documentación oficial: Swift",
+      "url": "https://www.swift.org/getting-started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "swiftui",
+      "title": "Documentación oficial: SwiftUI",
+      "url": "https://developer.apple.com/tutorials/swiftui",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "csharp",
+      "title": "Microsoft Learn: C#",
+      "url": "https://learn.microsoft.com/es-es/dotnet/csharp/tour-of-csharp/",
+      "provider": "Microsoft Learn",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "dotnet",
+      "title": "Microsoft .NET: .NET",
+      "url": "https://dotnet.microsoft.com/es-es/learn",
+      "provider": "Microsoft .NET",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "aspnet",
+      "title": "Microsoft Learn: ASP.NET",
+      "url": "https://learn.microsoft.com/es-es/aspnet/core/introduction-to-aspnet-core",
+      "provider": "Microsoft Learn",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "go",
+      "title": "Documentación oficial: Go",
+      "url": "https://go.dev/tour/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "rust",
+      "title": "Documentación oficial: Rust",
+      "url": "https://doc.rust-lang.org/book/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "php",
+      "title": "Documentación oficial: PHP",
+      "url": "https://www.php.net/manual/es/tutorial.php",
+      "provider": "Documentación oficial",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "laravel",
+      "title": "Documentación oficial: Laravel",
+      "url": "https://laravel.com/docs",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "django",
+      "title": "Documentación oficial: Django",
+      "url": "https://docs.djangoproject.com/es/stable/intro/tutorial01/",
+      "provider": "Documentación oficial",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "fastapi",
+      "title": "Documentación oficial: FastAPI",
+      "url": "https://fastapi.tiangolo.com/es/tutorial/",
+      "provider": "Documentación oficial",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "pandas",
+      "title": "Documentación oficial: pandas",
+      "url": "https://pandas.pydata.org/docs/getting_started/index.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "scikit-learn",
+      "title": "Documentación oficial: scikit-learn",
+      "url": "https://scikit-learn.org/stable/getting_started.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "pytorch",
+      "title": "Documentación oficial: PyTorch",
+      "url": "https://pytorch.org/tutorials/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "tensorflow",
+      "title": "Documentación oficial: TensorFlow",
+      "url": "https://www.tensorflow.org/tutorials",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "machine-learning",
+      "title": "Google for Developers: Machine Learning",
+      "url": "https://developers.google.com/machine-learning/crash-course",
+      "provider": "Google for Developers",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "playwright",
+      "title": "Documentación oficial: Playwright",
+      "url": "https://playwright.dev/docs/intro",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "cypress",
+      "title": "Documentación oficial: Cypress",
+      "url": "https://docs.cypress.io/app/get-started/why-cypress",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "jest",
+      "title": "Documentación oficial: Jest",
+      "url": "https://jestjs.io/docs/getting-started",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "selenium",
+      "title": "Documentación oficial: Selenium",
+      "url": "https://www.selenium.dev/documentation/webdriver/getting_started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "owasp",
+      "title": "OWASP: OWASP",
+      "url": "https://owasp.org/www-project-top-ten/",
+      "provider": "OWASP",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "microservices",
+      "title": "microservices.io (Chris Richardson): Microservicios",
+      "url": "https://microservices.io/",
+      "provider": "microservices.io (Chris Richardson)",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "power-bi",
+      "title": "Microsoft Learn: Power BI",
+      "url": "https://learn.microsoft.com/es-es/training/powerplatform/power-bi",
+      "provider": "Microsoft Learn",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "scrum",
+      "title": "Scrum Guides: Scrum",
+      "url": "https://scrumguides.org/scrum-guide.html",
+      "provider": "Scrum Guides",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "accessibility",
+      "title": "W3C WAI: Accesibilidad web",
+      "url": "https://www.w3.org/WAI/fundamentals/accessibility-intro/es",
+      "provider": "W3C WAI",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "html",
+      "title": "MDN Web Docs: HTML",
+      "url": "https://developer.mozilla.org/es/docs/Learn_web_development/Core/Structuring_content",
+      "provider": "MDN Web Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "css",
+      "title": "MDN Web Docs: CSS",
+      "url": "https://developer.mozilla.org/es/docs/Learn_web_development/Core/Styling_basics",
+      "provider": "MDN Web Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "spark",
+      "title": "Documentación oficial: Apache Spark",
+      "url": "https://spark.apache.org/docs/latest/quick-start.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "airflow",
+      "title": "Documentación oficial: Apache Airflow",
+      "url": "https://airflow.apache.org/docs/apache-airflow/stable/tutorial/index.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "dbt",
+      "title": "Documentación oficial: dbt",
+      "url": "https://docs.getdbt.com/guides",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "grafana",
+      "title": "Documentación oficial: Grafana",
+      "url": "https://grafana.com/tutorials/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "prometheus",
+      "title": "Documentación oficial: Prometheus",
+      "url": "https://prometheus.io/docs/prometheus/latest/getting_started/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "jenkins",
+      "title": "Documentación oficial: Jenkins",
+      "url": "https://www.jenkins.io/doc/tutorials/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "nginx",
+      "title": "Documentación oficial: Nginx",
+      "url": "https://nginx.org/en/docs/beginners_guide.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "websockets",
+      "title": "MDN Web Docs: WebSockets",
+      "url": "https://developer.mozilla.org/es/docs/Web/API/WebSockets_API",
+      "provider": "MDN Web Docs",
+      "language": "es",
+      "free": true
+    },
+    {
+      "skillId": "oauth",
+      "title": "Documentación oficial: OAuth 2.0 / OpenID Connect",
+      "url": "https://oauth.net/2/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "jwt",
+      "title": "Documentación oficial: JWT",
+      "url": "https://jwt.io/introduction",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "langchain",
+      "title": "Documentación oficial: LangChain",
+      "url": "https://python.langchain.com/docs/tutorials/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "flyway",
+      "title": "Documentación oficial: Flyway",
+      "url": "https://documentation.red-gate.com/fd/quickstart-guides-184127576.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "hibernate",
+      "title": "Documentación oficial: Hibernate",
+      "url": "https://hibernate.org/orm/documentation/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "elasticsearch",
+      "title": "Documentación oficial: Elasticsearch",
+      "url": "https://www.elastic.co/docs/get-started",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "figma",
+      "title": "Documentación oficial: Figma",
+      "url": "https://help.figma.com/hc/en-us",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "tailwind",
+      "title": "Documentación oficial: Tailwind CSS",
+      "url": "https://tailwindcss.com/docs/installation",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "nextjs",
+      "title": "Documentación oficial: Next.js",
+      "url": "https://nextjs.org/learn",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "rxjs",
+      "title": "Documentación oficial: RxJS",
+      "url": "https://rxjs.dev/guide/overview",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "maven",
+      "title": "Documentación oficial: Maven",
+      "url": "https://maven.apache.org/guides/getting-started/index.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "gradle",
+      "title": "Documentación oficial: Gradle",
+      "url": "https://docs.gradle.org/current/userguide/getting_started_eng.html",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "sonarqube",
+      "title": "Documentación oficial: SonarQube",
+      "url": "https://docs.sonarsource.com/sonarqube-server/",
+      "provider": "Documentación oficial",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "unit-testing",
+      "title": "Martin Fowler: Pruebas unitarias",
+      "url": "https://martinfowler.com/bliki/UnitTest.html",
+      "provider": "Martin Fowler",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "tdd",
+      "title": "Martin Fowler: TDD",
+      "url": "https://martinfowler.com/bliki/TestDrivenDevelopment.html",
+      "provider": "Martin Fowler",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "clean-architecture",
+      "title": "Robert C. Martin: Arquitectura limpia / hexagonal",
+      "url": "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+      "provider": "Robert C. Martin",
+      "language": "en",
+      "free": true
+    },
+    {
+      "skillId": "ddd",
+      "title": "Martin Fowler: Domain-Driven Design",
+      "url": "https://martinfowler.com/bliki/DomainDrivenDesign.html",
+      "provider": "Martin Fowler",
+      "language": "en",
+      "free": true
+    }
+  ]
+}
