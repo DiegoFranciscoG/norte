@@ -149,7 +149,7 @@ export function scoreJob(job: Job, profile: Profile, ctx: ScoringContext): Score
         ? `Pide ${requiredYears} años${how}; tienes ${have}.`
         : profile.yearsOfExperience === null
           ? `Pide ${requiredYears} años${how} y no declaraste tu experiencia.`
-          : `Pide ${requiredYears} años${how}; tienes ${have}. Te faltan ${round(requiredYears - have, 1)}.`,
+          : `Pide ${requiredYears} años${how}; tienes ${have}. ${round(requiredYears - have, 1) === 1 ? 'Te falta 1 año' : `Te faltan ${round(requiredYears - have, 1)} años`}.`,
     });
   }
 
