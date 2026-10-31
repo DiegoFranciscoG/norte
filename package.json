@@ -11,7 +11,8 @@
   },
   "workspaces": [
     "packages/core",
-    "ingest"
+    "ingest",
+    "web"
   ],
   "scripts": {
     "build:core": "npm run build -w @norte/core",

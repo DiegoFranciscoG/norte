@@ -1,0 +1,187 @@
+<div class="container page">
+  <h1 class="page-title">Tu perfil</h1>
+  <p class="muted lead">Todo lo de esta página se procesa y se guarda <strong>en este dispositivo</strong>. Tu CV nunca se sube: solo se usan las habilidades que detectamos.</p>
+
+  <div class="grid">
+    <div>
+      <section class="card section" aria-labelledby="cv-title">
+        <h2 id="cv-title">Tu CV (PDF)</h2>
+        <p class="small muted">Se lee con pdf.js dentro de tu navegador. Ni el archivo ni su texto salen de aquí.</p>
+        <label class="upload btn" for="cv-file"><app-icon name="upload" [size]="16" /> Elegir PDF</label>
+        <input id="cv-file" class="visually-hidden" type="file" accept="application/pdf" (change)="onCv($event)" />
+        @switch (cvState()) {
+          @case ('reading') {
+            <p role="status">Leyendo el PDF en tu dispositivo…</p>
+          }
+          @case ('error') {
+            <p class="notice danger" role="alert">{{ cvError() }}</p>
+          }
+        }
+        @if (cvResult(); as r) {
+          <div class="result" role="status">
+            <p><strong>{{ r.skills.length }} habilidades detectadas</strong></p>
+            <ul class="chip-list">
+              @for (s of r.skills; track s.id) {
+                <li class="tag brand">{{ name(s.id) }}</li>
+              }
+            </ul>
+            <p class="small">
+              Experiencia estimada: {{ r.yearsOfExperience ?? 'no detectada' }}{{ r.yearsOfExperience !== null ? ' años' : '' }}
+              @if (r.yearsSource === 'date-ranges') {
+                (sumando tus periodos laborales sin contar estudios ni solapamientos)
+              }
+              · Inglés: {{ r.englishLevel ?? 'no detectado' }}
+            </p>
+            <button type="button" class="btn primary" (click)="applyCv()">Usar estos datos</button>
+          </div>
+        }
+      </section>
+
+      <section class="card section" aria-labelledby="gh-title">
+        <h2 id="gh-title">Tu GitHub</h2>
+        <p class="small muted">Leemos tus repositorios públicos para encontrar habilidades <strong>demostradas en código</strong>: dependencias reales, CI, pruebas, Docker y migraciones. La consulta sale de tu navegador hacia GitHub; NORTE no la ve.</p>
+        <div class="row">
+          <div class="field grow">
+            <label for="gh-user">Usuario de GitHub</label>
+            <input id="gh-user" type="text" [value]="ghUser()" (input)="ghUser.set($any($event.target).value)" placeholder="tu-usuario" autocomplete="off" />
+          </div>
+          <div class="field grow">
+            <label for="gh-token">Token personal (opcional)</label>
+            <input id="gh-token" type="password" (input)="setToken($any($event.target).value)" placeholder="Solo si superas 60 consultas/hora" autocomplete="off" />
+          </div>
+        </div>
+        <p class="small muted">El token se queda en memoria de esta pestaña y no se guarda en ningún lado.</p>
+        <button type="button" class="btn primary" (click)="analyzeGithub()" [disabled]="!ghUser().trim() || github.progress().phase === 'listing' || github.progress().phase === 'repos'">Analizar repositorios</button>
+        @if (github.progress().phase !== 'idle') {
+          <p class="small" role="status">
+            {{ github.progress().message }}
+            @if (github.progress().remaining !== null) {
+              · Consultas restantes en GitHub: {{ github.progress().remaining }}
+            }
+          </p>
+        }
+        @if (ghError()) {
+          <p class="notice danger" role="alert">{{ ghError() }}</p>
+        }
+        @if (ghResult(); as r) {
+          <div class="result">
+            <p><strong>{{ r.demonstrated.length }} habilidades demostradas en {{ r.analyses.length }} repositorios</strong></p>
+            <ul class="repos">
+              @for (a of r.analyses; track a.repo) {
+                <li>
+                  <a [href]="a.url" target="_blank" rel="noopener">{{ a.repo }}</a>
+                  <span class="small muted">
+                    {{ a.skills.length }} habilidades
+                    @if (a.signals.ci) { · CI }
+                    @if (a.signals.tests) { · pruebas }
+                    @if (a.signals.docker) { · Docker }
+                    @if (a.signals.migrations) { · migraciones }
+                  </span>
+                </li>
+              }
+            </ul>
+            <button type="button" class="btn primary" (click)="applyGithub()">Guardar como demostradas</button>
+          </div>
+        }
+      </section>
+
+      <section class="card section" aria-labelledby="skills-title">
+        <h2 id="skills-title">Tus habilidades</h2>
+        <h3 class="sub">Demostradas en código</h3>
+        @if (p().demonstrated.length) {
+          <ul class="skills">
+            @for (d of p().demonstrated; track d.id) {
+              <li>
+                <span class="tag ok">{{ name(d.id) }}</span>
+                <span class="small muted">de {{ d.repos.join(', ') }}
+                  @if (d.evidence[0]; as e) {
+                    ({{ e.path || e.detail }})
+                  }
+                </span>
+                <button type="button" class="icon-btn" (click)="profiles.removeSkill(d.id)" [attr.aria-label]="'Quitar ' + name(d.id)"><app-icon name="x" [size]="16" /></button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="small muted">Aún no. Conecta tu GitHub.</p>
+        }
+        <h3 class="sub">Declaradas (CV o manual)</h3>
+        <ul class="chip-list">
+          @for (id of declaredOnly(); track id) {
+            <li class="tag brand removable">{{ name(id) }} <button type="button" class="icon-btn" (click)="profiles.removeSkill(id)" [attr.aria-label]="'Quitar ' + name(id)"><app-icon name="x" [size]="14" /></button></li>
+          } @empty {
+            <li class="small muted">Sube tu CV o agrégalas a mano.</li>
+          }
+        </ul>
+        <form class="add" (submit)="$event.preventDefault(); addSkill(skillInput.value); skillInput.value = ''">
+          <label class="visually-hidden" for="add-skill">Agregar habilidad</label>
+          <input id="add-skill" #skillInput type="text" list="catalog" placeholder="Agregar habilidad (p. ej. Spring Boot)" />
+          <datalist id="catalog">
+            @for (o of catalogOptions(); track o.id) {
+              <option [value]="o.name"></option>
+            }
+          </datalist>
+          <button type="submit" class="btn">Agregar</button>
+        </form>
+      </section>
+    </div>
+
+    <div>
+      <section class="card section" aria-labelledby="pref-title">
+        <h2 id="pref-title">Preferencias</h2>
+        <div class="field">
+          <label for="home">Tu ciudad</label>
+          <input id="home" type="text" [value]="p().homeCity" (change)="profiles.update({ homeCity: $any($event.target).value || data.homeCity() })" />
+        </div>
+        <label class="check"><input type="checkbox" [checked]="p().acceptsRelocation" (change)="profiles.update({ acceptsRelocation: $any($event.target).checked })" /> Acepto mudarme a otra ciudad de Ecuador</label>
+        <div class="field">
+          <label for="years">Años de experiencia</label>
+          <input id="years" type="number" min="0" max="50" step="0.5" [value]="p().yearsOfExperience ?? ''" (change)="setNumber('yearsOfExperience', $any($event.target).value)" />
+        </div>
+        <div class="field">
+          <label for="english">Nivel de inglés (MCER)</label>
+          <select id="english" [value]="p().englishLevel ?? ''" (change)="profiles.setEnglish($any($event.target).value || null)">
+            <option value="">No declarado</option>
+            @for (l of levels; track l) {
+              <option [value]="l">{{ l }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="salary">Salario mínimo (USD al mes)</label>
+          <input id="salary" type="number" min="0" step="50" [value]="p().minSalaryUsd ?? ''" (change)="setNumber('minSalaryUsd', $any($event.target).value)" />
+        </div>
+      </section>
+
+      <section class="card section" aria-labelledby="w-title">
+        <h2 id="w-title">Pesos del puntaje</h2>
+        <p class="small muted">Mueve lo que más te importa. Se escalan para sumar 100 (ahora suman {{ weightTotal() }}).</p>
+        @for (k of weightKeys; track k) {
+          <div class="weight">
+            <label [for]="'w-' + k">{{ weightLabel[k] }}</label>
+            <input [id]="'w-' + k" type="range" min="0" max="50" step="1" [value]="weights()[k]" (input)="setWeight(k, $any($event.target).value)" />
+            <output [for]="'w-' + k">{{ weights()[k] }}</output>
+          </div>
+        }
+        <button type="button" class="btn ghost" (click)="profiles.setWeights(null)">Restablecer pesos</button>
+      </section>
+
+      <section class="card section" aria-labelledby="acc-title">
+        <h2 id="acc-title">Guardar en tu cuenta</h2>
+        @if (!auth.enabled()) {
+          <p class="small muted">Esta instalación funciona sin servidor: tu perfil vive solo en este dispositivo.</p>
+        } @else if (!auth.loggedIn()) {
+          <p class="small muted">Opcional. <a routerLink="/cuenta">Crea una cuenta</a> para recibir alertas y llevar tus postulaciones a otros dispositivos.</p>
+        } @else {
+          <p class="small muted">Se envían solo identificadores de habilidades (con su código ESCO si existe), su origen, años de experiencia y preferencias. Nunca el CV.</p>
+          <button type="button" class="btn" (click)="syncToAccount()">Guardar perfil en mi cuenta</button>
+          @if (syncState()) {
+            <p class="small" role="status">{{ syncState() }}</p>
+          }
+        }
+      </section>
+
+      <button type="button" class="btn danger" (click)="clearAll()"><app-icon name="trash" [size]="16" /> Borrar todo de este dispositivo</button>
+    </div>
+  </div>
+</div>

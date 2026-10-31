@@ -1,0 +1,102 @@
+.lead {
+  margin: 0 0 16px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 16px;
+  align-items: start;
+}
+.upload {
+  margin: 8px 0;
+}
+.result {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.grow {
+  flex: 1 1 200px;
+}
+.repos {
+  margin: 8px 0 12px;
+  padding-left: 18px;
+}
+.sub {
+  font-size: 15px;
+  margin: 12px 0 6px;
+}
+.skills {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.skills li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.icon-btn {
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+}
+.icon-btn:hover {
+  background: var(--surface-hover);
+}
+.removable {
+  padding-right: 4px;
+}
+.add {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.add input {
+  flex: 1;
+}
+.field {
+  margin-bottom: 12px;
+}
+.check {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+.weight {
+  display: grid;
+  grid-template-columns: 1fr 120px 28px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.weight label {
+  font-weight: 400;
+  font-size: 14px;
+}
+.weight output {
+  text-align: right;
+  font-weight: 600;
+}
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,160 @@
+<article class="detail" aria-labelledby="job-title">
+  <header class="head">
+    <div class="company-row">
+      <div class="avatar" [style.background]="color()" aria-hidden="true">{{ initials() }}</div>
+      <span class="company">{{ job().company.name }}</span>
+    </div>
+    <h1 id="job-title">{{ job().title }}</h1>
+    <p class="meta">
+      {{ location() }} · Publicada {{ ago() }}
+      @if (job().sources.length > 1) {
+        · {{ job().sources.length }} fuentes
+      }
+    </p>
+    <ul class="chip-list tags" aria-label="Características">
+      <li class="tag"><app-icon name="check" [size]="16" /> {{ modality() }}</li>
+      @if (employment()) {
+        <li class="tag"><app-icon name="check" [size]="16" /> {{ employment() }}</li>
+      }
+      @if (seniority()) {
+        <li class="tag">{{ seniority() }}</li>
+      }
+      @if (salary(); as s) {
+        <li class="tag ok">{{ s }}</li>
+      } @else {
+        <li class="tag warn">Salario no declarado</li>
+      }
+      @if (job().modality === 'remote' && job().remoteScope?.ecuadorEligible === null) {
+        <li class="tag warn">Confirma si aceptan Ecuador</li>
+      }
+    </ul>
+    <div class="actions">
+      <a class="btn primary" [href]="applyUrl()" target="_blank" rel="noopener">Postular en la fuente <app-icon name="external" [size]="16" /></a>
+      @if (saved(); as s) {
+        <a class="btn" routerLink="/postulaciones"><app-icon name="check" [size]="16" /> Guardada</a>
+      } @else {
+        <button type="button" class="btn" (click)="save()"><app-icon name="bookmark" [size]="16" /> Guardar para postular</button>
+      }
+    </div>
+    <p class="small muted">NORTE nunca postula por ti: el botón abre la vacante en su sitio original.</p>
+  </header>
+
+  <section class="card block match" aria-labelledby="match-title">
+    @if (score(); as s) {
+      <div class="match-head">
+        <div>
+          <h2 id="match-title">Tu encaje: <span [class.good]="s.fit === 'good'">{{ s.total }}</span>/100</h2>
+          <p class="muted">{{ s.fit === 'good' ? 'Encajas con esta vacante.' : 'No encajas todavía: revisa lo que falta.' }}</p>
+        </div>
+        <div class="ring" [class.good]="s.fit === 'good'" aria-hidden="true" [style.--p]="s.total">{{ round(s.total) }}</div>
+      </div>
+      <button type="button" class="btn ghost toggle" (click)="showBreakdown.set(!showBreakdown())" [attr.aria-expanded]="showBreakdown()" aria-controls="breakdown">
+        {{ showBreakdown() ? 'Ocultar desglose' : 'Ver desglose del puntaje' }}
+      </button>
+      @if (showBreakdown()) {
+        <ol id="breakdown" class="breakdown">
+          @for (c of s.components; track c.key) {
+            <li>
+              <div class="row">
+                <span class="label">{{ labels[c.key] }}</span>
+                <span class="pts">{{ c.points }} / {{ c.max }}</span>
+              </div>
+              <div class="bar" role="img" [attr.aria-label]="labels[c.key] + ': ' + c.points + ' de ' + c.max"><span [style.width.%]="pct(c.points, c.max)" [class]="c.status"></span></div>
+              <p class="small muted">{{ c.detail }}</p>
+            </li>
+          }
+        </ol>
+        <p class="small muted">El total es la suma exacta del desglose. <a routerLink="/fuentes" fragment="algoritmo">Cómo se calcula</a>.</p>
+      }
+    } @else {
+      <h2 id="match-title">¿Encajas con esta vacante?</h2>
+      <p class="muted">Sube tu CV (se lee en tu dispositivo) o conecta tu GitHub para ver tu puntaje, por qué encajas y qué te falta.</p>
+      <a class="btn" routerLink="/perfil">Completar mi perfil</a>
+    }
+  </section>
+
+  @if (gap(); as g) {
+    <section class="card block" aria-labelledby="gap-title">
+      <h2 id="gap-title">Brecha y qué hacer</h2>
+      <p class="summary">{{ g.summary }}</p>
+      @if (g.recommendations.length) {
+        <ul class="recs">
+          @for (r of g.recommendations; track r.skillId) {
+            <li>
+              <strong>{{ r.via?.skillName ?? r.skillName }}</strong>
+              @if (r.via) {
+                <span class="muted"> (cubre {{ r.skillName }})</span>
+              }
+              <span class="tag ok gain">+{{ r.gain }} puntos</span>
+              <p class="small muted">
+                @if (r.closestRepo) {
+                  Añádelo a <a [href]="r.closestRepo.url" target="_blank" rel="noopener">{{ r.closestRepo.name }}</a>, que ya usa {{ names(r.closestRepo.shared.slice(0, 3)) }}.
+                } @else {
+                  Demuéstralo en un repositorio público.
+                }
+                @for (res of r.resources; track res.url) {
+                  <a [href]="res.url" target="_blank" rel="noopener">{{ res.title }}</a>
+                }
+              </p>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+
+  <section class="card block" aria-labelledby="skills-title">
+    <h2 id="skills-title">Habilidades que pide</h2>
+    @if (skills().length) {
+      <ul class="chip-list">
+        @for (s of skills(); track s.id) {
+          <li class="tag" [class.ok]="s.state === 'demonstrated'" [class.brand]="s.state === 'declared'" [attr.title]="s.state === 'demonstrated' ? 'Demostrada en tu código' : s.state === 'declared' ? 'Declarada en tu CV' : 'No está en tu perfil'">
+            {{ s.name }}{{ s.optional ? ' · deseable' : '' }}
+          </li>
+        }
+      </ul>
+      @if (hasProfile()) {
+        <p class="small muted legend"><span class="tag ok">demostrada</span> <span class="tag brand">declarada</span> <span class="tag">te falta</span></p>
+      }
+    } @else {
+      <p class="muted">No detectamos habilidades reconocibles en el aviso.</p>
+    }
+    @if (requirements().length) {
+      <ul class="reqs">
+        @for (r of requirements(); track r) {
+          <li>{{ r }}</li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="card block" aria-labelledby="about-title">
+    <h2 id="about-title">Acerca de la vacante</h2>
+    <p class="excerpt">{{ job().excerpt || 'La fuente no publicó una descripción.' }}</p>
+    <a [href]="job().sources[0]?.url" target="_blank" rel="noopener">Leer la descripción completa en la fuente <app-icon name="external" [size]="14" /></a>
+  </section>
+
+  <section class="card block" aria-labelledby="sources-title">
+    <h2 id="sources-title">Orígenes</h2>
+    <ul class="sources">
+      @for (s of job().sources; track s.sourceId) {
+        <li>
+          <a [href]="s.url" target="_blank" rel="noopener">{{ s.sourceName }}</a>
+          @if (s.attribution; as a) {
+            · <a [href]="a.url" target="_blank" rel="noopener" class="attribution">{{ a.text }}</a>
+          }
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="card block" aria-labelledby="deep-title">
+    <h2 id="deep-title">Buscar también en</h2>
+    <p class="small muted">Se abren en una pestaña nueva con la búsqueda escrita. NORTE no consulta esos sitios.</p>
+    <ul class="chip-list">
+      @for (d of deepLinks(); track d.name) {
+        <li><a class="pill" [href]="d.url" target="_blank" rel="noopener">{{ d.name }} <app-icon name="external" [size]="14" /></a></li>
+      }
+    </ul>
+  </section>
+</article>
