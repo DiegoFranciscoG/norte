@@ -75,7 +75,7 @@
     { "iso": "ZA", "names": ["south africa", "sudáfrica"], "latam": false }
   ],
   "remoteScopes": {
-    "worldwide": ["worldwide", "anywhere", "anywhere in the world", "global", "remote - world", "en cualquier lugar", "todo el mundo", "sin restricción"],
+    "worldwide": ["worldwide", "anywhere", "anywhere in the world", "remote - world", "en cualquier lugar", "todo el mundo", "sin restricción"],
     "latam": ["latam", "latin america", "latinoamérica", "latinoamerica", "américa latina", "america latina", "south america", "sudamérica", "sudamerica", "lat am", "central america", "centroamérica"],
     "americas": ["americas", "the americas", "américas", "amer", "namer and latam", "north and south america"],
     "excludingLatam": ["us only", "usa only", "united states only", "us-based", "u.s. only", "canada only", "uk only", "europe only", "eu only", "emea", "europe", "european union", "apac", "asia", "north america", "usa timezones", "us timezones", "cet", "cest"]
