@@ -21,6 +21,18 @@ const PATHS: Record<string, string> = {
   upload: 'M12 3 7 8h3v6h4V8h3l-5-5ZM5 18h14v2H5v-2Z',
   trash: 'M9 3h6l1 2h4v2H4V5h4l1-2Zm-3 6h12l-1 12H7L6 9Zm3 2v8h2v-8H9Zm4 0v8h2v-8h-2Z',
   north: 'M12 2 6 22l6-4 6 4-6-20Z',
+  menu: 'M3 6h18v2H3V6Zm0 5h18v2H3v-2Zm0 5h18v2H3v-2Z',
+  home: 'M12 3 2 11h3v9h6v-6h2v6h6v-9h3L12 3Z',
+  arrowUp: 'M11 20V7.8l-5.6 5.6L4 12l8-8 8 8-1.4 1.4L13 7.8V20h-2Z',
+  target: 'M11 2h2v2.1A8 8 0 0 1 19.9 11H22v2h-2.1A8 8 0 0 1 13 19.9V22h-2v-2.1A8 8 0 0 1 4.1 13H2v-2h2.1A8 8 0 0 1 11 4.1V2Zm1 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm0 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z',
+  laptop: 'M4 5h16a1 1 0 0 1 1 1v10h2v2H1v-2h2V6a1 1 0 0 1 1-1Zm1 2v9h14V7H5Z',
+  building: 'M4 3h10a1 1 0 0 1 1 1v5h5a1 1 0 0 1 1 1v11H3V4a1 1 0 0 1 1-1Zm1 2v14h3v-3h4v3h1V5H5Zm10 6v8h4v-8h-4ZM7 7h2v2H7V7Zm4 0h2v2h-2V7Zm-4 4h2v2H7v-2Zm4 0h2v2h-2v-2Z',
+  sliders: 'M4 6h9.2a3 3 0 0 1 5.6 0H20v2h-1.2a3 3 0 0 1-5.6 0H4V6Zm12 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2ZM4 16h1.2a3 3 0 0 1 5.6 0H20v2h-9.2a3 3 0 0 1-5.6 0H4v-2Zm4 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z',
+  refresh: 'M12 4a8 8 0 0 1 7.4 5H17v2h6V5h-2v2.3A10 10 0 1 0 22 12h-2a8 8 0 1 1-8-8Z',
+  download: 'M11 3h2v9.2l3.6-3.6L18 10l-6 6-6-6 1.4-1.4 3.6 3.6V3ZM5 18h14v2H5v-2Z',
+  doc: 'M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm7 1.5V9h5.5L13 3.5ZM8 13h8v2H8v-2Zm0 4h8v2H8v-2Z',
+  shield: 'M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5l-8-3Zm0 2.2 6 2.2V11c0 3.9-2.5 7.5-6 8.8-3.5-1.3-6-4.9-6-8.8V6.4l6-2.2Z',
+  key: 'M14 3a7 7 0 1 1-6.3 10H6v2H4v2H2v-4l5.7-5.7A7 7 0 0 1 14 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm1 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z',
 };
 
 @Component({
