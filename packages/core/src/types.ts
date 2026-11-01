@@ -2,8 +2,10 @@ export type Modality = 'onsite' | 'hybrid' | 'remote' | 'unknown';
 export type EmploymentType = 'full-time' | 'part-time' | 'contract' | 'freelance' | 'internship' | 'temporary' | 'unknown';
 export type Seniority = 'intern' | 'junior' | 'mid' | 'senior' | 'lead' | 'unknown';
 export type Cefr = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
-export type JobGroup = 'home' | 'ecuador' | 'remote' | 'freelance';
-export type RemoteScopeType = 'worldwide' | 'latam' | 'americas' | 'countries' | 'excluding-latam' | 'unknown';
+/** Grupos relativos a la ubicación de cada persona: se calculan en el navegador, no en el índice. */
+export type JobGroup = 'near' | 'country' | 'remote' | 'freelance';
+export type RemoteScopeType = 'worldwide' | 'regions' | 'countries' | 'unknown';
+export type RegionCode = 'latam' | 'north-america' | 'americas' | 'europe' | 'middle-east' | 'africa' | 'emea' | 'apac';
 export type Region = 'EC' | 'LATAM' | 'WORLD';
 
 export interface JobLocation {
@@ -14,11 +16,18 @@ export interface JobLocation {
   raw: string;
 }
 
+/** A quién admite un remoto. La elegibilidad para un país concreto la calcula remoteEligibility(). */
 export interface RemoteScope {
   type: RemoteScopeType;
+  regions: RegionCode[];
+  /** ISO 3166-1 alfa-2 admitidos explícitamente */
   countries: string[];
-  /** true: admite Ecuador; false: lo excluye; null: no se puede saber */
-  ecuadorEligible: boolean | null;
+}
+
+/** Dónde vive la persona: lo elige ella (o lo calcula su navegador); nunca se envía sin consentimiento. */
+export interface UserPlace {
+  country: string | null;
+  city: string | null;
 }
 
 export interface Salary {
@@ -68,7 +77,6 @@ export interface Job {
   location: JobLocation;
   modality: Modality;
   remoteScope: RemoteScope | null;
-  group: JobGroup;
   employmentType: EmploymentType;
   seniority: Seniority;
   yearsRequired: number | null;

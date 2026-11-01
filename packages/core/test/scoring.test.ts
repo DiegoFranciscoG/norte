@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { analyzeGap, type LearningResource, type ProfileRepo } from '../src/gap.js';
 import { COMPONENT_ORDER, effectiveWeights, profileSets, scoreJob, type Profile, type ScoringConfig } from '../src/score.js';
 import { createSkillMatcher } from '../src/skills.js';
-import type { Cefr, Job, SkillCatalog } from '../src/types.js';
-import { extraction } from './fixtures.js';
+import type { Cefr, Job, RemoteScope, SkillCatalog } from '../src/types.js';
+import { extraction, geoData } from './fixtures.js';
 
 const data = (p: string) => JSON.parse(readFileSync(resolve(import.meta.dirname, '../../../data', p), 'utf8'));
 const catalog = data('skills/catalog.json') as SkillCatalog;
@@ -14,12 +14,12 @@ const resources = (data('skills/learning.json') as { resources: LearningResource
 const golden = data('fixtures/scoring-cases.json') as { now: string; cases: GoldenCase[] };
 const matcher = createSkillMatcher(catalog, extraction);
 const now = new Date(golden.now);
-const ctx = { matcher, config, now };
+const ctx = { matcher, config, now, regions: geoData.regions };
 
 interface GoldenCase {
   name: string;
-  job: { skills: [string, boolean][]; yearsRequired: number | null; seniority: Job['seniority']; modality: Job['modality']; city: string | null; country: string | null; ecuadorEligible: boolean | null; languages: [string, Cefr | null, boolean][]; salary: [number, number] | null; daysAgo: number; status: Job['status'] };
-  profile: { demonstrated: string[]; declared: string[]; years: number | null; english: Cefr | null; homeCity: string; relocation: boolean; minSalary: number | null; weights?: Profile['weights'] };
+  job: { skills: [string, boolean][]; yearsRequired: number | null; seniority: Job['seniority']; modality: Job['modality']; city: string | null; country: string | null; remoteScope: RemoteScope | null; languages: [string, Cefr | null, boolean][]; salary: [number, number] | null; daysAgo: number; status: Job['status'] };
+  profile: { demonstrated: string[]; declared: string[]; years: number | null; english: Cefr | null; homeCountry: string | null; homeCity: string; relocation: boolean; minSalary: number | null; weights?: Profile['weights'] };
   expected: { total: number; components: Record<string, number>; fit: string };
 }
 
@@ -30,8 +30,7 @@ export function buildJob(spec: GoldenCase['job'], id = 'j_test'): Job {
     company: { name: 'Ficticia', slug: 'ficticia' },
     location: { city: spec.city, province: null, country: spec.country, raw: '' },
     modality: spec.modality,
-    remoteScope: spec.modality === 'remote' ? { type: spec.ecuadorEligible === null ? 'unknown' : spec.ecuadorEligible ? 'latam' : 'excluding-latam', countries: [], ecuadorEligible: spec.ecuadorEligible } : null,
-    group: spec.modality === 'remote' ? 'remote' : 'ecuador',
+    remoteScope: spec.remoteScope,
     employmentType: 'full-time',
     seniority: spec.seniority,
     yearsRequired: spec.yearsRequired,
@@ -57,6 +56,7 @@ export function buildProfile(spec: GoldenCase['profile']): Profile {
     skills: [...spec.demonstrated.map((sid) => ({ id: sid, origin: 'demonstrated' as const })), ...spec.declared.map((sid) => ({ id: sid, origin: 'declared' as const }))],
     yearsOfExperience: spec.years,
     englishLevel: spec.english,
+    homeCountry: spec.homeCountry,
     homeCity: spec.homeCity,
     acceptsRelocation: spec.relocation,
     minSalaryUsd: spec.minSalary,
