@@ -20,7 +20,6 @@ public record NorteProperties(
         @Valid @NotNull Alerts alerts,
         @NotBlank String indexBaseUrl,
         @NotBlank String siteUrl,
-        @NotBlank String defaultHomeCity,
         @Valid @NotNull RateLimit rateLimit) {
 
     public record Jwt(@NotBlank String secret, @NotBlank String issuer, @NotNull Duration accessTtl, @NotNull Duration refreshTtl) {

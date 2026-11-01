@@ -1,6 +1,7 @@
 package io.github.diegofranciscog.norte.service;
 
 import io.github.diegofranciscog.norte.config.NorteProperties;
+import io.github.diegofranciscog.norte.scoring.IndexModels.GeoFile;
 import io.github.diegofranciscog.norte.scoring.IndexModels.IndexInfo;
 import io.github.diegofranciscog.norte.scoring.IndexModels.JobsFile;
 import io.github.diegofranciscog.norte.scoring.IndexModels.ScoringConfig;
@@ -33,6 +34,10 @@ public class IndexClient {
 
     public SkillsFile skills() {
         return http.get().uri("/skills.json").retrieve().body(SkillsFile.class);
+    }
+
+    public GeoFile geo() {
+        return http.get().uri("/geo.json").retrieve().body(GeoFile.class);
     }
 
     public ScoringConfig scoring() {

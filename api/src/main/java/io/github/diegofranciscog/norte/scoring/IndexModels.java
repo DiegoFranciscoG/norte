@@ -54,7 +54,8 @@ public final class IndexModels {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record RemoteScope(String type, Boolean ecuadorEligible) {
+    /** worldwide | regions | countries | unknown, con las regiones y países (ISO alfa-2) admitidos. */
+    public record RemoteScope(String type, List<String> regions, List<String> countries) {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -71,6 +72,11 @@ public final class IndexModels {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record SourceRef(String sourceId, String sourceName, String url, String applyUrl, boolean allowInAlerts) {
+    }
+
+    /** Pertenencia de países a regiones (geo.json del índice) para decidir si un remoto admite un país. */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record GeoFile(Map<String, List<String>> regions) {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -102,7 +108,7 @@ public final class IndexModels {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public record LocationConfig(double home, double ecuadorOtherCityWithRelocation, double ecuadorOtherCityWithoutRelocation, double remoteEligible, double remoteScopeUnknown, double remoteExcluded, double abroad) {
+    public record LocationConfig(double home, double sameCountryOtherCityWithRelocation, double sameCountryOtherCityWithoutRelocation, double remoteEligible, double remoteScopeUnknown, double remoteExcluded, double abroad, double unknownUserLocation) {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

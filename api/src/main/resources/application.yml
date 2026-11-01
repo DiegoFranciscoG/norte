@@ -61,7 +61,6 @@ norte:
     lookback-hours-first-run: 72
   index-base-url: ${NORTE_INDEX_BASE_URL}
   site-url: ${NORTE_SITE_URL:http://localhost:4200}
-  default-home-city: Cuenca
   rate-limit:
     max-attempts: 5
     window: PT15M

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.within;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.diegofranciscog.norte.scoring.IndexModels.Company;
+import io.github.diegofranciscog.norte.scoring.IndexModels.GeoFile;
 import io.github.diegofranciscog.norte.scoring.IndexModels.Job;
 import io.github.diegofranciscog.norte.scoring.IndexModels.JobSkill;
 import io.github.diegofranciscog.norte.scoring.IndexModels.LanguageRequirement;
@@ -38,7 +39,8 @@ class ScorerTest {
     private static final Golden GOLDEN = JSON.readValue(DATA.resolve("fixtures/scoring-cases.json").toFile(), Golden.class);
     private static final ScoringConfig CONFIG = JSON.readValue(DATA.resolve("config/scoring.json").toFile(), ScoringConfig.class);
     private static final SkillsFile CATALOG = JSON.readValue(DATA.resolve("skills/catalog.json").toFile(), SkillsFile.class);
-    private static final Scorer SCORER = new Scorer(CONFIG, CATALOG.skills());
+    private static final GeoFile GEO = JSON.readValue(DATA.resolve("geo/geo.json").toFile(), GeoFile.class);
+    private static final Scorer SCORER = new Scorer(CONFIG, CATALOG.skills(), GEO.regions());
     private static final Instant NOW = Instant.parse(GOLDEN.now());
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -54,12 +56,12 @@ class ScorerTest {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    record JobSpec(List<List<Object>> skills, Integer yearsRequired, String seniority, String modality, String city, String country, Boolean ecuadorEligible,
+    record JobSpec(List<List<Object>> skills, Integer yearsRequired, String seniority, String modality, String city, String country, RemoteScope remoteScope,
             List<List<Object>> languages, List<Integer> salary, int daysAgo, String status) {
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
-    record ProfileSpec(List<String> demonstrated, List<String> declared, Double years, String english, String homeCity, boolean relocation, Integer minSalary,
+    record ProfileSpec(String homeCountry, List<String> demonstrated, List<String> declared, Double years, String english, String homeCity, boolean relocation, Integer minSalary,
             Map<String, Integer> weights) {
     }
 
@@ -68,9 +70,7 @@ class ScorerTest {
     }
 
     static Job job(JobSpec s) {
-        RemoteScope scope = "remote".equals(s.modality())
-                ? new RemoteScope(s.ecuadorEligible() == null ? "unknown" : s.ecuadorEligible() ? "latam" : "excluding-latam", s.ecuadorEligible())
-                : null;
+        RemoteScope scope = s.remoteScope();
         List<JobSkill> skills = s.skills().stream().map(t -> new JobSkill((String) t.get(0), (Boolean) t.get(1))).toList();
         List<LanguageRequirement> languages = s.languages().stream().map(t -> new LanguageRequirement((String) t.get(0), (String) t.get(1), (Boolean) t.get(2))).toList();
         Salary salary = s.salary() == null ? null : new Salary(s.salary().get(0), s.salary().get(1), true);
@@ -83,7 +83,7 @@ class ScorerTest {
         List<ProfileSkill> skills = new ArrayList<>();
         p.demonstrated().forEach(id -> skills.add(new ProfileSkill(id, true)));
         p.declared().forEach(id -> skills.add(new ProfileSkill(id, false)));
-        return new ProfileView(skills, p.years(), p.english(), p.homeCity(), p.relocation(), p.minSalary(), p.weights());
+        return new ProfileView(skills, p.years(), p.english(), p.homeCountry(), p.homeCity(), p.relocation(), p.minSalary(), p.weights());
     }
 
     static Stream<Case> cases() {
@@ -115,7 +115,7 @@ class ScorerTest {
     void unaVacanteCerradaNoSumaFrescura() {
         Case base = GOLDEN.cases().getFirst();
         JobSpec s = base.job();
-        JobSpec closed = new JobSpec(s.skills(), s.yearsRequired(), s.seniority(), s.modality(), s.city(), s.country(), s.ecuadorEligible(), s.languages(), s.salary(),
+        JobSpec closed = new JobSpec(s.skills(), s.yearsRequired(), s.seniority(), s.modality(), s.city(), s.country(), s.remoteScope(), s.languages(), s.salary(),
                 s.daysAgo(), "closed");
         assertThat(SCORER.score(job(closed), profile(base.profile()), NOW).points().get("freshness")).isZero();
     }
@@ -124,7 +124,7 @@ class ScorerTest {
     void loQueNoEstaEnElPerfilNoSuma() {
         Case base = GOLDEN.cases().getFirst();
         JobSpec s = base.job();
-        JobSpec rust = new JobSpec(List.of(List.of("rust", false)), s.yearsRequired(), s.seniority(), s.modality(), s.city(), s.country(), s.ecuadorEligible(),
+        JobSpec rust = new JobSpec(List.of(List.of("rust", false)), s.yearsRequired(), s.seniority(), s.modality(), s.city(), s.country(), s.remoteScope(),
                 s.languages(), s.salary(), s.daysAgo(), s.status());
         Scorer.Result r = SCORER.score(job(rust), profile(base.profile()), NOW);
         assertThat(r.points().get("demonstrated")).isZero();

@@ -19,7 +19,7 @@ public final class DtoMapper {
     }
 
     public static ProfileResponse toResponse(Profile p) {
-        return new ProfileResponse(p.getHomeCity(), p.isAcceptsRelocation(), p.getYearsOfExperience(), p.getEnglishLevel(), p.getMinSalaryUsd(), p.getWeights(), p.getGithubUser(), p.getUpdatedAt());
+        return new ProfileResponse(p.getHomeCountry(), p.getHomeCity(), p.getModalities(), p.isAcceptsRelocation(), p.getYearsOfExperience(), p.getEnglishLevel(), p.getMinSalaryUsd(), p.getWeights(), p.getGithubUser(), p.getUpdatedAt());
     }
 
     public static SkillItem toItem(ProfileSkill s) {

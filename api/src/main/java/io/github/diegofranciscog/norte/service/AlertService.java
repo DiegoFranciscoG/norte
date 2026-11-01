@@ -66,7 +66,7 @@ public class AlertService {
         IndexInfo info = index.index();
         String version = info.build().version();
         List<Job> jobs = index.jobs().jobs().stream().filter(j -> "open".equals(j.status())).toList();
-        Scorer scorer = new Scorer(index.scoring(), index.skills().skills());
+        Scorer scorer = new Scorer(index.scoring(), index.skills().skills(), index.geo().regions());
         Instant now = Instant.now();
         int checked = 0;
         int sent = 0;
@@ -89,7 +89,7 @@ public class AlertService {
             List<AlertMailer.Item> items = new ArrayList<>();
             for (Job job : jobs) {
                 Optional<SourceRef> source = job.sources() == null ? Optional.empty() : job.sources().stream().filter(SourceRef::allowInAlerts).findFirst();
-                if (source.isEmpty() || job.firstSeenAt() == null || !Instant.parse(job.firstSeenAt()).isAfter(since)) {
+                if (source.isEmpty() || job.firstSeenAt() == null || !Instant.parse(job.firstSeenAt()).isAfter(since) || !wanted(scorer, job, profile.get())) {
                     continue;
                 }
                 Scorer.Result result = scorer.score(job, view, now);
@@ -117,8 +117,20 @@ public class AlertService {
         return new AlertRunSummary(version, checked, sent, jobs.size());
     }
 
+    /** Solo lo que la persona busca: sus modalidades y vacantes que puede tomar desde su país. */
+    static boolean wanted(Scorer scorer, Job job, Profile p) {
+        List<String> modalities = p.getModalities() == null ? List.of() : p.getModalities();
+        if (!modalities.isEmpty() && !modalities.contains(job.modality())) {
+            return false;
+        }
+        if ("remote".equals(job.modality())) {
+            return !Boolean.FALSE.equals(scorer.remoteEligibility(job.remoteScope(), p.getHomeCountry()));
+        }
+        return p.getHomeCountry() == null || job.location() == null || p.getHomeCountry().equals(job.location().country());
+    }
+
     private ProfileView view(Profile p) {
         List<ProfileSkill> list = skills.findByUserIdOrderBySkillIdAsc(p.getUserId()).stream().map(s -> new ProfileSkill(s.getSkillId(), s.getOrigin() == SkillOrigin.DEMONSTRATED)).toList();
-        return new ProfileView(list, p.getYearsOfExperience() == null ? null : p.getYearsOfExperience().doubleValue(), p.getEnglishLevel(), p.getHomeCity(), p.isAcceptsRelocation(), p.getMinSalaryUsd(), p.getWeights());
+        return new ProfileView(list, p.getYearsOfExperience() == null ? null : p.getYearsOfExperience().doubleValue(), p.getEnglishLevel(), p.getHomeCountry(), p.getHomeCity(), p.isAcceptsRelocation(), p.getMinSalaryUsd(), p.getWeights());
     }
 }
