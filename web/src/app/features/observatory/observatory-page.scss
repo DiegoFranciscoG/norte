@@ -1,0 +1,114 @@
+.obs {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 16px 24px 48px;
+}
+.head h1 {
+  font-size: 1.7rem;
+}
+.head p {
+  margin: 0;
+  max-width: 70ch;
+}
+.stamp {
+  margin: 8px 0 16px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.tile {
+  display: grid;
+  gap: 2px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.tile .label {
+  font-size: 0.88rem;
+  color: var(--text-2);
+}
+.tile .value {
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+.tile.hero .value {
+  font-size: 3rem;
+  line-height: 1.1;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.panel {
+  margin-bottom: 14px;
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.panel h2 {
+  font-size: 1.08rem;
+}
+.sub {
+  margin: 18px 0 8px;
+  font-size: 0.95rem;
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.city {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.city h3 {
+  margin: 0;
+}
+.city p {
+  margin: 6px 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+.reports {
+  margin: 0;
+  padding-left: 18px;
+}
+.chip-list a.chip {
+  text-decoration: none;
+}
+.method {
+  margin-top: 14px;
+}
+.method summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .tiles {
+    grid-template-columns: 1fr 1fr;
+  }
+  .tile.hero {
+    grid-column: 1 / -1;
+  }
+  .cols {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .obs {
+    padding: 12px 12px 40px;
+  }
+}
