@@ -1,0 +1,148 @@
+<div class="obs">
+  <header class="head">
+    <h1>Observatorio del mercado tech</h1>
+    <p class="muted">Vacantes tecnológicas accesibles desde Ecuador: ubicadas en el país o remotas que lo admiten. Datos abiertos, sin datos personales.</p>
+  </header>
+
+  @if (error()) {
+    <p class="notice warn">{{ error() }}</p>
+  } @else if (summary(); as s) {
+    @if (s.demo) {
+      <p class="notice warn">Estadísticas de demostración calculadas con datos ficticios.</p>
+    }
+    <p class="small muted stamp">Actualizado {{ stamp(s.generatedAt) }} · {{ s.license }}</p>
+
+    <section class="tiles" aria-label="Cifras principales">
+      <div class="tile hero">
+        <span class="label">Vacantes abiertas</span>
+        <span class="value">{{ fmt(s.population.open) }}</span>
+        <span class="small muted">{{ fmt(s.population.ecuador) }} ubicadas en Ecuador</span>
+      </div>
+      <div class="tile">
+        <span class="label">Remotas</span>
+        <span class="value">{{ fmt(s.remote.share, 1) }} %</span>
+        <span class="small muted">{{ fmt(s.remote.jobs) }} vacantes</span>
+      </div>
+      <div class="tile">
+        <span class="label">Publican salario</span>
+        <span class="value">{{ fmt(s.salaries.withSalaryShare, 1) }} %</span>
+        <span class="small muted">{{ fmt(s.salaries.withoutSalaryShare, 1) }} % no lo dice</span>
+      </div>
+      <div class="tile">
+        <span class="label">Fuentes con vacantes</span>
+        <span class="value">{{ s.sources.length }}</span>
+        <span class="small muted">con su fecha de obtención</span>
+      </div>
+    </section>
+
+    <div class="cols">
+      <section class="panel" aria-labelledby="skills-title">
+        <h2 id="skills-title">Habilidades más pedidas</h2>
+        <p class="small muted">Porcentaje de vacantes abiertas que piden cada una.</p>
+        <app-bar-chart [rows]="skills()" caption="Habilidades más pedidas, en porcentaje de vacantes abiertas" labelHeader="Habilidad" valueHeader="% de vacantes" />
+      </section>
+
+      <section class="panel" aria-labelledby="trend-title">
+        <h2 id="trend-title">Tendencia de 90 días</h2>
+        @if (s.trend.status === 'ok') {
+          <p class="small muted">Cambio de presencia entre la primera y la segunda mitad de los últimos {{ s.trend.windowDays }} días, en puntos porcentuales.</p>
+          @if (movers().length) {
+            <app-delta-bars [rows]="movers()" caption="Habilidades que más suben y bajan" />
+          } @else {
+            <p class="muted">No hay movimientos con muestra suficiente.</p>
+          }
+        } @else {
+          <p class="notice">Historial insuficiente: llevamos {{ s.trend.observedDays }} de {{ s.trend.windowDays }} días observados. No publicamos subidas ni bajadas hasta tener la ventana completa.</p>
+        }
+        <h3 class="sub">Vacantes nuevas por semana</h3>
+        <app-column-chart [points]="weeks()" caption="Vacantes vistas por primera vez en cada una de las últimas 13 semanas" valueHeader="Vacantes nuevas" />
+      </section>
+    </div>
+
+    <section class="panel" aria-labelledby="cities-title">
+      <h2 id="cities-title">Cuenca, Quito y Guayaquil</h2>
+      <app-bar-chart [rows]="cityRows()" caption="Vacantes abiertas por ciudad" labelHeader="Ciudad" valueHeader="Vacantes abiertas" />
+      <div class="city-grid">
+        @for (c of s.cities; track c.city) {
+          <article class="city">
+            <h3>{{ c.city }}</h3>
+            <p class="small muted">{{ c.open }} abiertas · {{ c.modality.onsite }} presenciales · {{ c.modality.hybrid }} híbridas</p>
+            @if (c.topSkills.length) {
+              <ul class="chip-list">
+                @for (k of c.topSkills; track k.id) {
+                  <li class="tag">{{ k.name }} · {{ k.count }}</li>
+                }
+              </ul>
+            }
+            <p class="small"><strong>Salario mediano:</strong> {{ salary(c.salary) }}</p>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="salary-title">
+      <h2 id="salary-title">Salarios publicados</h2>
+      <p class="small muted">Mediana y rango intercuartílico en USD mensuales. Con menos de {{ s.salaries.minSample }} vacantes no publicamos la cifra.</p>
+      @for (m of s.salaries.markets; track m.market) {
+        <h3 class="sub">{{ m.label }}</h3>
+        <p class="small muted">{{ m.withSalary }} de {{ m.jobs }} vacantes publican salario · general: {{ salary(m.overall) }}</p>
+        @if (m.byRole.length) {
+          <div class="table-wrap">
+            <table class="table">
+              <caption class="visually-hidden">Salario por rol: {{ m.label }}</caption>
+              <thead><tr><th scope="col">Rol</th><th scope="col" class="num">Vacantes</th><th scope="col">Mediana · P25–P75</th></tr></thead>
+              <tbody>
+                @for (r of m.byRole; track r.role) {
+                  <tr><td>{{ r.label }}</td><td class="num">{{ r.n }}</td><td>{{ salary(r) }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      }
+    </section>
+
+    <div class="cols">
+      <section class="panel" aria-labelledby="companies-title">
+        <h2 id="companies-title">Empresas con más vacantes</h2>
+        <app-bar-chart [rows]="companies()" caption="Empresas con más vacantes abiertas" labelHeader="Empresa" valueHeader="Vacantes abiertas" />
+      </section>
+      <section class="panel" aria-labelledby="months-title">
+        <h2 id="months-title">Vacantes nuevas por mes</h2>
+        @if (months().length) {
+          <app-column-chart [points]="months()" caption="Vacantes vistas por primera vez cada mes" valueHeader="Vacantes nuevas" />
+        }
+        @if (reports()?.reports?.length) {
+          <h3 class="sub">Informes mensuales</h3>
+          <ul class="reports">
+            @for (r of reports()!.reports; track r.month) {
+              <li><a [routerLink]="['/observatorio/informe', r.month]">{{ r.label }}</a> <span class="small muted">· {{ r.newJobs }} nuevas{{ r.complete ? '' : ' · en curso' }}</span></li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+
+    <section class="panel" aria-labelledby="open-title">
+      <h2 id="open-title">Datos abiertos</h2>
+      <p class="small muted">Archivos estáticos de solo lectura, actualizados con cada ingesta. Licencia CC BY 4.0: cita «NORTE, observatorio del mercado laboral tecnológico de Ecuador» con enlace.</p>
+      <ul class="chip-list">
+        @for (c of csv; track c.file) {
+          <li><a class="chip" [href]="c.url" download><app-icon name="download" [size]="16" /> {{ c.label }} (CSV)</a></li>
+        }
+        <li><a class="chip" [href]="apiUrl"><app-icon name="code" [size]="16" /> API JSON (índice de archivos)</a></li>
+      </ul>
+      <details class="method">
+        <summary>Metodología</summary>
+        <ul>
+          @for (m of s.methodology; track m) {
+            <li>{{ m }}</li>
+          }
+        </ul>
+        <p class="small muted">Fuentes con vacantes abiertas: @for (src of s.sources; track src.name; let last = $last) { {{ src.name }} ({{ src.openJobs }}){{ last ? '.' : ',' }} }</p>
+      </details>
+    </section>
+  } @else {
+    <p class="muted" role="status">Cargando estadísticas…</p>
+  }
+</div>

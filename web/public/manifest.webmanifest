@@ -1,12 +1,19 @@
 {
   "name": "NORTE — empleo tecnológico en Ecuador",
   "short_name": "NORTE",
-  "description": "Vacantes de fuentes abiertas, tu encaje con brecha explicada y el observatorio del mercado laboral tecnológico de Ecuador.",
+  "description": "Empleos de tecnología cerca de ti, en tu país o remotos que te admiten, con tu encaje explicado y lo que te falta.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f4f3ef",
-  "theme_color": "#0b5cad",
-  "lang": "es-EC",
-  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+  "theme_color": "#0b7a66",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }

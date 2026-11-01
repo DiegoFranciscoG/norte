@@ -2,32 +2,206 @@
   "source": "INEC — Geoportal y Clasificador Geográfico Estadístico (División Político Administrativa del Ecuador)",
   "sourceUrl": "https://www.ecuadorencifras.gob.ec/documentos/web-inec/Geografia_Estadistica/Micrositio_geoportal/index.html",
   "verifiedAt": "2026-10-31",
+  "note": "Nombres de países: data/geo/countries.json (CLDR). Ciudades: data/geo/cities.json (GeoNames, CC BY 4.0). Aquí: alias, regiones, frases de alcance remoto y la división político-administrativa de Ecuador (INEC).",
   "ecuador": {
     "provinces": [
-      { "name": "Azuay", "capital": "Cuenca", "cities": ["Cuenca", "Gualaceo", "Paute", "Sígsig", "Santa Isabel", "Girón"] },
-      { "name": "Bolívar", "capital": "Guaranda", "cities": ["Guaranda"] },
-      { "name": "Cañar", "capital": "Azogues", "cities": ["Azogues", "La Troncal", "Biblián"] },
-      { "name": "Carchi", "capital": "Tulcán", "cities": ["Tulcán"] },
-      { "name": "Chimborazo", "capital": "Riobamba", "cities": ["Riobamba"] },
-      { "name": "Cotopaxi", "capital": "Latacunga", "cities": ["Latacunga", "Salcedo"] },
-      { "name": "El Oro", "capital": "Machala", "cities": ["Machala", "Pasaje", "Santa Rosa", "Huaquillas"] },
-      { "name": "Esmeraldas", "capital": "Esmeraldas", "cities": ["Esmeraldas"] },
-      { "name": "Galápagos", "capital": "Puerto Baquerizo Moreno", "cities": ["Puerto Baquerizo Moreno", "Puerto Ayora"] },
-      { "name": "Guayas", "capital": "Guayaquil", "cities": ["Guayaquil", "Durán", "Samborondón", "Daule", "Milagro"] },
-      { "name": "Imbabura", "capital": "Ibarra", "cities": ["Ibarra", "Otavalo"] },
-      { "name": "Loja", "capital": "Loja", "cities": ["Loja"] },
-      { "name": "Los Ríos", "capital": "Babahoyo", "cities": ["Babahoyo", "Quevedo"] },
-      { "name": "Manabí", "capital": "Portoviejo", "cities": ["Portoviejo", "Manta", "Chone"] },
-      { "name": "Morona Santiago", "capital": "Macas", "cities": ["Macas"] },
-      { "name": "Napo", "capital": "Tena", "cities": ["Tena"] },
-      { "name": "Orellana", "capital": "Puerto Francisco de Orellana", "cities": ["Puerto Francisco de Orellana", "Coca"] },
-      { "name": "Pastaza", "capital": "Puyo", "cities": ["Puyo"] },
-      { "name": "Pichincha", "capital": "Quito", "cities": ["Quito", "Sangolquí", "Cayambe", "Machachi", "Cumbayá", "Tumbaco"] },
-      { "name": "Santa Elena", "capital": "Santa Elena", "cities": ["Santa Elena", "Salinas", "La Libertad"] },
-      { "name": "Santo Domingo de los Tsáchilas", "capital": "Santo Domingo", "cities": ["Santo Domingo"] },
-      { "name": "Sucumbíos", "capital": "Nueva Loja", "cities": ["Nueva Loja", "Lago Agrio"] },
-      { "name": "Tungurahua", "capital": "Ambato", "cities": ["Ambato"] },
-      { "name": "Zamora Chinchipe", "capital": "Zamora", "cities": ["Zamora"] }
+      {
+        "name": "Azuay",
+        "capital": "Cuenca",
+        "cities": [
+          "Cuenca",
+          "Gualaceo",
+          "Paute",
+          "Sígsig",
+          "Santa Isabel",
+          "Girón"
+        ]
+      },
+      {
+        "name": "Bolívar",
+        "capital": "Guaranda",
+        "cities": [
+          "Guaranda"
+        ]
+      },
+      {
+        "name": "Cañar",
+        "capital": "Azogues",
+        "cities": [
+          "Azogues",
+          "La Troncal",
+          "Biblián"
+        ]
+      },
+      {
+        "name": "Carchi",
+        "capital": "Tulcán",
+        "cities": [
+          "Tulcán"
+        ]
+      },
+      {
+        "name": "Chimborazo",
+        "capital": "Riobamba",
+        "cities": [
+          "Riobamba"
+        ]
+      },
+      {
+        "name": "Cotopaxi",
+        "capital": "Latacunga",
+        "cities": [
+          "Latacunga",
+          "Salcedo"
+        ]
+      },
+      {
+        "name": "El Oro",
+        "capital": "Machala",
+        "cities": [
+          "Machala",
+          "Pasaje",
+          "Santa Rosa",
+          "Huaquillas"
+        ]
+      },
+      {
+        "name": "Esmeraldas",
+        "capital": "Esmeraldas",
+        "cities": [
+          "Esmeraldas"
+        ]
+      },
+      {
+        "name": "Galápagos",
+        "capital": "Puerto Baquerizo Moreno",
+        "cities": [
+          "Puerto Baquerizo Moreno",
+          "Puerto Ayora"
+        ]
+      },
+      {
+        "name": "Guayas",
+        "capital": "Guayaquil",
+        "cities": [
+          "Guayaquil",
+          "Durán",
+          "Samborondón",
+          "Daule",
+          "Milagro"
+        ]
+      },
+      {
+        "name": "Imbabura",
+        "capital": "Ibarra",
+        "cities": [
+          "Ibarra",
+          "Otavalo"
+        ]
+      },
+      {
+        "name": "Loja",
+        "capital": "Loja",
+        "cities": [
+          "Loja"
+        ]
+      },
+      {
+        "name": "Los Ríos",
+        "capital": "Babahoyo",
+        "cities": [
+          "Babahoyo",
+          "Quevedo"
+        ]
+      },
+      {
+        "name": "Manabí",
+        "capital": "Portoviejo",
+        "cities": [
+          "Portoviejo",
+          "Manta",
+          "Chone"
+        ]
+      },
+      {
+        "name": "Morona Santiago",
+        "capital": "Macas",
+        "cities": [
+          "Macas"
+        ]
+      },
+      {
+        "name": "Napo",
+        "capital": "Tena",
+        "cities": [
+          "Tena"
+        ]
+      },
+      {
+        "name": "Orellana",
+        "capital": "Puerto Francisco de Orellana",
+        "cities": [
+          "Puerto Francisco de Orellana",
+          "Coca"
+        ]
+      },
+      {
+        "name": "Pastaza",
+        "capital": "Puyo",
+        "cities": [
+          "Puyo"
+        ]
+      },
+      {
+        "name": "Pichincha",
+        "capital": "Quito",
+        "cities": [
+          "Quito",
+          "Sangolquí",
+          "Cayambe",
+          "Machachi",
+          "Cumbayá",
+          "Tumbaco"
+        ]
+      },
+      {
+        "name": "Santa Elena",
+        "capital": "Santa Elena",
+        "cities": [
+          "Santa Elena",
+          "Salinas",
+          "La Libertad"
+        ]
+      },
+      {
+        "name": "Santo Domingo de los Tsáchilas",
+        "capital": "Santo Domingo",
+        "cities": [
+          "Santo Domingo"
+        ]
+      },
+      {
+        "name": "Sucumbíos",
+        "capital": "Nueva Loja",
+        "cities": [
+          "Nueva Loja",
+          "Lago Agrio"
+        ]
+      },
+      {
+        "name": "Tungurahua",
+        "capital": "Ambato",
+        "cities": [
+          "Ambato"
+        ]
+      },
+      {
+        "name": "Zamora Chinchipe",
+        "capital": "Zamora",
+        "cities": [
+          "Zamora"
+        ]
+      }
     ],
     "ambiguousCities": {
       "Cuenca": "También es capital de una provincia de España; se exige contexto de Ecuador (país, provincia Azuay o empresa ecuatoriana).",
@@ -36,48 +210,670 @@
       "Esmeraldas": "Coincide con el nombre de la provincia."
     }
   },
-  "countries": [
-    { "iso": "EC", "names": ["ecuador"], "latam": true, "utcOffsets": [-5, -6] },
-    { "iso": "CO", "names": ["colombia"], "latam": true },
-    { "iso": "PE", "names": ["peru", "perú"], "latam": true },
-    { "iso": "MX", "names": ["mexico", "méxico"], "latam": true },
-    { "iso": "AR", "names": ["argentina"], "latam": true },
-    { "iso": "CL", "names": ["chile"], "latam": true },
-    { "iso": "BR", "names": ["brazil", "brasil"], "latam": true },
-    { "iso": "UY", "names": ["uruguay"], "latam": true },
-    { "iso": "PY", "names": ["paraguay"], "latam": true },
-    { "iso": "BO", "names": ["bolivia"], "latam": true },
-    { "iso": "VE", "names": ["venezuela"], "latam": true },
-    { "iso": "CR", "names": ["costa rica"], "latam": true },
-    { "iso": "PA", "names": ["panama", "panamá"], "latam": true },
-    { "iso": "GT", "names": ["guatemala"], "latam": true },
-    { "iso": "HN", "names": ["honduras"], "latam": true },
-    { "iso": "SV", "names": ["el salvador"], "latam": true },
-    { "iso": "NI", "names": ["nicaragua"], "latam": true },
-    { "iso": "DO", "names": ["dominican republic", "república dominicana", "republica dominicana"], "latam": true },
-    { "iso": "PR", "names": ["puerto rico"], "latam": true },
-    { "iso": "CU", "names": ["cuba"], "latam": true },
-    { "iso": "US", "names": ["united states", "usa", "u.s.", "us only", "estados unidos", "ee. uu.", "ee.uu."], "latam": false },
-    { "iso": "CA", "names": ["canada", "canadá"], "latam": false },
-    { "iso": "GB", "names": ["united kingdom", "uk", "england", "reino unido"], "latam": false },
-    { "iso": "ES", "names": ["spain", "españa", "espana"], "latam": false },
-    { "iso": "PT", "names": ["portugal"], "latam": false },
-    { "iso": "DE", "names": ["germany", "deutschland", "alemania"], "latam": false },
-    { "iso": "NL", "names": ["netherlands", "nederland", "países bajos"], "latam": false },
-    { "iso": "FR", "names": ["france", "francia"], "latam": false },
-    { "iso": "PL", "names": ["poland", "polonia"], "latam": false },
-    { "iso": "IN", "names": ["india"], "latam": false },
-    { "iso": "PH", "names": ["philippines", "filipinas"], "latam": false },
-    { "iso": "AU", "names": ["australia"], "latam": false },
-    { "iso": "IE", "names": ["ireland", "irlanda"], "latam": false },
-    { "iso": "IT", "names": ["italy", "italia"], "latam": false },
-    { "iso": "SG", "names": ["singapore", "singapur"], "latam": false },
-    { "iso": "ZA", "names": ["south africa", "sudáfrica"], "latam": false }
+  "countryAliases": {
+    "CO": [
+      "colombia"
+    ],
+    "PE": [
+      "peru",
+      "perú"
+    ],
+    "MX": [
+      "mexico",
+      "méxico"
+    ],
+    "AR": [
+      "argentina"
+    ],
+    "CL": [
+      "chile"
+    ],
+    "BR": [
+      "brasil",
+      "brazil"
+    ],
+    "UY": [
+      "uruguay"
+    ],
+    "PY": [
+      "paraguay"
+    ],
+    "BO": [
+      "bolivia"
+    ],
+    "VE": [
+      "venezuela"
+    ],
+    "CR": [
+      "costa rica"
+    ],
+    "PA": [
+      "panama",
+      "panamá"
+    ],
+    "GT": [
+      "guatemala"
+    ],
+    "HN": [
+      "honduras"
+    ],
+    "SV": [
+      "el salvador"
+    ],
+    "NI": [
+      "nicaragua"
+    ],
+    "DO": [
+      "dominican republic",
+      "república dominicana",
+      "republica dominicana"
+    ],
+    "PR": [
+      "puerto rico"
+    ],
+    "CU": [
+      "cuba"
+    ],
+    "US": [
+      "ee. uu.",
+      "ee.uu.",
+      "eeuu",
+      "estados unidos",
+      "u.s.",
+      "u.s.a.",
+      "united states",
+      "united states of america",
+      "us only",
+      "usa"
+    ],
+    "CA": [
+      "canada",
+      "canadá"
+    ],
+    "GB": [
+      "england",
+      "gran bretana",
+      "great britain",
+      "inglaterra",
+      "reino unido",
+      "scotland",
+      "u.k.",
+      "uk",
+      "united kingdom",
+      "wales"
+    ],
+    "ES": [
+      "spain",
+      "españa",
+      "espana"
+    ],
+    "PT": [
+      "portugal"
+    ],
+    "DE": [
+      "alemania",
+      "deutschland",
+      "germany"
+    ],
+    "NL": [
+      "holanda",
+      "holland",
+      "nederland",
+      "netherlands",
+      "países bajos",
+      "the netherlands"
+    ],
+    "FR": [
+      "france",
+      "francia"
+    ],
+    "PL": [
+      "poland",
+      "polonia"
+    ],
+    "IN": [
+      "india"
+    ],
+    "PH": [
+      "philippines",
+      "filipinas"
+    ],
+    "AU": [
+      "australia"
+    ],
+    "IE": [
+      "ireland",
+      "irlanda"
+    ],
+    "IT": [
+      "italy",
+      "italia"
+    ],
+    "SG": [
+      "singapore",
+      "singapur"
+    ],
+    "ZA": [
+      "south africa",
+      "sudáfrica"
+    ],
+    "AE": [
+      "uae",
+      "emiratos arabes unidos"
+    ],
+    "KR": [
+      "south korea",
+      "corea del sur"
+    ],
+    "CZ": [
+      "czech republic",
+      "czechia",
+      "republica checa"
+    ],
+    "TR": [
+      "turkey",
+      "turkiye"
+    ]
+  },
+  "ambiguousCountryNames": [
+    "georgia",
+    "jersey",
+    "chad",
+    "jordan",
+    "dominica",
+    "guinea",
+    "niger"
   ],
+  "regions": {
+    "latam": [
+      "AR",
+      "BO",
+      "BR",
+      "CL",
+      "CO",
+      "CR",
+      "CU",
+      "DO",
+      "EC",
+      "GT",
+      "HN",
+      "HT",
+      "MX",
+      "NI",
+      "PA",
+      "PE",
+      "PR",
+      "PY",
+      "SV",
+      "UY",
+      "VE"
+    ],
+    "north-america": [
+      "CA",
+      "MX",
+      "US"
+    ],
+    "americas": [
+      "AG",
+      "AR",
+      "AW",
+      "BB",
+      "BM",
+      "BO",
+      "BR",
+      "BS",
+      "BZ",
+      "CA",
+      "CL",
+      "CO",
+      "CR",
+      "CU",
+      "CW",
+      "DM",
+      "DO",
+      "EC",
+      "GD",
+      "GF",
+      "GT",
+      "GY",
+      "HN",
+      "HT",
+      "JM",
+      "KN",
+      "KY",
+      "LC",
+      "MX",
+      "NI",
+      "PA",
+      "PE",
+      "PR",
+      "PY",
+      "SR",
+      "SV",
+      "TC",
+      "TT",
+      "US",
+      "UY",
+      "VC",
+      "VE",
+      "VG",
+      "VI"
+    ],
+    "europe": [
+      "AD",
+      "AL",
+      "AT",
+      "BA",
+      "BE",
+      "BG",
+      "BY",
+      "CH",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "ES",
+      "FI",
+      "FO",
+      "FR",
+      "GB",
+      "GG",
+      "GI",
+      "GR",
+      "HR",
+      "HU",
+      "IE",
+      "IM",
+      "IS",
+      "IT",
+      "JE",
+      "LI",
+      "LT",
+      "LU",
+      "LV",
+      "MC",
+      "MD",
+      "ME",
+      "MK",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PT",
+      "RO",
+      "RS",
+      "SE",
+      "SI",
+      "SK",
+      "SM",
+      "UA",
+      "VA"
+    ],
+    "middle-east": [
+      "AE",
+      "BH",
+      "EG",
+      "IL",
+      "IQ",
+      "IR",
+      "JO",
+      "KW",
+      "LB",
+      "OM",
+      "PS",
+      "QA",
+      "SA",
+      "SY",
+      "TR",
+      "YE"
+    ],
+    "africa": [
+      "AO",
+      "BF",
+      "BI",
+      "BJ",
+      "BW",
+      "CD",
+      "CF",
+      "CG",
+      "CI",
+      "CM",
+      "CV",
+      "DJ",
+      "DZ",
+      "ER",
+      "ET",
+      "GA",
+      "GH",
+      "GM",
+      "GN",
+      "GQ",
+      "GW",
+      "KE",
+      "KM",
+      "LR",
+      "LS",
+      "LY",
+      "MA",
+      "MG",
+      "ML",
+      "MR",
+      "MU",
+      "MW",
+      "MZ",
+      "NA",
+      "NE",
+      "NG",
+      "RW",
+      "SC",
+      "SD",
+      "SL",
+      "SN",
+      "SO",
+      "SS",
+      "ST",
+      "SZ",
+      "TD",
+      "TG",
+      "TN",
+      "TZ",
+      "UG",
+      "ZA",
+      "ZM",
+      "ZW"
+    ],
+    "emea": [
+      "AD",
+      "AE",
+      "AL",
+      "AO",
+      "AT",
+      "BA",
+      "BE",
+      "BF",
+      "BG",
+      "BH",
+      "BI",
+      "BJ",
+      "BW",
+      "BY",
+      "CD",
+      "CF",
+      "CG",
+      "CH",
+      "CI",
+      "CM",
+      "CV",
+      "CY",
+      "CZ",
+      "DE",
+      "DJ",
+      "DK",
+      "DZ",
+      "EE",
+      "EG",
+      "ER",
+      "ES",
+      "ET",
+      "FI",
+      "FO",
+      "FR",
+      "GA",
+      "GB",
+      "GG",
+      "GH",
+      "GI",
+      "GM",
+      "GN",
+      "GQ",
+      "GR",
+      "GW",
+      "HR",
+      "HU",
+      "IE",
+      "IL",
+      "IM",
+      "IQ",
+      "IR",
+      "IS",
+      "IT",
+      "JE",
+      "JO",
+      "KE",
+      "KM",
+      "KW",
+      "LB",
+      "LI",
+      "LR",
+      "LS",
+      "LT",
+      "LU",
+      "LV",
+      "LY",
+      "MA",
+      "MC",
+      "MD",
+      "ME",
+      "MG",
+      "MK",
+      "ML",
+      "MR",
+      "MT",
+      "MU",
+      "MW",
+      "MZ",
+      "NA",
+      "NE",
+      "NG",
+      "NL",
+      "NO",
+      "OM",
+      "PL",
+      "PS",
+      "PT",
+      "QA",
+      "RO",
+      "RS",
+      "RW",
+      "SA",
+      "SC",
+      "SD",
+      "SE",
+      "SI",
+      "SK",
+      "SL",
+      "SM",
+      "SN",
+      "SO",
+      "SS",
+      "ST",
+      "SY",
+      "SZ",
+      "TD",
+      "TG",
+      "TN",
+      "TR",
+      "TZ",
+      "UA",
+      "UG",
+      "VA",
+      "YE",
+      "ZA",
+      "ZM",
+      "ZW"
+    ],
+    "apac": [
+      "AU",
+      "BD",
+      "BN",
+      "CN",
+      "FJ",
+      "HK",
+      "ID",
+      "IN",
+      "JP",
+      "KH",
+      "KR",
+      "LA",
+      "LK",
+      "MM",
+      "MN",
+      "MO",
+      "MY",
+      "NP",
+      "NZ",
+      "PG",
+      "PH",
+      "PK",
+      "SG",
+      "TH",
+      "TW",
+      "VN"
+    ]
+  },
   "remoteScopes": {
-    "worldwide": ["worldwide", "anywhere", "anywhere in the world", "remote - world", "en cualquier lugar", "todo el mundo", "sin restricción"],
-    "latam": ["latam", "latin america", "latinoamérica", "latinoamerica", "américa latina", "america latina", "south america", "sudamérica", "sudamerica", "lat am", "central america", "centroamérica"],
-    "americas": ["americas", "the americas", "américas", "amer", "namer and latam", "north and south america"],
-    "excludingLatam": ["us only", "usa only", "united states only", "us-based", "u.s. only", "canada only", "uk only", "europe only", "eu only", "emea", "europe", "european union", "apac", "asia", "north america", "usa timezones", "us timezones", "cet", "cest"]
+    "worldwide": [
+      "worldwide",
+      "anywhere",
+      "anywhere in the world",
+      "remote - world",
+      "en cualquier lugar",
+      "todo el mundo",
+      "sin restricción",
+      "global",
+      "globally",
+      "remote worldwide",
+      "work from anywhere"
+    ],
+    "regions": {
+      "latam": [
+        "latam",
+        "latin america",
+        "latinoamérica",
+        "latinoamerica",
+        "américa latina",
+        "america latina",
+        "south america",
+        "sudamérica",
+        "sudamerica",
+        "lat am",
+        "central america",
+        "centroamérica"
+      ],
+      "americas": [
+        "americas",
+        "the americas",
+        "américas",
+        "amer",
+        "namer and latam",
+        "north and south america"
+      ],
+      "north-america": [
+        "north america",
+        "namer",
+        "us timezones",
+        "usa timezones",
+        "us time zones",
+        "est timezone",
+        "pst timezone"
+      ],
+      "europe": [
+        "europe",
+        "europe only",
+        "eu only",
+        "european union",
+        "european timezones",
+        "cet",
+        "cest",
+        "eu"
+      ],
+      "middle-east": [
+        "middle east",
+        "mena"
+      ],
+      "africa": [
+        "africa"
+      ],
+      "emea": [
+        "emea"
+      ],
+      "apac": [
+        "apac",
+        "asia",
+        "asia pacific",
+        "asia-pacific",
+        "oceania"
+      ]
+    },
+    "countryOnly": {
+      "US": [
+        "us only",
+        "usa only",
+        "united states only",
+        "us-based",
+        "u.s. only",
+        "us citizens only"
+      ],
+      "CA": [
+        "canada only"
+      ],
+      "GB": [
+        "uk only"
+      ]
+    }
+  },
+  "usStates": {
+    "AL": "alabama",
+    "AK": "alaska",
+    "AZ": "arizona",
+    "AR": "arkansas",
+    "CA": "california",
+    "CO": "colorado",
+    "CT": "connecticut",
+    "DE": "delaware",
+    "DC": "district of columbia",
+    "FL": "florida",
+    "GA": "georgia",
+    "HI": "hawaii",
+    "ID": "idaho",
+    "IL": "illinois",
+    "IN": "indiana",
+    "IA": "iowa",
+    "KS": "kansas",
+    "KY": "kentucky",
+    "LA": "louisiana",
+    "ME": "maine",
+    "MD": "maryland",
+    "MA": "massachusetts",
+    "MI": "michigan",
+    "MN": "minnesota",
+    "MS": "mississippi",
+    "MO": "missouri",
+    "MT": "montana",
+    "NE": "nebraska",
+    "NV": "nevada",
+    "NH": "new hampshire",
+    "NJ": "new jersey",
+    "NM": "new mexico",
+    "NY": "new york",
+    "NC": "north carolina",
+    "ND": "north dakota",
+    "OH": "ohio",
+    "OK": "oklahoma",
+    "OR": "oregon",
+    "PA": "pennsylvania",
+    "RI": "rhode island",
+    "SC": "south carolina",
+    "SD": "south dakota",
+    "TN": "tennessee",
+    "TX": "texas",
+    "UT": "utah",
+    "VT": "vermont",
+    "VA": "virginia",
+    "WA": "washington",
+    "WV": "west virginia",
+    "WI": "wisconsin",
+    "WY": "wyoming"
   }
 }

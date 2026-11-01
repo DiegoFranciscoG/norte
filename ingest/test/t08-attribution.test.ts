@@ -45,9 +45,10 @@ describe('T-08 atribución presente en toda vacante que la exija', async () => {
   const result = await runPipeline({ data, http: portalHttp(), now, previous: null, fx: null, log: () => undefined, tasks });
   const required = new Map(data.sources.portals.map((p) => [`portal:${p.id}`, p]));
 
-  it('lee una vacante de cada portal habilitado', () => {
+  it('lee una vacante de cada portal habilitado, también las presenciales fuera de Ecuador', () => {
     expect(Object.values(result.sourceRuns).every((r) => r.status === 'ok')).toBe(true);
-    expect(result.jobs).toHaveLength(7);
+    expect(result.jobs).toHaveLength(8);
+    expect(result.jobs.find((j) => j.title === 'Backend Developer')).toMatchObject({ location: { city: 'Berlin', country: 'DE' } });
   });
 
   it('cada origen de portal lleva texto y enlace de atribución que apunta al portal', () => {

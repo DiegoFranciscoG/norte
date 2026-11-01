@@ -2,7 +2,9 @@ name: Ingesta y publicación
 
 on:
   schedule:
-    - cron: '17 */3 * * *'
+    # Cada 30 minutos, lejos del inicio de la hora (cuando GitHub retrasa más los programados).
+    # Cada fuente respeta su propio intervalo mínimo (sources.json): Remotive, 6 h; el resto, 1 h.
+    - cron: '7,37 * * * *'
   workflow_dispatch:
 
 permissions:

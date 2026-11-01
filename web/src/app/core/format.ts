@@ -1,6 +1,11 @@
-import type { Job } from '@norte/core';
+import type { Job, JobGroup, RegionCode, RemoteScope } from '@norte/core';
 
 const DAY = 86400000;
+
+/** Fecha y hora UTC legibles a partir de un ISO 8601 («2026-11-01 14:49 UTC»). */
+export function stamp(iso: string | null | undefined): string {
+  return iso ? `${iso.slice(0, 16).replace('T', ' ')} UTC` : '';
+}
 
 export function timeAgo(iso: string, now = Date.now()): string {
   const days = Math.max(0, Math.floor((now - Date.parse(iso)) / DAY));
@@ -37,19 +42,50 @@ export const EMPLOYMENT_LABEL: Record<Job['employmentType'], string> = {
   unknown: '',
 };
 export const SENIORITY_LABEL: Record<Job['seniority'], string> = { intern: 'Pasante', junior: 'Junior', mid: 'Semi senior', senior: 'Senior', lead: 'Líder', unknown: '' };
-export const GROUP_LABEL: Record<Job['group'], string> = { home: 'Presencial o híbrido', ecuador: 'Resto de Ecuador', remote: 'Remoto abierto a Ecuador', freelance: 'Freelance' };
+export const GROUP_LABEL: Record<JobGroup, string> = { near: 'Cerca de ti', country: 'En tu país', remote: 'Remoto para ti', freelance: 'Freelance' };
+
+const REGION_LABEL: Record<RegionCode, string> = {
+  latam: 'Latinoamérica',
+  americas: 'las Américas',
+  'north-america': 'Norteamérica',
+  europe: 'Europa',
+  'middle-east': 'Oriente Medio',
+  africa: 'África',
+  emea: 'Europa, Oriente Medio y África',
+  apac: 'Asia-Pacífico',
+};
+
+const regionNames = (() => {
+  try {
+    return new Intl.DisplayNames(['es'], { type: 'region' });
+  } catch {
+    return null;
+  }
+})();
+
+/** Nombre del país en español a partir de su código ISO alfa-2 (CLDR del navegador). */
+export function countryName(iso: string | null | undefined): string {
+  if (!iso) return '';
+  try {
+    return regionNames?.of(iso) ?? iso;
+  } catch {
+    return iso;
+  }
+}
+
+export function remoteScopeLabel(scope: RemoteScope | null): string {
+  if (!scope || scope.type === 'unknown') return 'alcance no declarado';
+  if (scope.type === 'worldwide') return 'todo el mundo';
+  const parts = [...scope.regions.map((r) => REGION_LABEL[r]), ...scope.countries.map(countryName)];
+  return parts.length > 3 ? `${parts.slice(0, 3).join(', ')} y ${parts.length - 3} más` : parts.join(', ');
+}
 
 export function locationLabel(job: Job): string {
-  if (job.modality === 'remote') {
-    const scope = job.remoteScope;
-    if (!scope || scope.ecuadorEligible === null) return 'Remoto (alcance no declarado)';
-    const where = scope.type === 'worldwide' ? 'todo el mundo' : scope.type === 'latam' ? 'Latinoamérica' : scope.type === 'americas' ? 'las Américas' : 'Ecuador';
-    return `Remoto · ${where}`;
-  }
-  const place = [job.location.city, job.location.province && job.location.province !== job.location.city ? job.location.province : null, job.location.country === 'EC' ? 'Ecuador' : job.location.country]
+  if (job.modality === 'remote') return job.remoteScope && job.remoteScope.type !== 'unknown' ? `Remoto · ${remoteScopeLabel(job.remoteScope)}` : 'Remoto (alcance no declarado)';
+  const place = [job.location.city, job.location.province && job.location.province !== job.location.city ? job.location.province : null, countryName(job.location.country)]
     .filter(Boolean)
     .join(', ');
-  return `${place || 'Ecuador'} (${MODALITY_LABEL[job.modality].toLowerCase()})`;
+  return `${place || 'Ubicación no indicada'} (${MODALITY_LABEL[job.modality].toLowerCase()})`;
 }
 
 export function initials(name: string): string {

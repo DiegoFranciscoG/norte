@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { cefrRank, createJobClassifier } from '../src/classify.js';
-import { createGeoResolver } from '../src/geo.js';
-import { classifyGroup } from '../src/groups.js';
+import { createGeoResolver, remoteEligibility } from '../src/geo.js';
+import { groupFor, isPlaceable } from '../src/groups.js';
 import { classification, geoData } from './fixtures.js';
 
 const geo = createGeoResolver(geoData);
 const cls = createJobClassifier(classification);
-const home = { city: 'Cuenca', country: 'EC' };
+const cuenca = { city: 'Cuenca', country: 'EC' };
+const madrid = { city: 'Madrid', country: 'ES' };
+const regions = geoData.regions;
 
 describe('location parsing', () => {
   it('resolves Ecuadorian cities with their province', () => {
@@ -25,25 +27,49 @@ describe('location parsing', () => {
 
   it('uses structured hints and falls back to a single mentioned country', () => {
     expect(geo.parseLocation([''], { countryIso: 'ec', city: 'Loja' })).toMatchObject({ city: 'Loja', country: 'EC' });
-    expect(geo.parseLocation(['Bogotá, Colombia'])).toMatchObject({ city: null, country: 'CO' });
+    expect(geo.parseLocation(['Bogotá, Colombia'])).toMatchObject({ city: 'Bogotá', country: 'CO' });
     expect(geo.parseLocation(['Pichincha'])).toMatchObject({ province: 'Pichincha', country: 'EC' });
     expect(geo.toIso('Ecuador')).toBe('EC');
     expect(geo.toIso('br')).toBe('BR');
     expect(geo.toIso('Atlantis')).toBeNull();
     expect(geo.isLatam('EC')).toBe(true);
     expect(geo.isLatam('US')).toBe(false);
-    expect(geo.countryName('EC')).toBe('ecuador');
+    expect(geo.countryName('EC')).toBe('Ecuador');
+    expect(geo.toIso('Alemania')).toBe('DE');
+    expect(geo.toIso('Georgia')).toBe('GE');
   });
 
-  it('detects the geographic scope of remote jobs', () => {
-    expect(geo.detectRemoteScope(['Anywhere in the World'])).toMatchObject({ type: 'worldwide', ecuadorEligible: true });
-    expect(geo.detectRemoteScope(['Remote - LATAM'])).toMatchObject({ type: 'latam', ecuadorEligible: true });
-    expect(geo.detectRemoteScope(['Home Based - Americas'])).toMatchObject({ type: 'americas', ecuadorEligible: true });
-    expect(geo.detectRemoteScope(['USA Only'])).toMatchObject({ ecuadorEligible: false });
-    expect(geo.detectRemoteScope(['Remote (Europe)'])).toMatchObject({ type: 'excluding-latam', ecuadorEligible: false });
-    expect(geo.detectRemoteScope(['Remote'], ['CO', 'PE'])).toMatchObject({ type: 'countries', ecuadorEligible: false });
-    expect(geo.detectRemoteScope(['Remote'], ['EC', 'CO'])).toMatchObject({ type: 'countries', ecuadorEligible: true });
-    expect(geo.detectRemoteScope(['Remote'])).toMatchObject({ type: 'unknown', ecuadorEligible: null });
+  it('resolves cities and countries anywhere in the world', () => {
+    expect(geo.parseLocation(['Berlin, Germany'])).toMatchObject({ city: 'Berlin', country: 'DE' });
+    expect(geo.parseLocation(['Berlin'])).toMatchObject({ city: 'Berlin', country: 'DE' });
+    expect(geo.parseLocation(['San Francisco, CA'])).toMatchObject({ city: 'San Francisco', country: 'US' });
+    expect(geo.parseLocation(['Austin, Texas'])).toMatchObject({ city: 'Austin', country: 'US' });
+    expect(geo.parseLocation(['Toronto, ON'])).toMatchObject({ city: 'Toronto', country: 'CA' });
+    expect(geo.parseLocation(['London'])).toMatchObject({ country: 'GB' });
+    expect(geo.parseLocation(['San José, Costa Rica'])).toMatchObject({ country: 'CR' });
+    expect(geo.parseLocation(['Multiple locations'])).toMatchObject({ city: null, country: null });
+  });
+
+  it('detects the geographic scope of remote jobs as regions and countries', () => {
+    expect(geo.detectRemoteScope(['Anywhere in the World'])).toEqual({ type: 'worldwide', regions: [], countries: [] });
+    expect(geo.detectRemoteScope(['Remote - LATAM'])).toEqual({ type: 'regions', regions: ['latam'], countries: [] });
+    expect(geo.detectRemoteScope(['Home Based - Americas'])).toEqual({ type: 'regions', regions: ['americas'], countries: [] });
+    expect(geo.detectRemoteScope(['USA Only'])).toEqual({ type: 'countries', regions: [], countries: ['US'] });
+    expect(geo.detectRemoteScope(['Remote (Europe)'])).toEqual({ type: 'regions', regions: ['europe'], countries: [] });
+    expect(geo.detectRemoteScope(['Remote'], ['CO', 'Peru'])).toEqual({ type: 'countries', regions: [], countries: ['CO', 'PE'] });
+    expect(geo.detectRemoteScope(['Remote'])).toEqual({ type: 'unknown', regions: [], countries: [] });
+  });
+
+  it("decides remote eligibility for the person's country", () => {
+    const latam = geo.detectRemoteScope(['LATAM']);
+    const europe = geo.detectRemoteScope(['Europe']);
+    expect(remoteEligibility(latam, 'EC', regions)).toBe(true);
+    expect(remoteEligibility(europe, 'EC', regions)).toBe(false);
+    expect(remoteEligibility(europe, 'ES', regions)).toBe(true);
+    expect(remoteEligibility(geo.detectRemoteScope(['USA Only']), 'MX', regions)).toBe(false);
+    expect(remoteEligibility(geo.detectRemoteScope(['Worldwide']), null, regions)).toBe(true);
+    expect(remoteEligibility(geo.detectRemoteScope(['Remote']), 'EC', regions)).toBeNull();
+    expect(remoteEligibility(latam, null, regions)).toBeNull();
   });
 });
 
@@ -100,18 +126,36 @@ describe('job classification', () => {
   });
 });
 
-describe('groups', () => {
+describe('groups relative to each person', () => {
   const loc = (city: string | null, country: string | null) => ({ city, province: null, country, raw: '' });
-  it('assigns the four groups relative to the home city', () => {
-    expect(classifyGroup({ modality: 'hybrid', location: loc('Cuenca', 'EC'), remoteScope: null, employmentType: 'full-time' }, home)).toBe('home');
-    expect(classifyGroup({ modality: 'onsite', location: loc('Quito', 'EC'), remoteScope: null, employmentType: 'full-time' }, home)).toBe('ecuador');
-    expect(classifyGroup({ modality: 'remote', location: loc(null, null), remoteScope: { type: 'latam', countries: [], ecuadorEligible: true }, employmentType: 'full-time' }, home)).toBe('remote');
-    expect(classifyGroup({ modality: 'remote', location: loc(null, null), remoteScope: { type: 'worldwide', countries: [], ecuadorEligible: true }, employmentType: 'freelance' }, home)).toBe('freelance');
+  const scope = (text: string) => geo.detectRemoteScope([text]);
+  type Scope = ReturnType<typeof scope>;
+  const job = (modality: 'onsite' | 'hybrid' | 'remote', location: ReturnType<typeof loc>, remoteScope: Scope | null = null, employmentType: 'full-time' | 'freelance' = 'full-time') => ({ modality, location, remoteScope, employmentType });
+
+  it('assigns near, country, remote and freelance from where the person lives', () => {
+    expect(groupFor(job('hybrid', loc('Cuenca', 'EC')), cuenca, regions)).toBe('near');
+    expect(groupFor(job('onsite', loc('Quito', 'EC')), cuenca, regions)).toBe('country');
+    expect(groupFor(job('remote', loc(null, null), scope('LATAM')), cuenca, regions)).toBe('remote');
+    expect(groupFor(job('remote', loc(null, null), scope('Worldwide'), 'freelance'), cuenca, regions)).toBe('freelance');
+    expect(groupFor(job('onsite', loc('Madrid', 'ES')), madrid, regions)).toBe('near');
+    expect(groupFor(job('remote', loc(null, null), scope('Europe')), madrid, regions)).toBe('remote');
   });
 
-  it('drops jobs nobody in Ecuador can take', () => {
-    expect(classifyGroup({ modality: 'remote', location: loc(null, 'US'), remoteScope: { type: 'countries', countries: ['US'], ecuadorEligible: false }, employmentType: 'full-time' }, home)).toBeNull();
-    expect(classifyGroup({ modality: 'onsite', location: loc(null, 'CO'), remoteScope: null, employmentType: 'full-time' }, home)).toBeNull();
-    expect(classifyGroup({ modality: 'onsite', location: loc(null, 'MX'), remoteScope: null, employmentType: 'freelance' }, home)).toBeNull();
+  it('leaves out what the person cannot take', () => {
+    expect(groupFor(job('remote', loc(null, 'US'), scope('USA Only')), cuenca, regions)).toBeNull();
+    expect(groupFor(job('remote', loc(null, null), scope('Europe')), cuenca, regions)).toBeNull();
+    expect(groupFor(job('onsite', loc(null, 'CO')), cuenca, regions)).toBeNull();
+    expect(groupFor(job('onsite', loc(null, 'MX'), null, 'freelance'), cuenca, regions)).toBeNull();
+  });
+
+  it('without a known country shows everything instead of an empty list', () => {
+    expect(groupFor(job('onsite', loc('Lima', 'PE')), { country: null, city: null }, regions)).toBe('country');
+    expect(groupFor(job('remote', loc(null, null), scope('Remote')), { country: null, city: null }, regions)).toBe('remote');
+  });
+
+  it('keeps in the index only jobs that can be placed', () => {
+    expect(isPlaceable({ modality: 'onsite', location: loc(null, null) })).toBe(false);
+    expect(isPlaceable({ modality: 'remote', location: loc(null, null) })).toBe(true);
+    expect(isPlaceable({ modality: 'hybrid', location: loc(null, 'DE') })).toBe(true);
   });
 });

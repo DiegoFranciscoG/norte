@@ -20,7 +20,9 @@ public final class ProfileDtos {
     }
 
     public record ProfileRequest(
-            @NotBlank @Size(max = 80) String homeCity,
+            @Pattern(regexp = "[A-Z]{2}") String homeCountry,
+            @Size(max = 80) String homeCity,
+            @Size(max = 3) List<@NotNull @Pattern(regexp = "onsite|hybrid|remote") String> modalities,
             boolean acceptsRelocation,
             @DecimalMin("0") @DecimalMax("50") BigDecimal yearsOfExperience,
             @Pattern(regexp = "A1|A2|B1|B2|C1|C2") String englishLevel,
@@ -30,7 +32,9 @@ public final class ProfileDtos {
     }
 
     public record ProfileResponse(
+            String homeCountry,
             String homeCity,
+            List<String> modalities,
             boolean acceptsRelocation,
             BigDecimal yearsOfExperience,
             String englishLevel,

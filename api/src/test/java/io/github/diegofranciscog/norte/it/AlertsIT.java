@@ -49,6 +49,7 @@ class AlertsIT extends IntegrationTest {
                 job("j_prohibida", "Desarrollador Java remoto", "remotive", "Remotive", false)))));
         INDEX.put("skills.json", Files.readString(Path.of("..", "data", "skills", "catalog.json")));
         INDEX.put("scoring.json", Files.readString(Path.of("..", "data", "config", "scoring.json")));
+        INDEX.put("geo.json", Files.readString(Path.of("..", "data", "geo", "geo.json")));
     }
 
     @Test
@@ -56,7 +57,7 @@ class AlertsIT extends IntegrationTest {
     void enviaSoloLoNuevoYPermitidoUnaVezPorIndice() throws Exception {
         String email = newEmail();
         String token = signUp(email, newPassword(), "PROFILE_STORAGE", "EMAIL_ALERTS");
-        mvc.perform(jsonPut("/api/v1/me/profile", Map.of("homeCity", "Cuenca", "acceptsRelocation", false, "yearsOfExperience", 3, "englishLevel", "B2"), token))
+        mvc.perform(jsonPut("/api/v1/me/profile", Map.of("homeCountry", "EC", "homeCity", "Cuenca", "acceptsRelocation", false, "yearsOfExperience", 3, "englishLevel", "B2"), token))
                 .andExpect(status().isOk());
         mvc.perform(jsonPut("/api/v1/me/skills", List.of(Map.of("skillId", "java", "origin", "DEMONSTRATED")), token)).andExpect(status().isOk());
         mvc.perform(jsonPut("/api/v1/me/alerts", Map.of("enabled", true, "minScore", 50), token)).andExpect(status().isOk());

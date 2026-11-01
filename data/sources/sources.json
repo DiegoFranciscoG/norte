@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-10-31",
+  "verifiedAt": "2026-11-01",
   "userAgent": "NORTE/0.1 (observatorio laboral; +https://github.com/DiegoFranciscoG/norte)",
   "ats": {
     "greenhouse": {
@@ -64,9 +64,17 @@
       "endpoint": "https://remoteok.com/api",
       "termsUrl": "https://remoteok.com/api",
       "termsNote": "El primer elemento del arreglo es el aviso legal: enlazar a la URL de Remote OK sin nofollow y mencionarlo como fuente; no usar su logo.",
-      "attribution": { "required": true, "text": "Publicada en Remote OK", "url": "https://remoteok.com", "follow": true },
-      "usage": { "alerts": true, "structuredData": false },
-      "minHoursBetweenFetches": 3
+      "attribution": {
+        "required": true,
+        "text": "Publicada en Remote OK",
+        "url": "https://remoteok.com",
+        "follow": true
+      },
+      "usage": {
+        "alerts": true,
+        "structuredData": false
+      },
+      "minHoursBetweenFetches": 1
     },
     {
       "id": "remotive",
@@ -76,8 +84,16 @@
       "endpoint": "https://remotive.com/api/remote-jobs?category=software-dev",
       "termsUrl": "https://github.com/remotive-com/remote-jobs-api",
       "termsNote": "Enlazar a la URL de Remotive y mencionarlo como fuente; máximo 4 consultas al día; prohibido enviarlas a Google Jobs, LinkedIn, Jooble o Neuvoo; prohibido condicionar su visualización a un registro. Las vacantes llegan con 24 h de retraso.",
-      "attribution": { "required": true, "text": "Publicada en Remotive", "url": "https://remotive.com", "follow": true },
-      "usage": { "alerts": false, "structuredData": false },
+      "attribution": {
+        "required": true,
+        "text": "Publicada en Remotive",
+        "url": "https://remotive.com",
+        "follow": true
+      },
+      "usage": {
+        "alerts": false,
+        "structuredData": false
+      },
       "minHoursBetweenFetches": 6
     },
     {
@@ -85,13 +101,21 @@
       "name": "Himalayas",
       "kind": "remote-portal",
       "enabled": true,
-      "endpoint": "https://himalayas.app/jobs/api/search?country=EC&sort=recent&page={page}",
+      "endpoint": "https://himalayas.app/jobs/api/search?sort=recent&page={page}",
       "maxPages": 10,
       "termsUrl": "https://himalayas.app/api",
       "termsNote": "API pública sin clave (cupo compartido). Usar applicationLink sin modificar en cada botón de postular y mostrar un enlace visible a Himalayas como fuente. 20 resultados por página.",
-      "attribution": { "required": true, "text": "Publicada en Himalayas", "url": "https://himalayas.app", "follow": true },
-      "usage": { "alerts": true, "structuredData": false },
-      "minHoursBetweenFetches": 3
+      "attribution": {
+        "required": true,
+        "text": "Publicada en Himalayas",
+        "url": "https://himalayas.app",
+        "follow": true
+      },
+      "usage": {
+        "alerts": true,
+        "structuredData": false
+      },
+      "minHoursBetweenFetches": 1
     },
     {
       "id": "weworkremotely",
@@ -101,9 +125,17 @@
       "endpoint": "https://weworkremotely.com/remote-jobs.rss",
       "termsUrl": "https://weworkremotely.com/remote-job-rss-feed",
       "termsNote": "Cualquiera puede usar el RSS público; solo piden atribuir los enlaces a We Work Remotely. La empresa viene en el título antes de los dos puntos.",
-      "attribution": { "required": true, "text": "Publicada en We Work Remotely", "url": "https://weworkremotely.com", "follow": true },
-      "usage": { "alerts": true, "structuredData": false },
-      "minHoursBetweenFetches": 3
+      "attribution": {
+        "required": true,
+        "text": "Publicada en We Work Remotely",
+        "url": "https://weworkremotely.com",
+        "follow": true
+      },
+      "usage": {
+        "alerts": true,
+        "structuredData": false
+      },
+      "minHoursBetweenFetches": 1
     },
     {
       "id": "arbeitnow",
@@ -111,24 +143,39 @@
       "kind": "remote-portal",
       "enabled": true,
       "endpoint": "https://www.arbeitnow.com/api/job-board-api",
-      "remoteOnly": true,
       "termsUrl": "https://www.arbeitnow.com/blog/job-board-api",
       "termsNote": "API pública gratuita, sin abusar; agradecen enlazar al sitio. Mayoría de vacantes presenciales en Alemania: solo se conservan las remotas.",
-      "attribution": { "required": true, "text": "Publicada en Arbeitnow", "url": "https://www.arbeitnow.com", "follow": true },
-      "usage": { "alerts": true, "structuredData": false },
-      "minHoursBetweenFetches": 3
+      "attribution": {
+        "required": true,
+        "text": "Publicada en Arbeitnow",
+        "url": "https://www.arbeitnow.com",
+        "follow": true
+      },
+      "usage": {
+        "alerts": true,
+        "structuredData": false
+      },
+      "minHoursBetweenFetches": 1
     },
     {
       "id": "jobicy",
       "name": "Jobicy",
       "kind": "remote-portal",
       "enabled": true,
-      "endpoint": "https://jobicy.com/api/v2/remote-jobs?count=100&geo=latam",
+      "endpoint": "https://jobicy.com/api/v2/remote-jobs?count=100",
       "termsUrl": "https://jobicy.com/jobs-rss-feed",
       "termsNote": "Acreditar a Jobicy con enlace directo a la fuente y que el botón de postular lleve a la URL original del feed. Consultar como máximo una vez por hora.",
-      "attribution": { "required": true, "text": "Publicada en Jobicy", "url": "https://jobicy.com", "follow": true },
-      "usage": { "alerts": true, "structuredData": false },
-      "minHoursBetweenFetches": 3
+      "attribution": {
+        "required": true,
+        "text": "Publicada en Jobicy",
+        "url": "https://jobicy.com",
+        "follow": true
+      },
+      "usage": {
+        "alerts": true,
+        "structuredData": false
+      },
+      "minHoursBetweenFetches": 1
     },
     {
       "id": "getonboard",
@@ -136,46 +183,157 @@
       "kind": "latam-portal",
       "enabled": true,
       "endpoint": "https://www.getonbrd.com/api/v0/categories/{category}/jobs?per_page=100&page=1&expand=%5B%22company%22%5D",
-      "categories": ["programming", "sysadmin-devops-qa", "data-science-analytics", "mobile-developer", "cybersecurity"],
+      "categories": [
+        "programming",
+        "sysadmin-devops-qa",
+        "data-science-analytics",
+        "mobile-developer",
+        "cybersecurity"
+      ],
       "termsUrl": "https://www.getonbrd.com/help/que-puedo-hacer-con-la-api-de-get-on-board?lang=en",
       "termsNote": "La API pública no requiere configuración y permite construir una búsqueda o bolsa de empleo con sus vacantes publicadas. No exige atribución explícita: se atribuye igual por prudencia.",
-      "attribution": { "required": true, "text": "Publicada en Get on Board", "url": "https://www.getonbrd.com", "follow": true },
-      "usage": { "alerts": true, "structuredData": false },
-      "minHoursBetweenFetches": 3
+      "attribution": {
+        "required": true,
+        "text": "Publicada en Get on Board",
+        "url": "https://www.getonbrd.com",
+        "follow": true
+      },
+      "usage": {
+        "alerts": true,
+        "structuredData": false
+      },
+      "minHoursBetweenFetches": 1
     }
   ],
   "excluded": [
-    { "name": "LinkedIn", "reason": "Su robots.txt y su User Agreement prohíben el acceso automatizado sin permiso expreso.", "evidenceUrl": "https://www.linkedin.com/robots.txt", "alternative": "Enlace profundo" },
-    { "name": "Multitrabajos", "reason": "Condiciones de uso restrictivas y robots.txt que bloquea sus búsquedas parametrizadas.", "evidenceUrl": "https://www.multitrabajos.com/robots.txt", "alternative": "Enlace profundo" },
-    { "name": "Computrabajo", "reason": "Condiciones de uso restrictivas y robots.txt que bloquea sus búsquedas parametrizadas.", "evidenceUrl": "https://ec.computrabajo.com/robots.txt", "alternative": "Enlace profundo" },
-    { "name": "Upwork", "reason": "Su API exige solicitud aprobada y es solo para uso personal o interno; no admite uso comercial.", "evidenceUrl": "https://support.upwork.com/hc/en-us/articles/115015857647", "alternative": "Enlace profundo" },
-    { "name": "Workana", "reason": "No tiene API pública abierta. Sus vacantes Premium publicadas en Workable sí se leen por el registro de empresas.", "evidenceUrl": "https://apply.workable.com/workana-premium/", "alternative": "Enlace profundo" },
-    { "name": "Torre", "reason": "Su API oficial está en beta con acceso limitado por solicitud.", "evidenceUrl": "https://torre.ai/es/apiforprofessionals", "alternative": "Enlace profundo" },
-    { "name": "Working Nomads", "reason": "No hay documentación oficial del endpoint ni términos que autoricen su reutilización.", "evidenceUrl": "https://www.workingnomads.com/terms-and-conditions", "alternative": "Ninguna" },
-    { "name": "Careerjet Ecuador", "reason": "El dominio careerjet.com.ec no resolvió y su API exige registro de afiliado.", "evidenceUrl": "https://www.careerjet.com.ec", "alternative": "Ninguna" }
+    {
+      "name": "LinkedIn",
+      "reason": "Su robots.txt y su User Agreement prohíben el acceso automatizado sin permiso expreso.",
+      "evidenceUrl": "https://www.linkedin.com/robots.txt",
+      "alternative": "Enlace profundo"
+    },
+    {
+      "name": "Multitrabajos",
+      "reason": "Condiciones de uso restrictivas y robots.txt que bloquea sus búsquedas parametrizadas.",
+      "evidenceUrl": "https://www.multitrabajos.com/robots.txt",
+      "alternative": "Enlace profundo"
+    },
+    {
+      "name": "Computrabajo",
+      "reason": "Condiciones de uso restrictivas y robots.txt que bloquea sus búsquedas parametrizadas.",
+      "evidenceUrl": "https://ec.computrabajo.com/robots.txt",
+      "alternative": "Enlace profundo"
+    },
+    {
+      "name": "Upwork",
+      "reason": "Su API exige solicitud aprobada y es solo para uso personal o interno; no admite uso comercial.",
+      "evidenceUrl": "https://support.upwork.com/hc/en-us/articles/115015857647",
+      "alternative": "Enlace profundo"
+    },
+    {
+      "name": "Workana",
+      "reason": "No tiene API pública abierta. Sus vacantes Premium publicadas en Workable sí se leen por el registro de empresas.",
+      "evidenceUrl": "https://apply.workable.com/workana-premium/",
+      "alternative": "Enlace profundo"
+    },
+    {
+      "name": "Torre",
+      "reason": "Su API oficial está en beta con acceso limitado por solicitud.",
+      "evidenceUrl": "https://torre.ai/es/apiforprofessionals",
+      "alternative": "Enlace profundo"
+    },
+    {
+      "name": "Working Nomads",
+      "reason": "No hay documentación oficial del endpoint ni términos que autoricen su reutilización.",
+      "evidenceUrl": "https://www.workingnomads.com/terms-and-conditions",
+      "alternative": "Ninguna"
+    },
+    {
+      "name": "Careerjet Ecuador",
+      "reason": "El dominio careerjet.com.ec no resolvió y su API exige registro de afiliado.",
+      "evidenceUrl": "https://www.careerjet.com.ec",
+      "alternative": "Ninguna"
+    }
   ],
   "hostPolicies": {
-    "default": { "minIntervalMs": 1000, "maxRequestsPerRun": 40, "timeoutMs": 20000, "maxRetries": 3, "backoffBaseMs": 1000, "backoffMaxMs": 30000 },
-    "boards-api.greenhouse.io": { "minIntervalMs": 500, "maxRequestsPerRun": 80 },
-    "api.lever.co": { "minIntervalMs": 500, "maxRequestsPerRun": 80 },
-    "api.eu.lever.co": { "minIntervalMs": 500, "maxRequestsPerRun": 20 },
-    "api.ashbyhq.com": { "minIntervalMs": 500, "maxRequestsPerRun": 60 },
-    "apply.workable.com": { "minIntervalMs": 3000, "maxRequestsPerRun": 40, "backoffBaseMs": 5000 },
-    "*.recruitee.com": { "minIntervalMs": 1000, "maxRequestsPerRun": 40 },
-    "api.smartrecruiters.com": { "minIntervalMs": 1000, "maxRequestsPerRun": 60 },
-    "*.teamtailor.com": { "minIntervalMs": 1000, "maxRequestsPerRun": 20 },
-    "remoteok.com": { "minIntervalMs": 5000, "maxRequestsPerRun": 1 },
-    "remotive.com": { "minIntervalMs": 31000, "maxRequestsPerRun": 1 },
-    "himalayas.app": { "minIntervalMs": 2000, "maxRequestsPerRun": 10 },
-    "weworkremotely.com": { "minIntervalMs": 5000, "maxRequestsPerRun": 1 },
-    "www.arbeitnow.com": { "minIntervalMs": 5000, "maxRequestsPerRun": 1 },
-    "jobicy.com": { "minIntervalMs": 5000, "maxRequestsPerRun": 1 },
-    "www.getonbrd.com": { "minIntervalMs": 1500, "maxRequestsPerRun": 8 },
-    "www.ecb.europa.eu": { "minIntervalMs": 1000, "maxRequestsPerRun": 1 }
+    "default": {
+      "minIntervalMs": 1000,
+      "maxRequestsPerRun": 40,
+      "timeoutMs": 20000,
+      "maxRetries": 3,
+      "backoffBaseMs": 1000,
+      "backoffMaxMs": 30000
+    },
+    "boards-api.greenhouse.io": {
+      "minIntervalMs": 500,
+      "maxRequestsPerRun": 80
+    },
+    "api.lever.co": {
+      "minIntervalMs": 500,
+      "maxRequestsPerRun": 80
+    },
+    "api.eu.lever.co": {
+      "minIntervalMs": 500,
+      "maxRequestsPerRun": 20
+    },
+    "api.ashbyhq.com": {
+      "minIntervalMs": 500,
+      "maxRequestsPerRun": 60
+    },
+    "apply.workable.com": {
+      "minIntervalMs": 3000,
+      "maxRequestsPerRun": 40,
+      "backoffBaseMs": 5000
+    },
+    "*.recruitee.com": {
+      "minIntervalMs": 1000,
+      "maxRequestsPerRun": 40
+    },
+    "api.smartrecruiters.com": {
+      "minIntervalMs": 1000,
+      "maxRequestsPerRun": 60
+    },
+    "*.teamtailor.com": {
+      "minIntervalMs": 1000,
+      "maxRequestsPerRun": 20
+    },
+    "remoteok.com": {
+      "minIntervalMs": 5000,
+      "maxRequestsPerRun": 1
+    },
+    "remotive.com": {
+      "minIntervalMs": 31000,
+      "maxRequestsPerRun": 1
+    },
+    "himalayas.app": {
+      "minIntervalMs": 2000,
+      "maxRequestsPerRun": 10
+    },
+    "weworkremotely.com": {
+      "minIntervalMs": 5000,
+      "maxRequestsPerRun": 1
+    },
+    "www.arbeitnow.com": {
+      "minIntervalMs": 5000,
+      "maxRequestsPerRun": 1
+    },
+    "jobicy.com": {
+      "minIntervalMs": 5000,
+      "maxRequestsPerRun": 1
+    },
+    "www.getonbrd.com": {
+      "minIntervalMs": 1500,
+      "maxRequestsPerRun": 8
+    },
+    "www.ecb.europa.eu": {
+      "minIntervalMs": 1000,
+      "maxRequestsPerRun": 1
+    }
   },
   "fx": {
     "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml",
     "source": "Banco Central Europeo — tipos de cambio de referencia del euro",
     "termsUrl": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"
-  }
+  },
+  "atsMinHoursBetweenFetches": 1
 }

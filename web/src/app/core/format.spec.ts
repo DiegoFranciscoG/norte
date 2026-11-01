@@ -20,8 +20,10 @@ describe('format', () => {
 
   it('labels on-site and remote locations honestly', () => {
     expect(locationLabel(base)).toBe('Cuenca, Azuay, Ecuador (híbrido)');
-    expect(locationLabel({ ...base, modality: 'remote', remoteScope: { type: 'latam', countries: [], ecuadorEligible: true } })).toBe('Remoto · Latinoamérica');
-    expect(locationLabel({ ...base, modality: 'remote', remoteScope: { type: 'unknown', countries: [], ecuadorEligible: null } })).toBe('Remoto (alcance no declarado)');
+    expect(locationLabel({ ...base, modality: 'remote', remoteScope: { type: 'regions', regions: ['latam'], countries: [] } })).toBe('Remoto · Latinoamérica');
+    expect(locationLabel({ ...base, modality: 'remote', remoteScope: { type: 'countries', regions: [], countries: ['ES', 'PT'] } })).toBe('Remoto · España, Portugal');
+    expect(locationLabel({ ...base, modality: 'remote', remoteScope: { type: 'unknown', regions: [], countries: [] } })).toBe('Remoto (alcance no declarado)');
+    expect(locationLabel({ ...base, location: { city: 'Madrid', province: null, country: 'ES', raw: '' }, modality: 'onsite' })).toBe('Madrid, España (presencial)');
   });
 
   it('shows normalized salaries and flags unconvertible currencies', () => {

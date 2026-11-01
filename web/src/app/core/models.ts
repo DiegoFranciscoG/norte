@@ -1,4 +1,4 @@
-import type { Cefr, ExtractionConfig, Job, JobGroup, LearningResource, ProfileRepo, ScoringConfig, SkillDef, Weights } from '@norte/core';
+import type { Cefr, CityRow, ExtractionConfig, Job, LearningResource, Modality, ProfileRepo, RegionCode, ScoringConfig, SkillDef, Weights } from '@norte/core';
 
 export interface SourceRunInfo {
   sourceId: string;
@@ -14,11 +14,11 @@ export interface IndexFile {
   schemaVersion: number;
   demo: boolean;
   build: { version: string; generatedAt: string; commit: string | null };
-  home: { city: string; country: string };
   totals: {
     open: number;
     closed: number;
-    byGroup: Record<JobGroup, number>;
+    byModality: Record<Modality, number>;
+    countries: number;
     remoteScopeUnknown: number;
     withSalary: number;
     postingsFetched: number;
@@ -26,6 +26,17 @@ export interface IndexFile {
   };
   sources: SourceRunInfo[];
   license: { code: string; statistics: string; jobs: string };
+}
+
+/** Países con vacantes presenciales y sus ciudades; regiones para decidir qué remotos admiten a cada país. */
+export interface GeoIndex {
+  regions: Partial<Record<RegionCode, string[]>>;
+  countries: { iso: string; name: string; open: number; cities: { name: string; open: number }[] }[];
+}
+
+export interface CitiesFile {
+  license: string;
+  cities: CityRow[];
 }
 
 export interface SkillsFile {
@@ -98,8 +109,10 @@ export interface Application {
   remoteId?: string | null;
 }
 
+export type WorkMode = Exclude<Modality, 'unknown'>;
+
 export interface StoredProfile {
-  version: 1;
+  version: 2;
   declared: string[];
   demonstrated: { id: string; repos: string[]; evidence: { repo: string; path: string; detail: string }[] }[];
   repos: ProfileRepo[];
@@ -107,7 +120,12 @@ export interface StoredProfile {
   yearsOfExperience: number | null;
   yearsSource: 'cv' | 'manual' | null;
   englishLevel: Cefr | null;
-  homeCity: string;
+  /** País (ISO alfa-2) y ciudad donde vive la persona. La ubicación exacta nunca se guarda. */
+  homeCountry: string | null;
+  homeCity: string | null;
+  /** Modalidades que busca: presencial y híbrido en su país, remoto donde la admitan. */
+  modalities: WorkMode[];
+  onboarded: boolean;
   acceptsRelocation: boolean;
   minSalaryUsd: number | null;
   weights: Partial<Weights> | null;

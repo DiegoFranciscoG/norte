@@ -3,6 +3,7 @@ package io.github.diegofranciscog.norte.scoring;
 import io.github.diegofranciscog.norte.scoring.IndexModels.Job;
 import io.github.diegofranciscog.norte.scoring.IndexModels.JobSkill;
 import io.github.diegofranciscog.norte.scoring.IndexModels.LanguageRequirement;
+import io.github.diegofranciscog.norte.scoring.IndexModels.RemoteScope;
 import io.github.diegofranciscog.norte.scoring.IndexModels.ScoringConfig;
 import io.github.diegofranciscog.norte.scoring.IndexModels.SkillDef;
 import java.text.Normalizer;
@@ -31,7 +32,8 @@ public final class Scorer {
     public record ProfileSkill(String id, boolean demonstrated) {
     }
 
-    public record ProfileView(List<ProfileSkill> skills, Double yearsOfExperience, String englishLevel, String homeCity, boolean acceptsRelocation, Integer minSalaryUsd, Map<String, Integer> weights) {
+    /** homeCountry (ISO alfa-2) y homeCity pueden ser null si la persona aún no indicó dónde vive. */
+    public record ProfileView(List<ProfileSkill> skills, Double yearsOfExperience, String englishLevel, String homeCountry, String homeCity, boolean acceptsRelocation, Integer minSalaryUsd, Map<String, Integer> weights) {
     }
 
     public record Result(double total, Map<String, Double> points, boolean fit) {
@@ -39,10 +41,28 @@ public final class Scorer {
 
     private final ScoringConfig config;
     private final Map<String, SkillDef> catalog;
+    private final Map<String, List<String>> regions;
 
-    public Scorer(ScoringConfig config, List<SkillDef> skills) {
+    public Scorer(ScoringConfig config, List<SkillDef> skills, Map<String, List<String>> regions) {
         this.config = config;
         this.catalog = skills.stream().collect(Collectors.toMap(SkillDef::id, Function.identity(), (a, b) -> a));
+        this.regions = regions == null ? Map.of() : regions;
+    }
+
+    /** Igual que remoteEligibility() de TypeScript: true, false o null si no se puede saber. */
+    public Boolean remoteEligibility(RemoteScope scope, String country) {
+        if (scope == null || scope.type() == null || "unknown".equals(scope.type())) {
+            return null;
+        }
+        if ("worldwide".equals(scope.type())) {
+            return true;
+        }
+        if (country == null) {
+            return null;
+        }
+        boolean listed = scope.countries() != null && scope.countries().contains(country);
+        boolean inRegion = scope.regions() != null && scope.regions().stream().anyMatch(r -> regions.getOrDefault(r, List.of()).contains(country));
+        return listed || inRegion;
     }
 
     Set<String> expandImplied(Iterable<String> ids) {
@@ -82,8 +102,9 @@ public final class Scorer {
         return Math.round(value * f) / f;
     }
 
-    private static String normalize(String s) {
-        return Normalizer.normalize(s == null ? "" : s, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT).replaceAll("\\s+", " ").trim();
+    /** Igual que placeKey() de TypeScript: sin tildes, minúsculas, solo letras y números separados por un espacio. */
+    static String placeKey(String s) {
+        return Normalizer.normalize(s == null ? "" : s, Normalizer.Form.NFD).replaceAll("\\p{M}", "").toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+", " ").trim();
     }
 
     private static int rank(String level) {
@@ -121,13 +142,16 @@ public final class Scorer {
         }
 
         var L = config.location();
+        String jobCountry = job.location() == null ? null : job.location().country();
         if ("remote".equals(job.modality())) {
-            Boolean eligible = job.remoteScope() == null ? null : job.remoteScope().ecuadorEligible();
+            Boolean eligible = remoteEligibility(job.remoteScope(), profile.homeCountry());
             ratio.put("location", Boolean.FALSE.equals(eligible) ? L.remoteExcluded() : eligible == null ? L.remoteScopeUnknown() : L.remoteEligible());
-        } else if (job.location() != null && "EC".equals(job.location().country())) {
+        } else if (profile.homeCountry() == null) {
+            ratio.put("location", L.unknownUserLocation());
+        } else if (profile.homeCountry().equals(jobCountry)) {
             String city = job.location().city();
-            boolean home = city != null && normalize(city).equals(normalize(profile.homeCity()));
-            ratio.put("location", home ? L.home() : profile.acceptsRelocation() ? L.ecuadorOtherCityWithRelocation() : L.ecuadorOtherCityWithoutRelocation());
+            boolean home = city != null && profile.homeCity() != null && placeKey(city).equals(placeKey(profile.homeCity()));
+            ratio.put("location", home ? L.home() : profile.acceptsRelocation() ? L.sameCountryOtherCityWithRelocation() : L.sameCountryOtherCityWithoutRelocation());
         } else {
             ratio.put("location", L.abroad());
         }

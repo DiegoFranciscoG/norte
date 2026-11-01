@@ -1,7 +1,7 @@
 import { cefrRank } from './classify.js';
+import { placeKey, remoteEligibility } from './geo.js';
 import type { SkillMatcher } from './skills.js';
-import { normalizeText } from './text.js';
-import type { Cefr, Job, Seniority } from './types.js';
+import type { Cefr, Job, RegionCode, Seniority } from './types.js';
 
 export type ComponentKey = 'demonstrated' | 'declared' | 'experience' | 'location' | 'language' | 'compensation' | 'freshness';
 export const COMPONENT_ORDER: ComponentKey[] = ['demonstrated', 'declared', 'experience', 'location', 'language', 'compensation', 'freshness'];
@@ -16,12 +16,13 @@ export interface ScoringConfig {
   experience: { levelMinYears: Record<Exclude<Seniority, 'unknown'>, number> };
   location: {
     home: number;
-    ecuadorOtherCityWithRelocation: number;
-    ecuadorOtherCityWithoutRelocation: number;
+    sameCountryOtherCityWithRelocation: number;
+    sameCountryOtherCityWithoutRelocation: number;
     remoteEligible: number;
     remoteScopeUnknown: number;
     remoteExcluded: number;
     abroad: number;
+    unknownUserLocation: number;
   };
   language: { defaultRequiredLevel: Cefr; nativeLanguage: string };
   freshness: { fullUntilDays: number; zeroAtDays: number };
@@ -39,7 +40,9 @@ export interface Profile {
   yearsOfExperience: number | null;
   englishLevel: Cefr | null;
   otherLanguages?: Record<string, Cefr>;
-  homeCity: string;
+  /** País de residencia (ISO alfa-2) y ciudad; null si la persona aún no los indicó. */
+  homeCountry: string | null;
+  homeCity: string | null;
   acceptsRelocation: boolean;
   minSalaryUsd: number | null;
   weights?: Partial<Weights> | null;
@@ -68,6 +71,25 @@ export interface ScoringContext {
   matcher: SkillMatcher;
   config: ScoringConfig;
   now: Date;
+  /** Pertenencia de países a regiones (data/geo/geo.json) para saber si un remoto admite el país de la persona. */
+  regions: Partial<Record<RegionCode, string[]>>;
+}
+
+const countryNames = (() => {
+  try {
+    return new Intl.DisplayNames(['es'], { type: 'region' });
+  } catch {
+    return null;
+  }
+})();
+
+export function countryLabel(iso: string | null): string {
+  if (!iso) return 'tu país';
+  try {
+    return countryNames?.of(iso) ?? iso;
+  } catch {
+    return iso;
+  }
 }
 
 /** Pesos efectivos: los del usuario (o los de configuración) escalados para que sumen 100. */
@@ -153,28 +175,31 @@ export function scoreJob(job: Job, profile: Profile, ctx: ScoringContext): Score
     });
   }
 
-  // Ubicación: un remoto que excluye a Ecuador vale cero aunque todo lo demás encaje.
+  // Ubicación relativa a la persona: un remoto que no admite su país vale cero aunque todo lo demás encaje.
   const L = config.location;
+  const how = job.modality === 'hybrid' ? 'Híbrido' : 'Presencial';
   if (job.modality === 'remote') {
-    const eligible = job.remoteScope?.ecuadorEligible ?? null;
+    const eligible = remoteEligibility(job.remoteScope, profile.homeCountry, ctx.regions);
     if (eligible === false) {
-      parts.push({ key: 'location', ratio: L.remoteExcluded, status: 'missing', detail: 'Remoto que excluye a Ecuador o Latinoamérica.' });
-      flags.push('remoto-excluye-ecuador');
+      parts.push({ key: 'location', ratio: L.remoteExcluded, status: 'missing', detail: `Remoto que no admite personas de ${countryLabel(profile.homeCountry)}.` });
+      flags.push('remoto-no-admite-tu-pais');
     } else if (eligible === null) {
-      parts.push({ key: 'location', ratio: L.remoteScopeUnknown, status: 'partial', detail: 'Remoto sin alcance geográfico declarado: confirma si aceptan Ecuador.' });
+      parts.push({ key: 'location', ratio: L.remoteScopeUnknown, status: 'partial', detail: profile.homeCountry ? `Remoto sin alcance geográfico declarado: confirma si aceptan personas de ${countryLabel(profile.homeCountry)}.` : 'Remoto sin alcance que se pueda comprobar: indica tu país.' });
     } else {
-      parts.push({ key: 'location', ratio: L.remoteEligible, status: 'ok', detail: 'Remoto abierto a Ecuador.' });
+      parts.push({ key: 'location', ratio: L.remoteEligible, status: 'ok', detail: `Remoto abierto a ${countryLabel(profile.homeCountry)}.` });
     }
-  } else if (job.location.country === 'EC') {
+  } else if (!profile.homeCountry) {
+    parts.push({ key: 'location', ratio: L.unknownUserLocation, status: 'partial', detail: 'Indica tu ubicación para saber si esta vacante te queda cerca.' });
+  } else if (job.location.country === profile.homeCountry) {
     const city = job.location.city;
-    if (city && normalizeText(city) === normalizeText(profile.homeCity)) {
-      parts.push({ key: 'location', ratio: L.home, status: 'ok', detail: `${job.modality === 'hybrid' ? 'Híbrido' : 'Presencial'} en tu ciudad (${city}).` });
+    if (city && profile.homeCity && placeKey(city) === placeKey(profile.homeCity)) {
+      parts.push({ key: 'location', ratio: L.home, status: 'ok', detail: `${how} en tu ciudad (${city}).` });
     } else {
-      const ratio = profile.acceptsRelocation ? L.ecuadorOtherCityWithRelocation : L.ecuadorOtherCityWithoutRelocation;
-      parts.push({ key: 'location', ratio, status: 'partial', detail: `${job.modality === 'hybrid' ? 'Híbrido' : 'Presencial'} en ${city ?? 'otra ciudad de Ecuador'}; ${profile.acceptsRelocation ? 'aceptas mudarte' : 'no aceptas mudarte'}.` });
+      const ratio = profile.acceptsRelocation ? L.sameCountryOtherCityWithRelocation : L.sameCountryOtherCityWithoutRelocation;
+      parts.push({ key: 'location', ratio, status: 'partial', detail: `${how} en ${city ?? 'otra ciudad'} (${countryLabel(job.location.country)}); ${profile.acceptsRelocation ? 'aceptas mudarte' : 'no aceptas mudarte'}.` });
     }
   } else {
-    parts.push({ key: 'location', ratio: L.abroad, status: 'missing', detail: 'Presencial fuera de Ecuador.' });
+    parts.push({ key: 'location', ratio: L.abroad, status: 'missing', detail: `${how} en ${job.location.city ? `${job.location.city}, ` : ''}${countryLabel(job.location.country)}: fuera de tu país.` });
   }
 
   // Idioma: cada idioma pedido frente al tuyo; manda el más débil.

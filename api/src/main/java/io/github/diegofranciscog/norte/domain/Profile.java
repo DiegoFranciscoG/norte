@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -19,8 +20,16 @@ public class Profile {
     @Column(name = "user_id")
     private UUID userId;
 
-    @Column(name = "home_city", nullable = false, length = 80)
+    @Column(name = "home_country", length = 2)
+    private String homeCountry;
+
+    @Column(name = "home_city", length = 80)
     private String homeCity;
+
+    /** onsite | hybrid | remote: lo que la persona busca (vacío = todo). */
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(nullable = false, columnDefinition = "jsonb")
+    private List<String> modalities = List.of();
 
     @Column(name = "accepts_relocation", nullable = false)
     private boolean acceptsRelocation;
@@ -47,14 +56,15 @@ public class Profile {
     protected Profile() {
     }
 
-    public Profile(UUID userId, String homeCity) {
+    public Profile(UUID userId) {
         this.userId = userId;
-        this.homeCity = homeCity;
         this.updatedAt = Instant.now();
     }
 
-    public void update(String homeCity, boolean acceptsRelocation, BigDecimal years, String englishLevel, Integer minSalaryUsd, Map<String, Integer> weights, String githubUser) {
+    public void update(String homeCountry, String homeCity, List<String> modalities, boolean acceptsRelocation, BigDecimal years, String englishLevel, Integer minSalaryUsd, Map<String, Integer> weights, String githubUser) {
+        this.homeCountry = homeCountry;
         this.homeCity = homeCity;
+        this.modalities = modalities == null ? List.of() : List.copyOf(modalities);
         this.acceptsRelocation = acceptsRelocation;
         this.yearsOfExperience = years;
         this.englishLevel = englishLevel;
@@ -66,6 +76,14 @@ public class Profile {
 
     public UUID getUserId() {
         return userId;
+    }
+
+    public String getHomeCountry() {
+        return homeCountry;
+    }
+
+    public List<String> getModalities() {
+        return modalities;
     }
 
     public String getHomeCity() {

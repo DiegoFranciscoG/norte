@@ -4,45 +4,561 @@
   "cases": [
     {
       "name": "Encaje completo en Cuenca híbrido",
-      "job": { "skills": [["java", false], ["spring-boot", false], ["docker", true]], "yearsRequired": 3, "seniority": "mid", "modality": "hybrid", "city": "Cuenca", "country": "EC", "ecuadorEligible": null, "languages": [], "salary": [1200, 1500], "daysAgo": 2, "status": "open" },
-      "profile": { "demonstrated": ["spring-boot", "docker"], "declared": [], "years": 4, "english": "B2", "homeCity": "Cuenca", "relocation": false, "minSalary": 1000 },
-      "expected": { "total": 100, "components": { "demonstrated": 30, "declared": 15, "experience": 15, "location": 15, "language": 10, "compensation": 10, "freshness": 5 }, "fit": "good" }
+      "job": {
+        "skills": [
+          [
+            "java",
+            false
+          ],
+          [
+            "spring-boot",
+            false
+          ],
+          [
+            "docker",
+            true
+          ]
+        ],
+        "yearsRequired": 3,
+        "seniority": "mid",
+        "modality": "hybrid",
+        "city": "Cuenca",
+        "country": "EC",
+        "languages": [],
+        "salary": [
+          1200,
+          1500
+        ],
+        "daysAgo": 2,
+        "status": "open",
+        "remoteScope": null
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [
+          "spring-boot",
+          "docker"
+        ],
+        "declared": [],
+        "years": 4,
+        "english": "B2",
+        "homeCity": "Cuenca",
+        "relocation": false,
+        "minSalary": 1000
+      },
+      "expected": {
+        "total": 100,
+        "components": {
+          "demonstrated": 30,
+          "declared": 15,
+          "experience": 15,
+          "location": 15,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 5
+        },
+        "fit": "good"
+      }
     },
     {
       "name": "Remoto que excluye a Latinoamérica: cero en ubicación aunque encaje en todo lo demás",
-      "job": { "skills": [["python", false]], "yearsRequired": null, "seniority": "unknown", "modality": "remote", "city": null, "country": null, "ecuadorEligible": false, "languages": [["en", "C1", false]], "salary": null, "daysAgo": 10, "status": "open" },
-      "profile": { "demonstrated": ["python"], "declared": [], "years": 2, "english": "C1", "homeCity": "Cuenca", "relocation": false, "minSalary": null },
-      "expected": { "total": 84.7, "components": { "demonstrated": 30, "declared": 15, "experience": 15, "location": 0, "language": 10, "compensation": 10, "freshness": 4.7 }, "fit": "good" }
+      "job": {
+        "skills": [
+          [
+            "python",
+            false
+          ]
+        ],
+        "yearsRequired": null,
+        "seniority": "unknown",
+        "modality": "remote",
+        "city": null,
+        "country": null,
+        "languages": [
+          [
+            "en",
+            "C1",
+            false
+          ]
+        ],
+        "salary": null,
+        "daysAgo": 10,
+        "status": "open",
+        "remoteScope": {
+          "type": "countries",
+          "regions": [],
+          "countries": [
+            "US"
+          ]
+        }
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [
+          "python"
+        ],
+        "declared": [],
+        "years": 2,
+        "english": "C1",
+        "homeCity": "Cuenca",
+        "relocation": false,
+        "minSalary": null
+      },
+      "expected": {
+        "total": 84.7,
+        "components": {
+          "demonstrated": 30,
+          "declared": 15,
+          "experience": 15,
+          "location": 0,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 4.7
+        },
+        "fit": "good"
+      }
     },
     {
       "name": "Pide 5 años y tiene 1: lo dice sin inflar el puntaje",
-      "job": { "skills": [["react", false], ["typescript", false], ["nextjs", true]], "yearsRequired": 5, "seniority": "senior", "modality": "onsite", "city": "Quito", "country": "EC", "ecuadorEligible": null, "languages": [["en", "B2", true]], "salary": [2000, 2500], "daysAgo": 30, "status": "open" },
-      "profile": { "demonstrated": [], "declared": ["react", "typescript"], "years": 1, "english": "B1", "homeCity": "Cuenca", "relocation": true, "minSalary": 1500 },
-      "expected": { "total": 45.8, "components": { "demonstrated": 0, "declared": 12, "experience": 3, "location": 10.5, "language": 7.5, "compensation": 10, "freshness": 2.8 }, "fit": "below-threshold" }
+      "job": {
+        "skills": [
+          [
+            "react",
+            false
+          ],
+          [
+            "typescript",
+            false
+          ],
+          [
+            "nextjs",
+            true
+          ]
+        ],
+        "yearsRequired": 5,
+        "seniority": "senior",
+        "modality": "onsite",
+        "city": "Quito",
+        "country": "EC",
+        "languages": [
+          [
+            "en",
+            "B2",
+            true
+          ]
+        ],
+        "salary": [
+          2000,
+          2500
+        ],
+        "daysAgo": 30,
+        "status": "open",
+        "remoteScope": null
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [],
+        "declared": [
+          "react",
+          "typescript"
+        ],
+        "years": 1,
+        "english": "B1",
+        "homeCity": "Cuenca",
+        "relocation": true,
+        "minSalary": 1500
+      },
+      "expected": {
+        "total": 45.8,
+        "components": {
+          "demonstrated": 0,
+          "declared": 12,
+          "experience": 3,
+          "location": 10.5,
+          "language": 7.5,
+          "compensation": 10,
+          "freshness": 2.8
+        },
+        "fit": "below-threshold"
+      }
     },
     {
       "name": "Salario bajo el mínimo sí resta; experiencia y ciudad cumplen",
-      "job": { "skills": [["sql", false], ["power-bi", false]], "yearsRequired": 2, "seniority": "mid", "modality": "onsite", "city": "Cuenca", "country": "EC", "ecuadorEligible": null, "languages": [], "salary": [600, 800], "daysAgo": 1, "status": "open" },
-      "profile": { "demonstrated": [], "declared": ["sql", "excel"], "years": 3, "english": null, "homeCity": "Cuenca", "relocation": false, "minSalary": 1000 },
-      "expected": { "total": 60.5, "components": { "demonstrated": 0, "declared": 7.5, "experience": 15, "location": 15, "language": 10, "compensation": 8, "freshness": 5 }, "fit": "good" }
+      "job": {
+        "skills": [
+          [
+            "sql",
+            false
+          ],
+          [
+            "power-bi",
+            false
+          ]
+        ],
+        "yearsRequired": 2,
+        "seniority": "mid",
+        "modality": "onsite",
+        "city": "Cuenca",
+        "country": "EC",
+        "languages": [],
+        "salary": [
+          600,
+          800
+        ],
+        "daysAgo": 1,
+        "status": "open",
+        "remoteScope": null
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [],
+        "declared": [
+          "sql",
+          "excel"
+        ],
+        "years": 3,
+        "english": null,
+        "homeCity": "Cuenca",
+        "relocation": false,
+        "minSalary": 1000
+      },
+      "expected": {
+        "total": 60.5,
+        "components": {
+          "demonstrated": 0,
+          "declared": 7.5,
+          "experience": 15,
+          "location": 15,
+          "language": 10,
+          "compensation": 8,
+          "freshness": 5
+        },
+        "fit": "good"
+      }
     },
     {
       "name": "Sin habilidades reconocibles, remoto sin alcance y publicada hace 70 días",
-      "job": { "skills": [], "yearsRequired": null, "seniority": "lead", "modality": "remote", "city": null, "country": null, "ecuadorEligible": null, "languages": [["en", null, false]], "salary": null, "daysAgo": 70, "status": "open" },
-      "profile": { "demonstrated": ["java"], "declared": [], "years": 7, "english": "B2", "homeCity": "Cuenca", "relocation": false, "minSalary": 2000 },
-      "expected": { "total": 42.5, "components": { "demonstrated": 0, "declared": 0, "experience": 15, "location": 7.5, "language": 10, "compensation": 10, "freshness": 0 }, "fit": "below-threshold" }
+      "job": {
+        "skills": [],
+        "yearsRequired": null,
+        "seniority": "lead",
+        "modality": "remote",
+        "city": null,
+        "country": null,
+        "languages": [
+          [
+            "en",
+            null,
+            false
+          ]
+        ],
+        "salary": null,
+        "daysAgo": 70,
+        "status": "open",
+        "remoteScope": {
+          "type": "unknown",
+          "regions": [],
+          "countries": []
+        }
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [
+          "java"
+        ],
+        "declared": [],
+        "years": 7,
+        "english": "B2",
+        "homeCity": "Cuenca",
+        "relocation": false,
+        "minSalary": 2000
+      },
+      "expected": {
+        "total": 42.5,
+        "components": {
+          "demonstrated": 0,
+          "declared": 0,
+          "experience": 15,
+          "location": 7.5,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 0
+        },
+        "fit": "below-threshold"
+      }
     },
     {
       "name": "Pesos ajustados por el usuario (suman 130 y se escalan a 100)",
-      "job": { "skills": [["java", false], ["spring-boot", false], ["docker", true]], "yearsRequired": 3, "seniority": "mid", "modality": "hybrid", "city": "Cuenca", "country": "EC", "ecuadorEligible": null, "languages": [], "salary": [1200, 1500], "daysAgo": 2, "status": "open" },
-      "profile": { "demonstrated": ["spring-boot", "docker"], "declared": [], "years": 4, "english": "B2", "homeCity": "Cuenca", "relocation": false, "minSalary": 1000, "weights": { "demonstrated": 60, "declared": 15, "experience": 15, "location": 15, "language": 10, "compensation": 10, "freshness": 5 } },
-      "expected": { "total": 99.9, "components": { "demonstrated": 46.2, "declared": 11.5, "experience": 11.5, "location": 11.5, "language": 7.7, "compensation": 7.7, "freshness": 3.8 }, "fit": "good" }
+      "job": {
+        "skills": [
+          [
+            "java",
+            false
+          ],
+          [
+            "spring-boot",
+            false
+          ],
+          [
+            "docker",
+            true
+          ]
+        ],
+        "yearsRequired": 3,
+        "seniority": "mid",
+        "modality": "hybrid",
+        "city": "Cuenca",
+        "country": "EC",
+        "languages": [],
+        "salary": [
+          1200,
+          1500
+        ],
+        "daysAgo": 2,
+        "status": "open",
+        "remoteScope": null
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [
+          "spring-boot",
+          "docker"
+        ],
+        "declared": [],
+        "years": 4,
+        "english": "B2",
+        "homeCity": "Cuenca",
+        "relocation": false,
+        "minSalary": 1000,
+        "weights": {
+          "demonstrated": 60,
+          "declared": 15,
+          "experience": 15,
+          "location": 15,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 5
+        }
+      },
+      "expected": {
+        "total": 99.9,
+        "components": {
+          "demonstrated": 46.2,
+          "declared": 11.5,
+          "experience": 11.5,
+          "location": 11.5,
+          "language": 7.7,
+          "compensation": 7.7,
+          "freshness": 3.8
+        },
+        "fit": "good"
+      }
     },
     {
       "name": "Demostrada pesa más que declarada; lo deseable pesa la mitad",
-      "job": { "skills": [["kubernetes", false], ["docker", false], ["terraform", true]], "yearsRequired": null, "seniority": "unknown", "modality": "remote", "city": null, "country": null, "ecuadorEligible": true, "languages": [], "salary": null, "daysAgo": 0, "status": "open" },
-      "profile": { "demonstrated": ["docker"], "declared": ["kubernetes"], "years": null, "english": null, "homeCity": "Cuenca", "relocation": false, "minSalary": null },
-      "expected": { "total": 79, "components": { "demonstrated": 12, "declared": 12, "experience": 15, "location": 15, "language": 10, "compensation": 10, "freshness": 5 }, "fit": "good" }
+      "job": {
+        "skills": [
+          [
+            "kubernetes",
+            false
+          ],
+          [
+            "docker",
+            false
+          ],
+          [
+            "terraform",
+            true
+          ]
+        ],
+        "yearsRequired": null,
+        "seniority": "unknown",
+        "modality": "remote",
+        "city": null,
+        "country": null,
+        "languages": [],
+        "salary": null,
+        "daysAgo": 0,
+        "status": "open",
+        "remoteScope": {
+          "type": "regions",
+          "regions": [
+            "latam"
+          ],
+          "countries": []
+        }
+      },
+      "profile": {
+        "homeCountry": "EC",
+        "demonstrated": [
+          "docker"
+        ],
+        "declared": [
+          "kubernetes"
+        ],
+        "years": null,
+        "english": null,
+        "homeCity": "Cuenca",
+        "relocation": false,
+        "minSalary": null
+      },
+      "expected": {
+        "total": 79,
+        "components": {
+          "demonstrated": 12,
+          "declared": 12,
+          "experience": 15,
+          "location": 15,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 5
+        },
+        "fit": "good"
+      }
+    },
+    {
+      "name": "Persona en Monterrey: presencial en Guadalajara sin mudarse",
+      "job": {
+        "skills": [
+          [
+            "python",
+            false
+          ]
+        ],
+        "yearsRequired": null,
+        "seniority": "unknown",
+        "languages": [],
+        "salary": null,
+        "daysAgo": 2,
+        "status": "open",
+        "modality": "onsite",
+        "city": "Guadalajara",
+        "country": "MX",
+        "remoteScope": null
+      },
+      "profile": {
+        "homeCountry": "MX",
+        "homeCity": "Monterrey",
+        "demonstrated": [
+          "python"
+        ],
+        "declared": [],
+        "years": 3,
+        "english": "B2",
+        "relocation": false,
+        "minSalary": null
+      },
+      "expected": {
+        "total": 88,
+        "components": {
+          "demonstrated": 30,
+          "declared": 15,
+          "experience": 15,
+          "location": 3,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 5
+        },
+        "fit": "good"
+      }
+    },
+    {
+      "name": "Persona en Madrid: remoto para Europa la admite",
+      "job": {
+        "skills": [
+          [
+            "python",
+            false
+          ]
+        ],
+        "yearsRequired": null,
+        "seniority": "unknown",
+        "languages": [],
+        "salary": null,
+        "daysAgo": 2,
+        "status": "open",
+        "modality": "remote",
+        "city": null,
+        "country": null,
+        "remoteScope": {
+          "type": "regions",
+          "regions": [
+            "europe"
+          ],
+          "countries": []
+        }
+      },
+      "profile": {
+        "homeCountry": "ES",
+        "homeCity": "Madrid",
+        "demonstrated": [
+          "python"
+        ],
+        "declared": [],
+        "years": 3,
+        "english": "B2",
+        "relocation": false,
+        "minSalary": null
+      },
+      "expected": {
+        "total": 100,
+        "components": {
+          "demonstrated": 30,
+          "declared": 15,
+          "experience": 15,
+          "location": 15,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 5
+        },
+        "fit": "good"
+      }
+    },
+    {
+      "name": "Persona en Madrid: presencial en Lima queda fuera de su país",
+      "job": {
+        "skills": [
+          [
+            "python",
+            false
+          ]
+        ],
+        "yearsRequired": null,
+        "seniority": "unknown",
+        "languages": [],
+        "salary": null,
+        "daysAgo": 2,
+        "status": "open",
+        "modality": "onsite",
+        "city": "Lima",
+        "country": "PE",
+        "remoteScope": null
+      },
+      "profile": {
+        "homeCountry": "ES",
+        "homeCity": "Madrid",
+        "demonstrated": [
+          "python"
+        ],
+        "declared": [],
+        "years": 3,
+        "english": "B2",
+        "relocation": false,
+        "minSalary": null
+      },
+      "expected": {
+        "total": 85,
+        "components": {
+          "demonstrated": 30,
+          "declared": 15,
+          "experience": 15,
+          "location": 0,
+          "language": 10,
+          "compensation": 10,
+          "freshness": 5
+        },
+        "fit": "good"
+      }
     }
   ]
 }

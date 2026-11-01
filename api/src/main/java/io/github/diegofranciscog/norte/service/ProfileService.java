@@ -1,6 +1,5 @@
 package io.github.diegofranciscog.norte.service;
 
-import io.github.diegofranciscog.norte.config.NorteProperties;
 import io.github.diegofranciscog.norte.domain.AnalyzedRepo;
 import io.github.diegofranciscog.norte.domain.Enums.ConsentPurpose;
 import io.github.diegofranciscog.norte.domain.Profile;
@@ -33,19 +32,17 @@ public class ProfileService {
     private final AnalyzedRepoRepository repos;
     private final ConsentService consents;
     private final AuditService audit;
-    private final NorteProperties props;
 
-    public ProfileService(ProfileRepository profiles, ProfileSkillRepository skills, AnalyzedRepoRepository repos, ConsentService consents, AuditService audit, NorteProperties props) {
+    public ProfileService(ProfileRepository profiles, ProfileSkillRepository skills, AnalyzedRepoRepository repos, ConsentService consents, AuditService audit) {
         this.profiles = profiles;
         this.skills = skills;
         this.repos = repos;
         this.consents = consents;
         this.audit = audit;
-        this.props = props;
     }
 
     private Profile profileOf(UUID userId) {
-        return profiles.findById(userId).orElseGet(() -> profiles.save(new Profile(userId, props.defaultHomeCity())));
+        return profiles.findById(userId).orElseGet(() -> profiles.save(new Profile(userId)));
     }
 
     @Transactional
@@ -58,7 +55,8 @@ public class ProfileService {
         consents.require(userId, ConsentPurpose.PROFILE_STORAGE);
         Profile p = profileOf(userId);
         Map<String, Integer> weights = req.weights() == null ? null : new LinkedHashMap<>(req.weights());
-        p.update(req.homeCity().trim(), req.acceptsRelocation(), req.yearsOfExperience(), req.englishLevel(), req.minSalaryUsd(), weights, req.githubUser());
+        String city = req.homeCity() == null || req.homeCity().isBlank() ? null : req.homeCity().trim();
+        p.update(req.homeCountry(), city, req.modalities(), req.acceptsRelocation(), req.yearsOfExperience(), req.englishLevel(), req.minSalaryUsd(), weights, req.githubUser());
         audit.record(userId, "PROFILE_UPDATED", null);
         return DtoMapper.toResponse(p);
     }
@@ -109,7 +107,7 @@ public class ProfileService {
     public void wipe(UUID userId) {
         skills.deleteByUser(userId);
         repos.deleteByUser(userId);
-        profiles.findById(userId).ifPresent(p -> p.update(props.defaultHomeCity(), false, null, null, null, null, null));
+        profiles.findById(userId).ifPresent(p -> p.update(null, null, List.of(), false, null, null, null, null, null));
         audit.record(userId, "PROFILE_WIPED", null);
     }
 }

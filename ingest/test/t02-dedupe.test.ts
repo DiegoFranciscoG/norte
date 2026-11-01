@@ -27,7 +27,7 @@ function bases(): NormalizedPosting[] {
       if (c >= 5 && t === 3) title = 'Senior Backend Engineer (Go)';
       if (c === 0 && (t === 4 || t === 5)) {
         title = 'Analista de Sistemas';
-        extra = { modality: 'onsite', remoteScope: null, group: 'ecuador', location: { city: t === 4 ? 'Quito' : 'Guayaquil', province: null, country: 'EC', raw: '' } };
+        extra = { modality: 'onsite', remoteScope: null, location: { city: t === 4 ? 'Quito' : 'Guayaquil', province: null, country: 'EC', raw: '' } };
       }
       if (c === 1 && t === 6) title = 'Software Engineer, Backend';
       if (c === 1 && t === 7) title = 'Software Engineer, Frontend';

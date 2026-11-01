@@ -1,6 +1,5 @@
 package io.github.diegofranciscog.norte.service;
 
-import io.github.diegofranciscog.norte.config.NorteProperties;
 import io.github.diegofranciscog.norte.domain.Alert;
 import io.github.diegofranciscog.norte.domain.Profile;
 import io.github.diegofranciscog.norte.domain.RefreshToken;
@@ -34,12 +33,11 @@ public class AuthService {
     private final PasswordEncoder passwords;
     private final LoginRateLimiter limiter;
     private final AuditService audit;
-    private final NorteProperties props;
     /** Hash de una clave aleatoria: se compara aunque el correo no exista, así el tiempo de respuesta no delata cuentas. */
     private final String dummyHash;
 
     public AuthService(UserRepository users, RefreshTokenRepository refreshTokens, ProfileRepository profiles, AlertRepository alerts, ConsentService consents,
-            TokenService tokens, PasswordEncoder passwords, LoginRateLimiter limiter, AuditService audit, NorteProperties props) {
+            TokenService tokens, PasswordEncoder passwords, LoginRateLimiter limiter, AuditService audit) {
         this.users = users;
         this.refreshTokens = refreshTokens;
         this.profiles = profiles;
@@ -49,7 +47,6 @@ public class AuthService {
         this.passwords = passwords;
         this.limiter = limiter;
         this.audit = audit;
-        this.props = props;
         this.dummyHash = passwords.encode(UUID.randomUUID().toString());
     }
 
@@ -66,7 +63,7 @@ public class AuthService {
             throw ApiException.conflict("email-taken", "Ya existe una cuenta con ese correo.");
         }
         User user = users.save(new User(email, passwords.encode(req.password())));
-        profiles.save(new Profile(user.getId(), props.defaultHomeCity()));
+        profiles.save(new Profile(user.getId()));
         alerts.save(new Alert(user.getId(), 70));
         List<ConsentDecision> decisions = req.consents() == null ? List.of() : req.consents();
         for (ConsentDecision d : decisions) {

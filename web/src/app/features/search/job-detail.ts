@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { analyzeGap, profileSets, type Job, type ScoreResult } from '@norte/core';
+import { analyzeGap, profileSets, remoteEligibility, type Job, type ScoreResult } from '@norte/core';
 import { ApplicationsService } from '../../core/applications.service';
 import { DataService } from '../../core/data.service';
-import { EMPLOYMENT_LABEL, MODALITY_LABEL, SENIORITY_LABEL, avatarColor, initials, locationLabel, salaryLabel, slug, timeAgo } from '../../core/format';
+import { EMPLOYMENT_LABEL, MODALITY_LABEL, SENIORITY_LABEL, avatarColor, countryName, initials, locationLabel, salaryLabel, slug, timeAgo } from '../../core/format';
 import { ProfileService } from '../../core/profile.service';
 import { Icon } from '../../shared/icon';
 
@@ -45,6 +45,9 @@ export class JobDetail {
   protected readonly applyUrl = computed(() => this.job().sources[0]?.applyUrl ?? this.job().sources[0]?.url ?? '#');
   protected readonly saved = computed(() => this.apps.byJob().get(this.job().id) ?? null);
   protected readonly hasProfile = this.profiles.hasProfile;
+  /** null: el remoto no declara a quién admite; false: no admite el país de la persona. */
+  protected readonly eligibility = computed(() => (this.job().modality === 'remote' ? remoteEligibility(this.job().remoteScope, this.profiles.place().country, this.data.regions()) : true));
+  protected readonly yourCountry = computed(() => countryName(this.profiles.place().country) || 'tu país');
 
   protected readonly skills = computed(() => {
     const matcher = this.data.matcher();
@@ -61,7 +64,7 @@ export class JobDetail {
     const matcher = this.data.matcher();
     const config = this.data.scoring();
     if (!matcher || !config || !this.hasProfile()) return null;
-    return analyzeGap(this.job(), this.profiles.coreProfile(), { matcher, config, now: new Date(), repos: this.profiles.profile().repos, resources: this.data.learning().resources });
+    return analyzeGap(this.job(), this.profiles.coreProfile(), { matcher, config, now: new Date(), regions: this.data.regions(), repos: this.profiles.profile().repos, resources: this.data.learning().resources });
   });
 
   protected readonly requirements = computed(() => {
@@ -78,7 +81,8 @@ export class JobDetail {
   protected readonly deepLinks = computed(() => {
     const j = this.job();
     const q = j.title.replace(/[([].*?[)\]]/g, '').trim();
-    const loc = j.location.city ?? 'Ecuador';
+    const p = this.profiles.profile();
+    const loc = (j.modality === 'remote' ? null : j.location.city) ?? p.homeCity ?? countryName(p.homeCountry);
     return this.data.deepLinks().map((d) => ({
       name: d.name,
       url: d.template.replace('{q}', d.slugify ? slug(q) : encodeURIComponent(q)).replace('{loc}', encodeURIComponent(loc)),

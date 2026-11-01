@@ -1,0 +1,121 @@
+<div class="onb">
+  <div class="progress" role="progressbar" [attr.aria-valuenow]="stepNumber()" aria-valuemin="1" [attr.aria-valuemax]="total" [attr.aria-label]="'Paso ' + stepNumber() + ' de ' + total">
+    @for (n of [1, 2, 3, 4]; track n) {
+      <span [class.done]="n <= stepNumber()"></span>
+    }
+  </div>
+  <p class="small muted step-label">Paso {{ stepNumber() }} de {{ total }}</p>
+
+  @switch (step()) {
+    @case ('cv') {
+      <h1 id="onb-title" tabindex="-1">Empecemos por tu CV</h1>
+      <p class="muted lead">Lo leemos aquí, en tu navegador: el archivo y su texto nunca se envían a ningún servidor. Solo guardamos las habilidades que detectamos.</p>
+      <label class="drop" for="onb-cv" [class.busy]="cvState() === 'reading'">
+        <app-icon name="upload" [size]="28" />
+        <strong>{{ cvState() === 'reading' ? 'Leyendo tu CV…' : 'Elige tu CV en PDF' }}</strong>
+        <span class="small muted">o arrástralo aquí</span>
+        <input id="onb-cv" type="file" accept="application/pdf,.pdf" (change)="onCv($event)" />
+      </label>
+      @if (cvState() === 'error') {
+        <p class="notice danger" role="alert">{{ cvError() }}</p>
+      }
+      @if (found(); as f) {
+        <div class="notice found" role="status">
+          <app-icon name="check" [size]="18" />
+          <span>Detectamos {{ f.skills }} habilidades{{ f.years !== null ? ', unos ' + f.years + ' años de experiencia' : '' }}{{ f.english ? ' e inglés ' + f.english : '' }}. En el siguiente paso puedes corregirlo.</span>
+        </div>
+      }
+      <div class="nav">
+        <button type="button" class="btn ghost" (click)="next()">No tengo mi CV a mano</button>
+        <button type="button" class="btn primary" (click)="next()" [disabled]="cvState() === 'reading'">Continuar</button>
+      </div>
+    }
+
+    @case ('data') {
+      <h1 id="onb-title" tabindex="-1">Revisa tus datos</h1>
+      <p class="muted lead">Esto es lo que usaremos para calcular tu encaje con cada vacante.</p>
+      <section class="block" aria-labelledby="skills-title">
+        <h2 id="skills-title">Tus habilidades</h2>
+        @if (skills().length) {
+          <ul class="chip-list">
+            @for (s of skills(); track s.id) {
+              <li class="tag">
+                {{ s.name }}
+                <button type="button" class="x" (click)="profiles.removeSkill(s.id)" [attr.aria-label]="'Quitar ' + s.name"><app-icon name="x" [size]="14" /></button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="small muted">Aún no hay habilidades. Agrega las que domines.</p>
+        }
+        <div class="field add">
+          <label for="onb-skill">Agregar habilidad</label>
+          <input id="onb-skill" type="text" list="onb-catalog" placeholder="Ej.: Java, React, SQL" (change)="addSkill($any($event.target).value); $any($event.target).value = ''" />
+          <datalist id="onb-catalog">
+            @for (o of catalog(); track o.id) {
+              <option [value]="o.name"></option>
+            }
+          </datalist>
+        </div>
+      </section>
+      <div class="two">
+        <div class="field">
+          <label for="onb-years">Años de experiencia</label>
+          <input id="onb-years" type="number" min="0" max="50" step="0.5" [value]="p().yearsOfExperience ?? ''" (change)="setYears($any($event.target).value)" />
+        </div>
+        <div class="field">
+          <label for="onb-english">Nivel de inglés</label>
+          <select id="onb-english" (change)="profiles.setEnglish($any($event.target).value || null)">
+            <option value="" [selected]="!p().englishLevel">No lo sé / ninguno</option>
+            @for (l of levels; track l) {
+              <option [value]="l" [selected]="p().englishLevel === l">{{ l }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <p class="small muted">¿Tienes repositorios públicos en GitHub? En <a routerLink="/perfil">tu perfil</a> puedes demostrar tus habilidades con tu código: pesan el doble.</p>
+      <div class="nav">
+        <button type="button" class="btn ghost" (click)="back()">Atrás</button>
+        <button type="button" class="btn primary" (click)="next()">Continuar</button>
+      </div>
+    }
+
+    @case ('place') {
+      <h1 id="onb-title" tabindex="-1">¿Dónde vives?</h1>
+      <p class="muted lead">Con esto te mostramos empleos presenciales e híbridos en tu país y remotos que admiten a personas de tu país.</p>
+      <app-location-picker />
+      <div class="nav">
+        <button type="button" class="btn ghost" (click)="back()">Atrás</button>
+        <button type="button" class="btn primary" (click)="next()">Continuar</button>
+      </div>
+    }
+
+    @case ('modes') {
+      <h1 id="onb-title" tabindex="-1">¿Cómo quieres trabajar?</h1>
+      <p class="muted lead">Elige una o varias. Puedes cambiarlo cuando quieras.</p>
+      <div class="modes" role="group" aria-label="Modalidades">
+        @for (m of modes; track m.id) {
+          <button type="button" class="mode" [class.on]="p().modalities.includes(m.id)" [attr.aria-pressed]="p().modalities.includes(m.id)" (click)="profiles.toggleMode(m.id)">
+            <app-icon [name]="m.icon" [size]="24" />
+            <strong>{{ m.title }}</strong>
+            <span class="small muted">{{ m.detail() }}</span>
+            @if (p().modalities.includes(m.id)) {
+              <span class="tick" aria-hidden="true"><app-icon name="check" [size]="16" /></span>
+            }
+          </button>
+        }
+      </div>
+      <label class="check"><input type="checkbox" [checked]="p().acceptsRelocation" (change)="profiles.update({ acceptsRelocation: $any($event.target).checked })" /> Me mudaría a otra ciudad de mi país</label>
+      <div class="field salary">
+        <label for="onb-salary">Salario mínimo mensual en USD (opcional)</label>
+        <input id="onb-salary" type="number" min="0" step="50" [value]="p().minSalaryUsd ?? ''" (change)="setSalary($any($event.target).value)" />
+      </div>
+      <div class="nav">
+        <button type="button" class="btn ghost" (click)="back()">Atrás</button>
+        <button type="button" class="btn primary" (click)="finish()" [disabled]="!p().modalities.length">Ver mis empleos</button>
+      </div>
+    }
+  }
+
+  <p class="skip"><button type="button" class="btn ghost" (click)="finish()">Saltar por ahora</button></p>
+</div>

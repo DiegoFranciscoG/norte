@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
         <ul>
           <li><strong>Tu CV.</strong> Se lee con pdf.js dentro de tu navegador. Ni el archivo ni su texto se envían a ningún servidor.</li>
           <li><strong>Tu puntaje.</strong> Se calcula en tu navegador sobre el índice público.</li>
+          <li><strong>Tu ubicación exacta.</strong> Si pulsas «Usar mi ubicación», el navegador te pide permiso y la ciudad más cercana se calcula aquí con un archivo de ciudades. Las coordenadas no se guardan ni se envían; solo quedan tu país y tu ciudad, en este dispositivo.</li>
           <li><strong>Tu token de GitHub</strong>, si lo usas: queda en memoria de la pestaña y solo viaja a GitHub.</li>
         </ul>
       </section>
@@ -21,7 +22,7 @@ import { RouterLink } from '@angular/router';
         <h2>Lo que guarda la cuenta (opcional)</h2>
         <ul>
           <li>Correo y contraseña cifrada con Argon2id.</li>
-          <li>Con tu consentimiento «guardar mi perfil»: identificadores de habilidades (con código ESCO si existe), su origen (demostrada o declarada), años de experiencia, nivel de inglés y preferencias.</li>
+          <li>Con tu consentimiento «guardar mi perfil»: identificadores de habilidades (con código ESCO si existe), su origen (demostrada o declarada), años de experiencia, nivel de inglés, tu país y ciudad (nunca coordenadas), las modalidades que buscas y tus preferencias.</li>
           <li>Tus postulaciones, si usas el tablero con sesión iniciada.</li>
           <li>Con tu consentimiento «alertas»: el umbral de puntaje para avisarte por correo.</li>
           <li>Cada consentimiento se registra por finalidad, con la versión del texto y la fecha. Casillas separadas y sin marcar por defecto.</li>

@@ -35,7 +35,7 @@ class JwtConfigTest {
         RANDOM.nextBytes(token);
         return new NorteProperties(new NorteProperties.Jwt(secret, issuer, Duration.ofMinutes(15), Duration.ofDays(7)), List.of("http://localhost:4200"),
                 new NorteProperties.Alerts(HexFormat.of().formatHex(token), "alertas@norte.test", 10, 72), "http://localhost:8080/data/v1", "http://localhost:4200",
-                "Cuenca", new NorteProperties.RateLimit(5, Duration.ofMinutes(15)));
+                new NorteProperties.RateLimit(5, Duration.ofMinutes(15)));
     }
 
     @Test

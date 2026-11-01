@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class ProfileConsentIT extends IntegrationTest {
 
     static Map<String, Object> profile() {
-        return Map.of("homeCity", "Cuenca", "acceptsRelocation", true, "yearsOfExperience", 2.5, "englishLevel", "B2", "minSalaryUsd", 1200);
+        return Map.of("homeCountry", "EC", "homeCity", "Cuenca", "modalities", List.of("hybrid", "remote"), "acceptsRelocation", true, "yearsOfExperience", 2.5, "englishLevel", "B2", "minSalaryUsd", 1200);
     }
 
     static List<Map<String, Object>> skills() {
@@ -49,5 +49,7 @@ class ProfileConsentIT extends IntegrationTest {
         String token = signUp(newEmail(), newPassword(), "PROFILE_STORAGE");
         mvc.perform(jsonPut("/api/v1/me/skills", List.of(Map.of("skillId", "DROP TABLE users;", "origin", "DECLARED")), token)).andExpect(status().isBadRequest());
         mvc.perform(jsonPut("/api/v1/me/profile", Map.of("homeCity", "Cuenca", "englishLevel", "Z9"), token)).andExpect(status().isBadRequest());
+        mvc.perform(jsonPut("/api/v1/me/profile", Map.of("homeCountry", "ecuador"), token)).andExpect(status().isBadRequest());
+        mvc.perform(jsonPut("/api/v1/me/profile", Map.of("modalities", List.of("teletransporte")), token)).andExpect(status().isBadRequest());
     }
 }

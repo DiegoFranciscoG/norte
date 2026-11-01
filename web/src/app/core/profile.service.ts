@@ -1,14 +1,15 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { scoreJob, type Cefr, type Profile, type ScoreResult, type Weights } from '@norte/core';
+import { scoreJob, type Cefr, type Profile, type ScoreResult, type UserPlace, type Weights } from '@norte/core';
 import { DataService } from './data.service';
-import type { StoredProfile } from './models';
+import type { StoredProfile, WorkMode } from './models';
 import { readStored, removeStored, writeStored } from './storage';
 
 const STORAGE_ENTRY = 'norte.profile.v1';
+export const ALL_MODES: WorkMode[] = ['onsite', 'hybrid', 'remote'];
 
-export function emptyProfile(homeCity: string): StoredProfile {
+export function emptyProfile(): StoredProfile {
   return {
-    version: 1,
+    version: 2,
     declared: [],
     demonstrated: [],
     repos: [],
@@ -16,12 +17,25 @@ export function emptyProfile(homeCity: string): StoredProfile {
     yearsOfExperience: null,
     yearsSource: null,
     englishLevel: null,
-    homeCity,
+    homeCountry: null,
+    homeCity: null,
+    modalities: [...ALL_MODES],
+    onboarded: false,
     acceptsRelocation: false,
     minSalaryUsd: null,
     weights: null,
     updatedAt: null,
   };
+}
+
+/** La versión 1 era solo para Ecuador: quien ya tenía perfil vivía allí y ya pasó por el ingreso. */
+export function migrateProfile(stored: unknown): StoredProfile {
+  const base = emptyProfile();
+  if (!stored || typeof stored !== 'object') return base;
+  const p = stored as Partial<StoredProfile> & { version?: number; homeCity?: string | null };
+  if (p.version === 2) return { ...base, ...p, version: 2 };
+  const had = (p.declared?.length ?? 0) > 0 || (p.demonstrated?.length ?? 0) > 0 || p.yearsOfExperience != null;
+  return { ...base, ...p, version: 2, homeCountry: had ? 'EC' : null, homeCity: had ? (p.homeCity ?? null) : null, modalities: [...ALL_MODES], onboarded: had };
 }
 
 /**
@@ -31,12 +45,14 @@ export function emptyProfile(homeCity: string): StoredProfile {
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private readonly data = inject(DataService);
-  readonly profile = signal<StoredProfile>(readStored<StoredProfile>(STORAGE_ENTRY, emptyProfile('Cuenca')));
+  readonly profile = signal<StoredProfile>(migrateProfile(readStored<unknown>(STORAGE_ENTRY, null)));
 
   readonly hasProfile = computed(() => {
     const p = this.profile();
     return p.declared.length > 0 || p.demonstrated.length > 0 || p.yearsOfExperience !== null;
   });
+
+  readonly place = computed<UserPlace>(() => ({ country: this.profile().homeCountry, city: this.profile().homeCity }));
 
   readonly coreProfile = computed<Profile>(() => {
     const p = this.profile();
@@ -44,6 +60,7 @@ export class ProfileService {
       skills: [...p.demonstrated.map((d) => ({ id: d.id, origin: 'demonstrated' as const, repos: d.repos })), ...p.declared.map((id) => ({ id, origin: 'declared' as const }))],
       yearsOfExperience: p.yearsOfExperience,
       englishLevel: p.englishLevel,
+      homeCountry: p.homeCountry,
       homeCity: p.homeCity,
       acceptsRelocation: p.acceptsRelocation,
       minSalaryUsd: p.minSalaryUsd,
@@ -57,8 +74,8 @@ export class ProfileService {
     const config = this.data.scoring();
     if (!matcher || !config || !this.hasProfile()) return new Map();
     const profile = this.coreProfile();
-    const now = new Date();
-    return new Map(this.data.openJobs().map((j) => [j.id, scoreJob(j, profile, { matcher, config, now })] as const));
+    const ctx = { matcher, config, now: new Date(), regions: this.data.regions() };
+    return new Map(this.data.openJobs().map((j) => [j.id, scoreJob(j, profile, ctx)] as const));
   });
 
   update(patch: Partial<StoredProfile>): void {
@@ -92,9 +109,23 @@ export class ProfileService {
     this.update({ weights });
   }
 
+  setLocation(country: string | null, city: string | null): void {
+    this.update({ homeCountry: country, homeCity: city?.trim() || null });
+  }
+
+  toggleMode(mode: WorkMode): void {
+    const current = this.profile().modalities;
+    const next = current.includes(mode) ? current.filter((m) => m !== mode) : [...current, mode];
+    this.update({ modalities: ALL_MODES.filter((m) => next.includes(m)) });
+  }
+
+  completeOnboarding(): void {
+    this.update({ onboarded: true });
+  }
+
   /** Borra todo lo guardado en este dispositivo. */
   clear(): void {
     removeStored(STORAGE_ENTRY);
-    this.profile.set(emptyProfile(this.data.homeCity()));
+    this.profile.set(emptyProfile());
   }
 }

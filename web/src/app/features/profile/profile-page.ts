@@ -9,6 +9,8 @@ import { DataService } from '../../core/data.service';
 import { GithubService } from '../../core/github.service';
 import { ProfileService } from '../../core/profile.service';
 import { Icon } from '../../shared/icon';
+import { LocationPicker } from '../../shared/location-picker';
+import type { WorkMode } from '../../core/models';
 
 const WEIGHT_LABEL: Record<keyof Weights, string> = {
   demonstrated: 'Habilidades demostradas',
@@ -22,7 +24,7 @@ const WEIGHT_LABEL: Record<keyof Weights, string> = {
 
 @Component({
   selector: 'app-profile-page',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink, Icon, LocationPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.scss',
@@ -37,6 +39,11 @@ export class ProfilePage {
 
   protected readonly p = this.profiles.profile;
   protected readonly levels: Cefr[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  protected readonly modeOptions: { id: WorkMode; label: string }[] = [
+    { id: 'onsite', label: 'Presencial (en mi país)' },
+    { id: 'hybrid', label: 'Híbrido (en mi país)' },
+    { id: 'remote', label: 'Remoto (empresas de cualquier país que me admitan)' },
+  ];
   protected readonly weightKeys = COMPONENT_ORDER;
   protected readonly weightLabel = WEIGHT_LABEL;
   protected readonly cvState = signal<'idle' | 'reading' | 'done' | 'error'>('idle');
@@ -140,7 +147,9 @@ export class ProfilePage {
     ];
     try {
       await firstValueFrom(this.http.put(this.auth.api('/api/v1/me/profile'), {
+        homeCountry: p.homeCountry,
         homeCity: p.homeCity,
+        modalities: p.modalities,
         acceptsRelocation: p.acceptsRelocation,
         yearsOfExperience: p.yearsOfExperience,
         englishLevel: p.englishLevel,
