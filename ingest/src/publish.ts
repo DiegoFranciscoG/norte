@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
-import { GROUP_ORDER, searchOptions, type Job, type SearchDocument } from '@norte/core';
+import { searchOptions, type Job, type SearchDocument } from '@norte/core';
 import MiniSearch from 'minisearch';
 import type { LoadedData } from './config.js';
 import { companySlug } from './normalize.js';
@@ -37,13 +37,31 @@ export function searchDocuments(jobs: Job[], skillName: (id: string) => string):
 
 export function buildTotals(jobs: Job[]) {
   const open = jobs.filter((j) => j.status === 'open');
-  const byGroup = Object.fromEntries(GROUP_ORDER.map((g) => [g, open.filter((j) => j.group === g).length]));
+  const byModality = { onsite: 0, hybrid: 0, remote: 0, unknown: 0 };
+  for (const j of open) byModality[j.modality]++;
   return {
     open: open.length,
     closed: jobs.length - open.length,
-    byGroup,
-    remoteScopeUnknown: open.filter((j) => j.group === 'remote' && j.remoteScope?.ecuadorEligible === null).length,
+    byModality,
+    countries: new Set(open.map((j) => j.location.country).filter(Boolean)).size,
+    remoteScopeUnknown: open.filter((j) => j.modality === 'remote' && (j.remoteScope?.type ?? 'unknown') === 'unknown').length,
     withSalary: open.filter((j) => j.salary?.convertible).length,
+  };
+}
+
+/** Lo que el navegador necesita para ubicar a la persona: regiones, países y ciudades con vacantes. */
+export function buildGeoIndex(jobs: Job[], data: LoadedData) {
+  const byCountry = new Map<string, { open: number; cities: Map<string, number> }>();
+  for (const j of jobs) {
+    if (j.status !== 'open' || j.modality === 'remote' || !j.location.country) continue;
+    const c = byCountry.get(j.location.country) ?? { open: 0, cities: new Map<string, number>() };
+    c.open++;
+    if (j.location.city) c.cities.set(j.location.city, (c.cities.get(j.location.city) ?? 0) + 1);
+    byCountry.set(j.location.country, c);
+  }
+  return {
+    regions: data.geo.regions,
+    countries: data.geo.countries.map((c) => ({ iso: c.iso, name: c.es, open: byCountry.get(c.iso)?.open ?? 0, cities: [...(byCountry.get(c.iso)?.cities ?? new Map<string, number>()).entries()].sort((a, b) => b[1] - a[1]).map(([name, open]) => ({ name, open })) })),
   };
 }
 
@@ -68,6 +86,8 @@ export async function publish(opts: PublishOptions): Promise<string[]> {
     'search-index.json': JSON.stringify(search),
     'skills.json': { version: data.catalog.version, extraction: data.extraction, skills: data.catalog.skills },
     'scoring.json': data.scoring,
+    'geo.json': buildGeoIndex(result.jobs, data),
+    'cities.json': { license: 'CC BY 4.0 — © GeoNames (geonames.org)', columns: ['name', 'asciiName', 'country', 'lat', 'lon', 'population'], cities: data.geo.cities ?? [] },
     'learning.json': data.learning,
     'dependencies.json': data.dependencies,
     'career-pages.json': data.careerPages,

@@ -1,4 +1,4 @@
-import { normalizeText, type Job, type Seniority, type SkillDef } from '@norte/core';
+import { normalizeText, remoteEligibility, type Job, type RegionCode, type Seniority, type SkillDef } from '@norte/core';
 import type { LoadedData } from '../config.js';
 import { DATA_LICENSE } from '../publish.js';
 import { toCsv } from './csv.js';
@@ -77,6 +77,7 @@ export interface ObservatoryInput {
 interface Ctx {
   cfg: ObservatoryConfig;
   homeCountry: string;
+  regions: Partial<Record<RegionCode, string[]>>;
   skills: Map<string, SkillDef>;
   role: (title: string) => string;
   cityByKey: Map<string, string>;
@@ -152,6 +153,10 @@ function skillCounts(jobs: Job[]): Map<string, number> {
   for (const j of jobs) for (const id of new Set(j.skills.map((s) => s.id))) inc(counts, id);
   return counts;
 }
+
+/** Accesible desde el país foco: ubicada ahí o remota que no lo excluye. */
+export const accessible = (ctx: Ctx, j: Job): boolean =>
+  j.location.country === ctx.homeCountry || (j.modality === 'remote' && remoteEligibility(j.remoteScope, ctx.homeCountry, ctx.regions) !== false);
 
 const market = (ctx: Ctx, j: Job): Market => (j.location.country === ctx.homeCountry ? 'ecuador' : 'internacional');
 const cityOf = (ctx: Ctx, j: Job): string | null => (j.location.city ? (ctx.cityByKey.get(normalizeText(j.location.city)) ?? null) : null);
@@ -504,6 +509,7 @@ export function createContext(data: LoadedData): Ctx {
   return {
     cfg,
     homeCountry: data.ingest.home.country,
+    regions: data.geo.regions,
     skills: new Map(data.catalog.skills.map((s) => [s.id, s])),
     role: createRoleClassifier(cfg.roles),
     cityByKey: new Map(cfg.cities.map((c) => [normalizeText(c), c])),
@@ -515,24 +521,26 @@ export function buildObservatory(input: ObservatoryInput): Record<string, object
   const ctx = createContext(input.data);
   const { cfg } = ctx;
   const generatedAt = input.now.toISOString();
-  const open = input.jobs.filter((j) => j.status === 'open');
+  // El índice es global; el observatorio mira el mercado accesible desde su país foco (Ecuador).
+  const jobs = input.jobs.filter((j) => accessible(ctx, j));
+  const open = jobs.filter((j) => j.status === 'open');
   const inEcuador = open.filter((j) => market(ctx, j) === 'ecuador');
   const remote = open.filter((j) => j.modality === 'remote');
   const withSalary = open.filter((j) => jobSalaryUsd(j) !== null);
   const today = localDate(input.now.getTime(), cfg.utcOffsetHours);
 
   const days = mergeDays(input.previousDays, { day: today, open: open.length, remote: remote.length, ecuador: inEcuador.length, withSalary: withSalary.length }, cfg.monthly.keepDays);
-  const firstSeen = input.jobs.map((j) => j.firstSeenAt).sort()[0] ?? null;
+  const firstSeen = jobs.map((j) => j.firstSeenAt).sort()[0] ?? null;
   const firstDay = days[0]?.day ? `${days[0].day}T00:00:00.000Z` : null;
   const observedSince = [firstSeen, firstDay].filter((x): x is string => x !== null).sort()[0] ?? null;
-  const months = mergeMonths(ctx, input.previousMonths, input.jobs, input.now);
+  const months = mergeMonths(ctx, input.previousMonths, jobs, input.now);
 
   const skills = skillCounts(open);
   const categories = new Map<string, number>();
   for (const j of open) for (const c of new Set(j.skills.map((s) => ctx.skills.get(s.id)?.category).filter((x): x is SkillDef['category'] => x !== undefined))) inc(categories, c);
   const scopes = new Map<string, number>();
-  for (const j of remote) inc(scopes, j.remoteScope?.ecuadorEligible === null || !j.remoteScope ? 'unknown' : j.remoteScope.type);
-  const trend = buildTrend(ctx, input.jobs, input.now, observedSince);
+  for (const j of remote) inc(scopes, j.remoteScope?.type ?? 'unknown');
+  const trend = buildTrend(ctx, jobs, input.now, observedSince);
   const salaries = buildSalaries(ctx, open);
   const cities = buildCities(ctx, inEcuador);
   const topSkills = top(skills, cfg.topSkills).map(([id, count]) => ({
@@ -550,7 +558,7 @@ export function buildObservatory(input: ObservatoryInput): Record<string, object
   const summary = {
     ...common,
     methodology,
-    population: { open: open.length, ecuador: inEcuador.length, remote: remote.length, freelance: open.filter((j) => j.group === 'freelance').length },
+    population: { open: open.length, ecuador: inEcuador.length, remote: remote.length, freelance: open.filter((j) => j.employmentType === 'freelance').length },
     remote: { share: share(remote.length, open.length), jobs: remote.length, scopes: Object.fromEntries(top(scopes, 10)) },
     topSkills,
     categories: top(categories, 30).map(([category, count]) => ({ category, count, share: share(count, open.length) })),

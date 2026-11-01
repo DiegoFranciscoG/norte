@@ -5,10 +5,13 @@ import type { SourceTask, RawPosting } from './sources/types.js';
  * El índice resultante lleva demo: true y la interfaz muestra un aviso; nunca se publica en GitHub Pages.
  */
 const COMPANIES = [
-  { name: 'Andina Software Demo', region: 'EC' as const, city: 'Cuenca' },
-  { name: 'Pacífico Datos Demo', region: 'EC' as const, city: 'Guayaquil' },
-  { name: 'Volcán Fintech Demo', region: 'EC' as const, city: 'Quito' },
-  { name: 'Remoto Latam Demo', region: 'LATAM' as const, city: null },
+  { name: 'Andina Software Demo', region: 'EC' as const, city: 'Cuenca', country: 'Ecuador', iso: 'EC', remoteText: 'Remote - LATAM' },
+  { name: 'Pacífico Datos Demo', region: 'EC' as const, city: 'Guayaquil', country: 'Ecuador', iso: 'EC', remoteText: 'Remote - LATAM' },
+  { name: 'Volcán Fintech Demo', region: 'EC' as const, city: 'Quito', country: 'Ecuador', iso: 'EC', remoteText: 'Remote - LATAM' },
+  { name: 'Remoto Latam Demo', region: 'LATAM' as const, city: null, country: null, iso: null, remoteText: 'Remote - LATAM' },
+  { name: 'Azteca Apps Demo', region: 'LATAM' as const, city: 'Monterrey', country: 'México', iso: 'MX', remoteText: 'Remote - Americas' },
+  { name: 'Ibérica Cloud Demo', region: 'WORLD' as const, city: 'Madrid', country: 'España', iso: 'ES', remoteText: 'Remote (Europe)' },
+  { name: 'Global Remote Demo', region: 'WORLD' as const, city: null, country: null, iso: null, remoteText: 'Anywhere in the World' },
 ];
 
 const TITLES = [
@@ -38,8 +41,8 @@ function demoPostings(now: Date): RawPosting[] {
         company: c.name,
         companyRegion: c.region,
         sector: 'software',
-        locationTexts: remote ? ['Remote - LATAM'] : [`${c.city}, Ecuador`],
-        countryIso: remote ? null : 'EC',
+        locationTexts: remote ? [c.remoteText] : [`${c.city}, ${c.country}`],
+        countryIso: remote ? null : c.iso,
         city: remote ? null : c.city,
         modality: remote ? 'remote' : n % 2 === 0 ? 'hybrid' : 'onsite',
         employmentText: n % 7 === 0 ? 'Freelance' : 'Full-time',

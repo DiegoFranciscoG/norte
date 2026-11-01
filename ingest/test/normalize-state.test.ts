@@ -28,23 +28,26 @@ describe('normalización', () => {
       salary: { min: 1500, max: 1800, currency: 'USD', period: 'month' },
     }), task, deps);
     if (typeof r === 'string') throw new Error(r);
-    expect(r).toMatchObject({ group: 'home', modality: 'hybrid', location: { city: 'Cuenca', country: 'EC' }, yearsRequired: 5, company: { slug: 'ficticia' } });
+    expect(r).toMatchObject({ modality: 'hybrid', location: { city: 'Cuenca', country: 'EC' }, yearsRequired: 5, company: { slug: 'ficticia' } });
     expect(r.skills.map((s) => s.id)).toEqual(['java', 'spring-boot']);
     expect(r.salary).toMatchObject({ usdMonthlyMin: 1500, usdMonthlyMax: 1800 });
     expect(r.languages).toEqual([{ language: 'en', level: 'B1', inferred: false }]);
     expect(r.excerpt).not.toContain('@');
   });
 
-  it('descarta roles no tecnológicos y remotos que excluyen a Ecuador', () => {
+  it('descarta roles no tecnológicos y lo que no se puede ubicar', () => {
     expect(normalizePosting(rawPosting({ sourceId: 's', externalId: '2', title: 'Ejecutivo de Ventas', company: 'X' }), task, deps)).toBe('not-tech');
-    expect(normalizePosting(rawPosting({ sourceId: 's', externalId: '3', title: 'Backend Engineer', company: 'X', locationTexts: ['USA Only'] }), task, deps)).toBe('outside-groups');
+    expect(normalizePosting(rawPosting({ sourceId: 's', externalId: '3', title: 'Backend Engineer', company: 'X', modality: 'onsite', locationTexts: ['Multiple locations'] }), task, deps)).toBe('no-location');
+    const usOnly = normalizePosting(rawPosting({ sourceId: 's', externalId: '6', title: 'Backend Engineer', company: 'X', locationTexts: ['USA Only'] }), task, deps);
+    if (typeof usOnly === 'string') throw new Error(usOnly);
+    expect(usOnly.remoteScope).toEqual({ type: 'countries', regions: [], countries: ['US'] });
     expect(normalizePosting(rawPosting({ sourceId: 's', externalId: '4', title: '', company: 'X' }), task, deps)).toBe('invalid');
   });
 
   it('un remoto ubicado en Ecuador es elegible y una fecha futura se recorta a ahora', () => {
     const r = normalizePosting(rawPosting({ sourceId: 's', externalId: '5', title: 'Data Engineer', company: 'X', locationTexts: ['Remote in Ecuador'], publishedAt: '2030-01-01T00:00:00.000Z' }), task, deps);
     if (typeof r === 'string') throw new Error(r);
-    expect(r.remoteScope).toEqual({ type: 'countries', countries: ['EC'], ecuadorEligible: true });
+    expect(r.remoteScope).toEqual({ type: 'countries', regions: [], countries: ['EC'] });
     expect(r.publishedAt).toBe(now.toISOString());
   });
 

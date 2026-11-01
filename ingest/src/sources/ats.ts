@@ -237,7 +237,7 @@ async function runSmartRecruiters(ctx: FetchContext, company: CompanyEntry, def:
   return out;
 }
 
-export function atsTask(company: CompanyEntry, defs: Record<AtsId, AtsDef>, detailOnlyForTech: boolean): SourceTask {
+export function atsTask(company: CompanyEntry, defs: Record<AtsId, AtsDef>, detailOnlyForTech: boolean, minHoursBetweenFetches = 0): SourceTask {
   const def = defs[company.ats];
   return {
     sourceId: `ats:${company.ats}:${company.board}`,
@@ -245,7 +245,7 @@ export function atsTask(company: CompanyEntry, defs: Record<AtsId, AtsDef>, deta
     kind: 'ats',
     attribution: null,
     allowInAlerts: true,
-    minHoursBetweenFetches: 0,
+    minHoursBetweenFetches,
     async run(ctx) {
       if (company.ats === 'smartrecruiters') return runSmartRecruiters(ctx, company, def, detailOnlyForTech);
       const url = fill(company.eu && def.euListUrl ? def.euListUrl : def.listUrl, { board: company.board });

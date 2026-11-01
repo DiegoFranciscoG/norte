@@ -51,7 +51,7 @@ describe('foto actual del mercado', () => {
   it('cuenta población, remoto y habilidades sobre las vacantes abiertas', () => {
     expect(s.population).toEqual({ open: 6, ecuador: 4, remote: 2, freelance: 0 });
     expect(s.remote.share).toBe(33.3);
-    expect(s.remote.scopes).toEqual({ latam: 1, unknown: 1 });
+    expect(s.remote.scopes).toEqual({ regions: 1, unknown: 1 });
     expect(s.topSkills[0]).toMatchObject({ id: 'java', count: 3, share: 50 });
     expect(s.topCompanies[0]).toMatchObject({ name: 'Andina Software Demo', count: 2 });
   });

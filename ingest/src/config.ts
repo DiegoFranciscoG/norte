@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ClassificationConfig, ExtractionConfig, GeoData, HomeConfig, Region, SalaryConfig, SkillCatalog } from '@norte/core';
+import { buildGeoData, type ClassificationConfig, type CityRow, type CountryName, type ExtractionConfig, type GeoData, type Region, type SalaryConfig, type SkillCatalog } from '@norte/core';
 import type { HostPolicy } from './http/client.js';
 import type { ObservatoryConfig } from './stats/observatory.js';
 
@@ -41,6 +41,8 @@ export interface SourcesConfig {
   portals: PortalDef[];
   excluded: { name: string; reason: string; evidenceUrl: string; alternative: string }[];
   hostPolicies: Record<string, Partial<HostPolicy>>;
+  /** Horas mínimas entre consultas al mismo tablero de empresa (con ETag, casi siempre responde 304). */
+  atsMinHoursBetweenFetches?: number;
   fx: { url: string; source: string; termsUrl: string };
 }
 
@@ -57,6 +59,12 @@ export interface CompanyEntry {
   evidence: { jobs: number | null; ecuador: number | null; latam: number | null };
   notes?: string;
   eu?: boolean;
+}
+
+/** País foco del observatorio y ciudad de referencia de los datos de demostración. */
+export interface HomeConfig {
+  city: string;
+  country: string;
 }
 
 export interface IngestConfig {
@@ -119,7 +127,7 @@ export function loadData(dataDir = defaultDataDir()): LoadedData {
     ingest: readJson(dataDir, 'config', 'ingest.json'),
     extraction: readJson(dataDir, 'skills', 'extraction.json'),
     catalog: withEsco(readOptional(dataDir, { version: '0', skills: [] }, 'skills', 'catalog.json'), dataDir),
-    geo: readJson(dataDir, 'geo', 'geo.json'),
+    geo: buildGeoData(readJson(dataDir, 'geo', 'geo.json'), readJson<{ countries: CountryName[] }>(dataDir, 'geo', 'countries.json'), readOptional<{ cities: CityRow[] }>(dataDir, { cities: [] }, 'geo', 'cities.json')),
     scoring: readOptional(dataDir, {}, 'config', 'scoring.json'),
     learning: readOptional(dataDir, { resources: [] }, 'skills', 'learning.json'),
     dependencies: readOptional(dataDir, {}, 'skills', 'dependencies.json'),

@@ -18,7 +18,6 @@ export function job(p: Partial<Job> & { id: string }): Job {
     location: { city: 'Cuenca', province: 'Azuay', country: 'EC', raw: 'Cuenca, Ecuador' },
     modality: 'onsite',
     remoteScope: null,
-    group: 'home',
     employmentType: 'full-time',
     seniority: 'mid',
     yearsRequired: 2,
@@ -40,8 +39,8 @@ export function job(p: Partial<Job> & { id: string }): Job {
   };
 }
 
-const remoteLatam = { type: 'latam' as const, countries: [], ecuadorEligible: true };
-const remoteUnknown = { type: 'unknown' as const, countries: [], ecuadorEligible: null };
+const remoteLatam = { type: 'regions' as const, regions: ['latam' as const], countries: [] };
+const remoteUnknown = { type: 'unknown' as const, regions: [], countries: [] };
 const nowhere = { city: null, province: null, country: null, raw: 'Remote' };
 
 /** Seis vacantes abiertas y una cerrada, todas vistas por primera vez en octubre de 2026. */
@@ -49,10 +48,13 @@ export function octoberJobs(): Job[] {
   return [
     job({ id: 'j1', skills: [{ id: 'java', optional: false }, { id: 'spring-boot', optional: false }], salary: usd(1000, 1400) }),
     job({ id: 'j2', title: 'Backend Developer', modality: 'hybrid', salary: usd(1200, 1200) }),
-    job({ id: 'j3', title: 'Frontend Developer', seniority: 'junior', location: { city: 'Quito', province: 'Pichincha', country: 'EC', raw: 'Quito' }, group: 'ecuador', skills: [{ id: 'react', optional: false }], salary: usd(1400, 1600), company: { name: 'Volcán Fintech Demo', slug: 'volcan-fintech-demo' } }),
-    job({ id: 'j4', title: 'Data Engineer', seniority: 'senior', location: { city: 'Guayaquil', province: 'Guayas', country: 'EC', raw: 'Guayaquil' }, group: 'ecuador', skills: [{ id: 'python', optional: false }], company: { name: 'Pacífico Datos Demo', slug: 'pacifico-datos-demo' } }),
-    job({ id: 'j5', title: 'Senior Backend Engineer', seniority: 'senior', modality: 'remote', remoteScope: remoteLatam, location: nowhere, group: 'remote', skills: [{ id: 'java', optional: false }, { id: 'aws', optional: true }], salary: usd(3000, 4000), company: { name: 'Remoto Latam Demo', slug: 'remoto-latam-demo' } }),
-    job({ id: 'j6', title: 'Frontend Engineer', modality: 'remote', remoteScope: remoteUnknown, location: nowhere, group: 'remote', skills: [{ id: 'react', optional: false }], company: { name: 'Remoto Latam Demo', slug: 'remoto-latam-demo' } }),
+    job({ id: 'j3', title: 'Frontend Developer', seniority: 'junior', location: { city: 'Quito', province: 'Pichincha', country: 'EC', raw: 'Quito' }, skills: [{ id: 'react', optional: false }], salary: usd(1400, 1600), company: { name: 'Volcán Fintech Demo', slug: 'volcan-fintech-demo' } }),
+    job({ id: 'j4', title: 'Data Engineer', seniority: 'senior', location: { city: 'Guayaquil', province: 'Guayas', country: 'EC', raw: 'Guayaquil' }, skills: [{ id: 'python', optional: false }], company: { name: 'Pacífico Datos Demo', slug: 'pacifico-datos-demo' } }),
+    job({ id: 'j5', title: 'Senior Backend Engineer', seniority: 'senior', modality: 'remote', remoteScope: remoteLatam, location: nowhere, skills: [{ id: 'java', optional: false }, { id: 'aws', optional: true }], salary: usd(3000, 4000), company: { name: 'Remoto Latam Demo', slug: 'remoto-latam-demo' } }),
+    job({ id: 'j6', title: 'Frontend Engineer', modality: 'remote', remoteScope: remoteUnknown, location: nowhere, skills: [{ id: 'react', optional: false }], company: { name: 'Remoto Latam Demo', slug: 'remoto-latam-demo' } }),
     job({ id: 'j7', status: 'closed', closedAt: NOW.toISOString(), firstSeenAt: daysAgo(10) }),
+    // Fuera del mercado que mira el observatorio: presencial en Madrid y remoto solo para Europa.
+    job({ id: 'x1', location: { city: 'Madrid', province: null, country: 'ES', raw: 'Madrid' }, salary: usd(9000, 9000) }),
+    job({ id: 'x2', modality: 'remote', remoteScope: { type: 'regions', regions: ['europe'], countries: [] }, location: nowhere, skills: [{ id: 'kubernetes', optional: false }] }),
   ];
 }

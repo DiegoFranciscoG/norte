@@ -1,6 +1,6 @@
 import {
-  classifyGroup,
   detectPostingLanguage,
+  isPlaceable,
   htmlToText,
   makeExcerpt,
   normalizeSalary,
@@ -31,7 +31,7 @@ export interface NormalizeDeps {
   now: Date;
 }
 
-export type DropReason = 'not-tech' | 'outside-groups' | 'invalid';
+export type DropReason = 'not-tech' | 'no-location' | 'invalid';
 
 const LEGAL_SUFFIX = /\s+(inc|llc|ltd|limited|s ?a ?s|s ?a|gmbh|corp|corporation|co|cia|ltda|plc|bv|ag)$/i;
 
@@ -62,13 +62,12 @@ export function normalizePosting(raw: RawPosting, task: SourceTask, deps: Normal
   const structured = (raw.structuredCountries ?? []).map((c) => deps.geo.toIso(c)).filter((c): c is string => c !== null);
   let remoteScope = null;
   if (modality === 'remote') {
-    remoteScope = location.country === 'EC'
-      ? { type: 'countries' as const, countries: ['EC'], ecuadorEligible: true }
-      : deps.geo.detectRemoteScope([...locationTexts, title], structured);
+    remoteScope = deps.geo.detectRemoteScope([...locationTexts, title], structured);
+    // Un remoto sin alcance declarado pero ubicado en un país suele exigir residir en ese país.
+    if (remoteScope.type === 'unknown' && location.country) remoteScope = { type: 'countries' as const, regions: [], countries: [location.country] };
   }
   const employmentType = deps.classifier.employmentType(raw.employmentText, [title]);
-  const group = classifyGroup({ modality, location, remoteScope, employmentType }, deps.cfg.home);
-  if (!group) return 'outside-groups';
+  if (!isPlaceable({ modality, location })) return 'no-location';
 
   const skillText = `${title}\n${description}\n${(raw.tags ?? []).join(', ')}`;
   const skills = deps.matcher.extract(skillText, raw.optionalText ?? undefined).map(({ id, optional }) => ({ id, optional }));
@@ -94,7 +93,6 @@ export function normalizePosting(raw: RawPosting, task: SourceTask, deps: Normal
     location,
     modality,
     remoteScope,
-    group,
     employmentType,
     seniority: deps.classifier.seniority(title, raw.seniorityTexts ?? []),
     yearsRequired: deps.classifier.yearsRequired(description),

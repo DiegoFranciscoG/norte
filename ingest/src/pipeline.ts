@@ -32,7 +32,7 @@ export interface PipelineResult {
 
 export function buildTasks(data: LoadedData): SourceTask[] {
   return [
-    ...data.companies.companies.map((c) => atsTask(c, data.sources.ats, data.ingest.smartrecruitersDetailOnlyForTechTitles)),
+    ...data.companies.companies.map((c) => atsTask(c, data.sources.ats, data.ingest.smartrecruitersDetailOnlyForTechTitles, data.sources.atsMinHoursBetweenFetches ?? 0)),
     ...data.sources.portals.filter((p) => p.enabled).map(portalTask),
   ];
 }
@@ -59,7 +59,7 @@ export async function runPipeline(deps: PipelineDeps): Promise<PipelineResult> {
   const tasks = deps.tasks ?? buildTasks(data);
   const sourceRuns: Record<string, SourceRun> = {};
   const normalized: NormalizedPosting[] = [];
-  const dropped: Record<DropReason, number> = { 'not-tech': 0, 'outside-groups': 0, invalid: 0 };
+  const dropped: Record<DropReason, number> = { 'not-tech': 0, 'no-location': 0, invalid: 0 };
   let postings = 0;
 
   await pool(tasks, deps.concurrency ?? 8, async (task) => {
