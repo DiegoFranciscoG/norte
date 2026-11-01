@@ -1,0 +1,16 @@
+# Contexto de la imagen web: solo fuentes, nunca dependencias instaladas, salidas ni secretos.
+**/node_modules
+**/dist
+**/.angular
+**/coverage
+site
+.cache
+.git
+.github
+api
+docs
+**/test-results
+**/playwright-report
+.env
+.env.*
+!.env.example
