@@ -59,7 +59,9 @@ erDiagram
     }
     profiles {
         uuid user_id PK, FK
-        varchar home_city
+        varchar home_country "ISO 3166-1 alfa-2"
+        varchar home_city "opcional"
+        jsonb modalities "onsite, hybrid, remote"
         boolean accepts_relocation
         numeric years_of_experience "0 a 50"
         varchar english_level "A1..C2 (MCER)"
@@ -139,6 +141,7 @@ erDiagram
 |---|---|
 | `V1__init.sql` | Esquema completo con restricciones `CHECK`, `UNIQUE`, claves foráneas en cascada e índices |
 | `V2__consent_texts.sql` | Textos de consentimiento vigentes (versión `2026-10`) |
+| `V3__global_location.sql` | País de residencia, ciudad opcional y modalidades preferidas (NORTE pasa a ser global) |
 
 Hibernate corre con `ddl-auto: validate`: si una entidad y la migración no coinciden, la API no arranca. Las pruebas de integración lo comprueban contra PostgreSQL real (Testcontainers), nunca H2.
 
@@ -173,9 +176,9 @@ erDiagram
         string city "INEC DPA"
         string country "ISO 3166-1 alfa-2"
         string modality "onsite | hybrid | remote | unknown"
-        string remoteScope "worldwide | latam | americas | countries | excluding-latam | unknown"
-        boolean ecuadorEligible "true, false o null (no se sabe)"
-        string group "home | ecuador | remote | freelance"
+        string remoteScope "worldwide | regions | countries | unknown"
+        array remoteRegions "latam, americas, europe, emea, apac…"
+        array remoteCountries "ISO 3166-1 alfa-2"
         string seniority
         number yearsRequired
         boolean yearsInferred "supuesto S-05"
@@ -225,7 +228,8 @@ erDiagram
 | LinkedIn, Multitrabajos y Computrabajo solo aparecen como enlaces profundos de búsqueda; ningún cliente HTTP contra sus dominios (T-01) | Sus términos y `robots.txt` (fuentes 14–16) |
 | Remotive: atribución visible, máximo 4 consultas al día y fuera de las alertas | Términos de su API (fuente 7) |
 | Salarios convertidos a USD mensual con la tasa de referencia del BCE y su fecha; hora → mes con 173,33 h | Fuente 21; supuesto S-04 |
-| Ciudades y provincias normalizadas con la división político-administrativa del INEC | Fuente 22 |
+| Ciudades y provincias de Ecuador con la división político-administrativa del INEC; el resto del mundo con las ciudades de GeoNames y los nombres de país de CLDR | Fuentes 22, 31 y 32 |
+| Una vacante entra al índice si se puede ubicar (remota, o con país conocido); el grupo «cerca de ti / tu país / remoto para ti» se calcula para cada persona | [algoritmo.md](algoritmo.md) |
 | Extractos sin correos, teléfonos ni URLs de contacto | LOPDP art. 10 (minimización) |
 | Una vacante que deja de aparecer en su fuente se marca `closed` con fecha, no se borra en silencio | Requisito del proyecto |
 | Duplicados entre fuentes se fusionan conservando todas las referencias (T-02) | [algoritmo.md](algoritmo.md) |

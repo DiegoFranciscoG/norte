@@ -23,7 +23,7 @@ Todos los pesos, umbrales y factores viven en [`data/config/scoring.json`](../da
 | Habilidades demostradas | 30 | `Σ w(s)·[s ∈ demostradas] / Σ w(s)` | Vacante sin habilidades reconocibles: 0 y aviso |
 | Habilidades declaradas | 15 | `Σ w(s)·[s ∈ declaradas ∪ demostradas] / Σ w(s)` | Ídem |
 | Nivel y experiencia | 15 | `min(1, años tuyos / años pedidos)` | Si no pide años se usa el mínimo por nivel (junior 0, semi-senior 2, senior 4, lead 6) marcado «estimado». Si no pide nada: puntaje completo, marcado «no declarado». Si tú no declaraste tus años, cuentan como 0. |
-| Ubicación | 15 | Tu ciudad: 1 · otra ciudad de Ecuador: 0,7 si aceptas mudarte, 0,2 si no · remoto abierto a Ecuador: 1 · remoto sin alcance declarado: 0,5 · **remoto que excluye a Latinoamérica: 0** · presencial fuera de Ecuador: 0 | — |
+| Ubicación | 15 | Relativa a donde vives: tu ciudad: 1 · otra ciudad de tu país: 0,7 si aceptas mudarte, 0,2 si no · remoto que admite tu país: 1 · remoto sin alcance declarado: 0,5 · **remoto que no admite tu país: 0** · presencial en otro país: 0 · aún no indicaste tu ubicación: 0,5 | — |
 | Idioma | 10 | Por cada idioma pedido distinto del español: `min(1, tu nivel MCER / nivel pedido)`; manda el más débil | Si pide inglés sin nivel se asume B1; si el aviso está en inglés y no dice nada se asume B2 (marcado «inferido») |
 | Compensación | 10 | `min(1, salario máximo ofrecido / tu mínimo)` en USD mensuales | **No declara salario: puntaje completo**, marcado «no declarado» y contado aparte en el observatorio. Sin mínimo tuyo: completo. |
 | Frescura | 5 | 1 hasta 7 días, baja linealmente hasta 0 a los 60 días | Vacante cerrada: 0 |
@@ -54,14 +54,18 @@ La prueba **T-04** recorre 300 combinaciones de vacantes y perfiles y verifica q
 
 ## 6. Grupos
 
+NORTE es global: los grupos no se guardan en el índice, se calculan en el navegador según el país y la ciudad de cada persona (`groupFor` en `packages/core/src/groups.ts`).
+
 | Grupo | Regla |
 |---|---|
-| Cuenca presencial o híbrido | Presencial/híbrido con ciudad Cuenca (la ciudad de origen es configurable) |
-| Resto de Ecuador | Presencial/híbrido en otra ciudad de Ecuador o sin ciudad |
-| Remoto abierto a Ecuador | Remoto con alcance mundial, Latinoamérica, Américas o lista de países que incluye Ecuador; los de alcance no declarado aparecen aparte y marcados |
-| Freelance | Contratos por proyecto o freelance remotos o en Ecuador |
+| Cerca de ti | Presencial o híbrido en tu ciudad |
+| En tu país | Presencial o híbrido en otra ciudad de tu país |
+| Remoto para ti | Remoto que admite tu país: alcance mundial, una región que lo incluye (Latinoamérica, Américas, Europa, EMEA, Asia-Pacífico…) o una lista de países que lo incluye. Los de alcance no declarado aparecen marcados |
+| Freelance | Por proyecto: remoto que te admite o en tu país |
 
-Un remoto que excluye a Ecuador no entra al índice: no le sirve a nadie que busque desde aquí.
+Las modalidades que eliges filtran antes de puntuar: presencial e híbrido se buscan en tu país (tu ciudad primero) y remoto en cualquier lugar que admita tu país. Un remoto solo para Europa no aparece a alguien de Ecuador, pero sí a alguien de España.
+
+La pertenencia de cada país a cada región está en `data/geo/geo.json` (supuesto S-07: no hay un estándar oficial de qué es «LATAM» o «EMEA»). El índice guarda toda vacante que se pueda ubicar: remota, o presencial con país conocido.
 
 ## 7. Supuestos declarados
 

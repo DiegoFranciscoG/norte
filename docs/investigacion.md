@@ -33,9 +33,19 @@ Fuentes oficiales o primarias consultadas para decidir qué datos entran, con qu
 | 27 | Docker Hub — imágenes oficiales | https://hub.docker.com/_/postgres | 2026-10-31 | postgres 18.6-alpine, eclipse-temurin 25.0.5_8-jre, nginx-unprivileged 1.29.8, mailpit v1.29.7 |
 | 28 | Ley Orgánica de Protección de Datos Personales (Registro Oficial Suplemento 459, 26-05-2021), copia publicada por la SEPS | https://seps.gob.ec/wp-content/uploads/Ley-Orgánica-de-Protección-de-Datos-Personales-2022.pdf | 2026-10-31 | Consentimiento explícito (art. 8) y otras bases (art. 7); derechos de acceso, rectificación, eliminación, oposición, portabilidad y a no ser objeto de decisiones solo automatizadas (ver legal.md) |
 
+| 29 | GitHub Docs — eventos que disparan workflows (schedule) | https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows | 2026-11-01 | El intervalo mínimo programable es de 5 minutos y los programados pueden retrasarse al inicio de cada hora → ingesta cada 30 minutos en los minutos 7 y 37 |
+| 30 | GitHub Docs — límites de GitHub Pages | https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits | 2026-11-01 | Límite blando de 10 compilaciones por hora que no aplica a workflows propios; 100 GB/mes de ancho de banda; 1 GB por sitio |
+| 31 | GeoNames — readme de la descarga | https://download.geonames.org/export/dump/readme.txt | 2026-11-01 | Ciudades de más de 15 000 habitantes o capitales (cities15000), licencia CC BY 4.0 con atribución |
+| 32 | Unicode CLDR (vía Intl.DisplayNames) | https://cldr.unicode.org/ | 2026-11-01 | Nombres de países en español e inglés; licencia Unicode |
+| 33 | Himalayas — búsqueda sin país | https://himalayas.app/jobs/api/search?sort=recent&page=1 | 2026-11-01 | Llamada verificada: vacantes de todo el mundo con `locationRestrictions` por país |
+| 34 | Jobicy — API sin filtro geográfico | https://jobicy.com/api/v2/remote-jobs?count=50 | 2026-11-01 | Llamada verificada: remotos de todas las regiones con su `jobGeo` |
+
 ## Supuestos (no verificados)
 - **S-01** La página de licencia propia de ESCO no se localizó; se asume la política general de reutilización de la Comisión (Decisión 2011/833/EU) y se atribuye.
 - **S-02** El texto completo de las condiciones de uso de Multitrabajos y Computrabajo no se localizó; la exclusión se basa en la premisa del proyecto y en sus `robots.txt`.
 - **S-03** Get on Board no publica una cláusula de atribución para su API pública; se atribuye igual por prudencia.
 - **S-04** Conversión horaria a mensual: 173,33 horas (40 h × 52 semanas ÷ 12). Es una convención, no una norma; se aplica igual a todas las fuentes.
 - **S-05** Cuando una vacante declara nivel pero no años, se infieren años mínimos por nivel (configurables en `data/config/scoring.json`) y se marca como «inferido».
+- **S-06** Un remoto sin alcance declarado pero ubicado en un país («Remote — Spain») exige residir en ese país.
+- **S-07** La pertenencia de países a regiones (Latinoamérica, Américas, Europa, EMEA, Asia-Pacífico…) es una agrupación propia y configurable; no hay una norma oficial para esos términos de las vacantes.
+- **S-08** En Himalayas, una vacante sin restricciones de ubicación admite a todo el mundo (así la presenta su sitio).
