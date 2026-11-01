@@ -102,3 +102,25 @@ El salario se normaliza a **dólares mensuales** con los tipos de referencia dia
 ## 10. Políticas de consulta (aplicadas por la ingesta)
 
 Definidas por host en `data/sources/sources.json → hostPolicies`: intervalo mínimo entre peticiones, presupuesto por ejecución, tiempo de espera de 20 s, 3 reintentos con espera exponencial y respeto de `Retry-After`. Las fuentes con tope diario (Remotive: 4 al día) guardan la hora de su última consulta y se saltan hasta cumplir el intervalo; mientras tanto se conservan sus vacantes previas sin marcarlas como cerradas.
+
+## 11. Logos de empresas
+
+Para que cada vacante se reconozca a simple vista, NORTE muestra el logo de la empresa **solo cuando la propia fuente lo entrega en sus datos**:
+
+| Fuente | Campo | ¿Se usa? | Motivo |
+|---|---|---|---|
+| Himalayas | `companyLogo` (CDN propio) | Sí | Verificado con una llamada real el 2026-11-01 |
+| Get on Board | `company.attributes.logo` (S3) | Sí | Verificado con una llamada real el 2026-11-01 |
+| Remote OK | `company_logo` | No | Su aviso legal pide no usar su logo; por prudencia no se toma ninguno de esa fuente |
+| Remotive | `company_logo` | No | Se sirve desde su dominio, que admite como máximo 4 consultas al día |
+| Jobicy | `companyLogo` | No | Se sirve desde su dominio, que admite como máximo una consulta por hora |
+| ATS (Greenhouse, Lever…) | — | No | Sus API públicas no entregan logo |
+
+Cómo se tratan:
+
+- La ingesta descarga cada logo una sola vez (caché persistente entre ejecuciones), con el mismo ritmo y presupuesto por host que el resto de peticiones, y como máximo 120 nuevos por ejecución.
+- Solo se aceptan PNG, JPEG, GIF y WebP reconocidos por su firma de bytes y de hasta 150 KB. **SVG nunca**: puede contener código.
+- Se publican en el propio índice (`logos/<hash>.<tipo>`). El navegador no pide nada a terceros y la URL original no se publica.
+- Sin logo, la interfaz muestra la inicial de la empresa sobre un fondo neutro.
+- El logo identifica a la empresa junto a su propia vacante; cualquier empresa puede pedir que se retire.
+

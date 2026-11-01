@@ -35,6 +35,8 @@ Buscar empleo tech obliga a revisar decenas de portales, sin saber si una vacant
 
 - **Global y relativo a ti**: indicas tu país y ciudad (o pulsas «Usar mi ubicación»: la ciudad más cercana se calcula en tu navegador). Presencial e híbrido se buscan en tu país, primero en tu ciudad; remoto, en empresas de cualquier país que admitan el tuyo.
 - **Ingreso guiado**: CV → revisar datos → ubicación → modalidades (presencial, híbrido, remoto).
+- **Vista previa al pasar el cursor**: cada vacante despliega su descripción breve, lo que pide y qué tienes o te falta, sin abrirla.
+- **Interfaz sin íconos y con logos reales** de las empresas cuando la fuente los entrega (descargados y validados en la ingesta, servidos desde el propio sitio).
 - **Encaje 0–100 explicado**: siete componentes con pesos públicos y ajustables; el desglose suma exactamente el total ([docs/algoritmo.md](docs/algoritmo.md)).
 - **Brecha accionable**: qué habilidades faltan, cuánto subiría tu encaje al demostrarlas, cuál de tus repositorios está más cerca y un recurso verificado para aprender.
 - **Evidencia de GitHub**: distingue habilidades demostradas en tu código (pesan el doble) de las declaradas en el CV.
@@ -202,6 +204,7 @@ Todo en planes gratuitos:
 - CORS con orígenes explícitos; cabeceras CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy` y HSTS; la web en nginx sin scripts en línea (`script-src 'self'`).
 - SQL solo parametrizado (JPA); `ddl-auto: validate` contra las migraciones.
 - CSV publicados con neutralización de fórmulas (inyección CSV).
+- Logos validados por firma de bytes y tamaño (nunca SVG) y servidos desde el propio sitio: el navegador no contacta a terceros.
 - Docker multi-etapa, imágenes con versión fija, usuario no root y healthcheck; GitHub Actions con permisos mínimos y acciones fijadas por SHA.
 - Sin secretos en el repositorio: gitleaks en pre-commit y en CI.
 
@@ -227,6 +230,7 @@ Todo en planes gratuitos:
 - Excluidas por sus términos (solo enlace profundo, nunca consultas): LinkedIn, Multitrabajos, Computrabajo y otras ([docs/fuentes.md](docs/fuentes.md)).
 - Habilidades: catálogo propio enlazado a ESCO v1.2.1 (© Unión Europea).
 - Ciudades: GeoNames (CC BY 4.0). Nombres de países: Unicode CLDR. División político-administrativa de Ecuador: INEC.
+- Logos de empresas: solo los que entregan Himalayas y Get on Board en sus datos ([docs/fuentes.md](docs/fuentes.md#11-logos-de-empresas)).
 - Tipos de cambio: Banco Central Europeo.
 - Estadísticas del observatorio: CC BY 4.0. Código: MIT.
 - Investigación y supuestos: [docs/investigacion.md](docs/investigacion.md) · Cumplimiento LOPDP: [docs/legal.md](docs/legal.md).
