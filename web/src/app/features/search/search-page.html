@@ -5,16 +5,13 @@
         <h1 id="welcome-title">Empleos que encajan contigo, donde estés</h1>
         <p class="muted">Sube tu CV (se lee aquí, nunca se envía) y te mostramos qué vacantes encajan, por qué, y qué te falta.</p>
       </div>
-      <a class="btn primary" routerLink="/bienvenida"><app-icon name="upload" [size]="18" /> Empezar con mi CV</a>
+      <a class="btn primary" routerLink="/bienvenida">Empezar con mi CV</a>
     </section>
   }
 
   <div class="chips" role="toolbar" aria-label="Qué empleos ver">
     @for (feed of feeds; track feed) {
       <button type="button" class="chip" [class.active]="f().feed === feed" [attr.aria-pressed]="f().feed === feed" (click)="setFeed(feed)">
-        @if (f().feed === feed) {
-          <app-icon name="check" [size]="16" />
-        }
         {{ feedLabel(feed) }} <span class="count">{{ search.counts()[feed] }}</span>
       </button>
     }
@@ -22,7 +19,7 @@
     <label class="pill" [class.active]="f().skill">
       <span class="visually-hidden">Habilidad</span>
       <select (change)="search.set('skill', $any($event.target).value || null)">
-        <option value="" [selected]="!f().skill">Habilidad</option>
+        <option value="" [selected]="!f().skill">Habilidad: todas</option>
         @for (s of search.options().skills; track s.id) {
           <option [value]="s.id" [selected]="f().skill === s.id">{{ s.name }} ({{ s.n }})</option>
         }
@@ -31,7 +28,7 @@
     <label class="pill" [class.active]="f().seniority">
       <span class="visually-hidden">Nivel</span>
       <select (change)="search.set('seniority', $any($event.target).value || null)">
-        <option value="" [selected]="!f().seniority">Nivel</option>
+        <option value="" [selected]="!f().seniority">Nivel: todos</option>
         @for (s of seniorities; track s) {
           <option [value]="s" [selected]="f().seniority === s">{{ seniorityLabel[s] }}</option>
         }
@@ -40,7 +37,7 @@
     <label class="pill" [class.active]="f().maxDays !== null">
       <span class="visually-hidden">Fecha de publicación</span>
       <select (change)="setNumber('maxDays', $any($event.target).value)">
-        <option value="" [selected]="f().maxDays === null">Cualquier fecha</option>
+        <option value="" [selected]="f().maxDays === null">Fecha: cualquiera</option>
         <option value="1" [selected]="f().maxDays === 1">Últimas 24 horas</option>
         <option value="7" [selected]="f().maxDays === 7">Última semana</option>
         <option value="30" [selected]="f().maxDays === 30">Último mes</option>
@@ -49,7 +46,7 @@
     <label class="pill" [class.active]="f().minSalary !== null">
       <span class="visually-hidden">Salario mínimo mensual</span>
       <select (change)="setNumber('minSalary', $any($event.target).value)">
-        <option value="" [selected]="f().minSalary === null">Salario</option>
+        <option value="" [selected]="f().minSalary === null">Salario: cualquiera</option>
         <option value="1000" [selected]="f().minSalary === 1000">Desde $1.000/mes</option>
         <option value="2000" [selected]="f().minSalary === 2000">Desde $2.000/mes</option>
         <option value="4000" [selected]="f().minSalary === 4000">Desde $4.000/mes</option>
@@ -58,7 +55,7 @@
     <label class="pill" [class.active]="f().english !== 'any'">
       <span class="visually-hidden">Inglés</span>
       <select (change)="search.set('english', $any($event.target).value)">
-        <option value="any" [selected]="f().english === 'any'">Inglés</option>
+        <option value="any" [selected]="f().english === 'any'">Inglés: indiferente</option>
         <option value="none" [selected]="f().english === 'none'">Sin inglés</option>
         <option value="mine" [selected]="f().english === 'mine'">Hasta mi nivel</option>
       </select>
@@ -75,7 +72,7 @@
     <p class="small muted" aria-live="polite">
       {{ search.results().length }} empleos
       @if (where()) {
-        · <app-icon name="pin" [size]="14" /> {{ where() }}
+        · {{ where() }}
       }
       @if (f().query) {
         · «{{ f().query }}»
@@ -106,7 +103,7 @@
       <p class="muted">También puedes buscar en plataformas que no permiten reutilizar sus avisos (se abren en su sitio):</p>
       <ul class="chip-list">
         @for (d of deepLinks(); track d.name) {
-          <li><a class="chip" [href]="d.url" target="_blank" rel="noopener">{{ d.name }} <app-icon name="external" [size]="14" /></a></li>
+          <li><a class="chip" [href]="d.url" target="_blank" rel="noopener">{{ d.name }}</a></li>
         }
       </ul>
       @if (search.dismissed().size) {

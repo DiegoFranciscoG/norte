@@ -88,24 +88,6 @@ export function locationLabel(job: Job): string {
   return `${place || 'Ubicación no indicada'} (${MODALITY_LABEL[job.modality].toLowerCase()})`;
 }
 
-export function initials(name: string): string {
-  return name
-    .replace(/\(.*?\)/g, '')
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join('');
-}
-
-/** Color estable por empresa para el avatar (paleta con contraste AA para texto blanco). */
-const AVATAR_COLORS = ['#0b5cad', '#0f7b5f', '#7a3fb0', '#b3261e', '#8a5a00', '#1f6f8b', '#5b4b8a', '#2e6b30'];
-export function avatarColor(name: string): string {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return AVATAR_COLORS[h % AVATAR_COLORS.length]!;
-}
-
 export function slug(text: string): string {
   return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }

@@ -73,7 +73,8 @@ export interface JobSourceRef {
 export interface Job {
   id: string;
   title: string;
-  company: { name: string; slug: string };
+  /** logo: ruta relativa al índice («logos/…»), descargada y validada en la ingesta; nunca una URL externa. */
+  company: { name: string; slug: string; logo?: string | null };
   location: JobLocation;
   modality: Modality;
   remoteScope: RemoteScope | null;

@@ -1,7 +1,7 @@
 <article class="detail" aria-labelledby="job-title">
   <header class="head">
     <div class="company-row">
-      <div class="avatar" [style.background]="color()" aria-hidden="true">{{ initials() }}</div>
+      <app-company-logo [name]="job().company.name" [logo]="job().company.logo" [size]="48" />
       <span class="company">{{ job().company.name }}</span>
     </div>
     <h1 id="job-title">{{ job().title }}</h1>
@@ -12,9 +12,9 @@
       }
     </p>
     <ul class="chip-list tags" aria-label="Características">
-      <li class="tag"><app-icon name="check" [size]="16" /> {{ modality() }}</li>
+      <li class="tag">{{ modality() }}</li>
       @if (employment()) {
-        <li class="tag"><app-icon name="check" [size]="16" /> {{ employment() }}</li>
+        <li class="tag">{{ employment() }}</li>
       }
       @if (seniority()) {
         <li class="tag">{{ seniority() }}</li>
@@ -31,11 +31,11 @@
       }
     </ul>
     <div class="actions">
-      <a class="btn primary" [href]="applyUrl()" target="_blank" rel="noopener">Postular en la fuente <app-icon name="external" [size]="16" /></a>
+      <a class="btn primary" [href]="applyUrl()" target="_blank" rel="noopener">Postular en {{ sourceName() }}</a>
       @if (saved(); as s) {
-        <a class="btn" routerLink="/postulaciones"><app-icon name="check" [size]="16" /> Guardada</a>
+        <a class="btn" routerLink="/postulaciones">Guardada en postulaciones</a>
       } @else {
-        <button type="button" class="btn" (click)="save()"><app-icon name="bookmark" [size]="16" /> Guardar para postular</button>
+        <button type="button" class="btn" (click)="save()">Guardar para postular</button>
       }
     </div>
     <p class="small muted">NORTE nunca postula por ti: el botón abre la vacante en su sitio original.</p>
@@ -45,11 +45,11 @@
     @if (score(); as s) {
       <div class="match-head">
         <div>
-          <h2 id="match-title">Tu encaje: <span [class.good]="s.fit === 'good'">{{ s.total }}</span>/100</h2>
+          <h2 id="match-title">Tu encaje: <span [class.good]="s.fit === 'good'">{{ num(s.total) }}</span>/100</h2>
           <p class="muted">{{ s.fit === 'good' ? 'Encajas con esta vacante.' : 'No encajas todavía: revisa lo que falta.' }}</p>
         </div>
-        <div class="ring" [class.good]="s.fit === 'good'" aria-hidden="true" [style.--p]="s.total"><span>{{ round(s.total) }}</span></div>
       </div>
+      <div class="meter" [class.good]="s.fit === 'good'" aria-hidden="true"><span [style.width.%]="s.total"></span></div>
       <button type="button" class="btn ghost toggle" (click)="showBreakdown.set(!showBreakdown())" [attr.aria-expanded]="showBreakdown()" aria-controls="breakdown">
         {{ showBreakdown() ? 'Ocultar desglose' : 'Ver desglose del puntaje' }}
       </button>
@@ -59,9 +59,9 @@
             <li>
               <div class="row">
                 <span class="label">{{ labels[c.key] }}</span>
-                <span class="pts">{{ c.points }} / {{ c.max }}</span>
+                <span class="pts">{{ num(c.points) }} / {{ num(c.max) }}</span>
               </div>
-              <div class="bar" role="img" [attr.aria-label]="labels[c.key] + ': ' + c.points + ' de ' + c.max"><span [style.width.%]="pct(c.points, c.max)" [class]="c.status"></span></div>
+              <div class="bar" role="img" [attr.aria-label]="labels[c.key] + ': ' + num(c.points) + ' de ' + num(c.max)"><span [style.width.%]="pct(c.points, c.max)" [class]="c.status"></span></div>
               <p class="small muted">{{ c.detail }}</p>
             </li>
           }
@@ -87,7 +87,7 @@
               @if (r.via) {
                 <span class="muted"> (cubre {{ r.skillName }})</span>
               }
-              <span class="tag ok gain">+{{ r.gain }} puntos</span>
+              <span class="tag ok gain">+{{ num(r.gain) }} puntos</span>
               <p class="small muted">
                 @if (r.closestRepo) {
                   Añádelo a <a [href]="r.closestRepo.url" target="_blank" rel="noopener">{{ r.closestRepo.name }}</a>, que ya usa {{ names(r.closestRepo.shared.slice(0, 3)) }}.
@@ -133,7 +133,7 @@
   <section class="card block" aria-labelledby="about-title">
     <h2 id="about-title">Acerca de la vacante</h2>
     <p class="excerpt">{{ job().excerpt || 'La fuente no publicó una descripción.' }}</p>
-    <a [href]="job().sources[0]?.url" target="_blank" rel="noopener">Leer la descripción completa en la fuente <app-icon name="external" [size]="14" /></a>
+    <a [href]="job().sources[0]?.url" target="_blank" rel="noopener">Leer la descripción completa en {{ sourceName() }}</a>
   </section>
 
   <section class="card block" aria-labelledby="sources-title">
@@ -155,7 +155,7 @@
     <p class="small muted">Se abren en una pestaña nueva con la búsqueda escrita. NORTE no consulta esos sitios.</p>
     <ul class="chip-list">
       @for (d of deepLinks(); track d.name) {
-        <li><a class="pill" [href]="d.url" target="_blank" rel="noopener">{{ d.name }} <app-icon name="external" [size]="14" /></a></li>
+        <li><a class="chip" [href]="d.url" target="_blank" rel="noopener">{{ d.name }}</a></li>
       }
     </ul>
   </section>

@@ -7,7 +7,7 @@
       <section class="card section" aria-labelledby="cv-title">
         <h2 id="cv-title">Tu CV (PDF)</h2>
         <p class="small muted">Se lee con pdf.js dentro de tu navegador. Ni el archivo ni su texto salen de aquí.</p>
-        <label class="upload btn" for="cv-file"><app-icon name="upload" [size]="16" /> Elegir PDF</label>
+        <label class="upload btn" for="cv-file">Elegir PDF</label>
         <input id="cv-file" class="visually-hidden" type="file" accept="application/pdf" (change)="onCv($event)" />
         @switch (cvState()) {
           @case ('reading') {
@@ -98,7 +98,7 @@
                     ({{ e.path || e.detail }})
                   }
                 </span>
-                <button type="button" class="icon-btn" (click)="profiles.removeSkill(d.id)" [attr.aria-label]="'Quitar ' + name(d.id)"><app-icon name="x" [size]="16" /></button>
+                <button type="button" class="icon-btn" (click)="profiles.removeSkill(d.id)" [attr.aria-label]="'Quitar ' + name(d.id)">Quitar</button>
               </li>
             }
           </ul>
@@ -108,7 +108,7 @@
         <h3 class="sub">Declaradas (CV o manual)</h3>
         <ul class="chip-list">
           @for (id of declaredOnly(); track id) {
-            <li class="tag brand removable">{{ name(id) }} <button type="button" class="icon-btn" (click)="profiles.removeSkill(id)" [attr.aria-label]="'Quitar ' + name(id)"><app-icon name="x" [size]="14" /></button></li>
+            <li class="tag brand removable">{{ name(id) }} <button type="button" class="icon-btn" (click)="profiles.removeSkill(id)" [attr.aria-label]="'Quitar ' + name(id)">Quitar</button></li>
           } @empty {
             <li class="small muted">Sube tu CV o agrégalas a mano.</li>
           }
@@ -184,7 +184,7 @@
         }
       </section>
 
-      <button type="button" class="btn danger" (click)="clearAll()"><app-icon name="trash" [size]="16" /> Borrar todo de este dispositivo</button>
+      <button type="button" class="btn danger" (click)="clearAll()">Borrar todo de este dispositivo</button>
     </div>
   </div>
 </div>

@@ -3,17 +3,16 @@ import { RouterLink } from '@angular/router';
 import { DataService } from '../../core/data.service';
 import { stamp } from '../../core/format';
 import { BarChart, fmt, type ChartRow } from '../../shared/charts';
-import { Icon } from '../../shared/icon';
 import { STATS, type Report, type SalaryStat } from './models';
 
 /** Informe automático de un mes: frases redactadas desde las cifras, cada cifra con su fuente y fecha. */
 @Component({
   selector: 'app-report-page',
-  imports: [BarChart, RouterLink, Icon],
+  imports: [BarChart, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="report">
-      <a routerLink="/observatorio" class="back"><app-icon name="arrowLeft" [size]="18" /> Observatorio</a>
+      <a routerLink="/observatorio" class="back">Volver al observatorio</a>
       @if (error()) {
         <p class="notice warn">{{ error() }}</p>
       } @else if (report(); as r) {

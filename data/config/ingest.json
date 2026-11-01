@@ -4,6 +4,10 @@
     "country": "EC"
   },
   "excerptMaxChars": 320,
+  "logos": {
+    "maxBytes": 153600,
+    "maxNewPerRun": 120
+  },
   "retention": {
     "closedDays": 90,
     "maxAgeDays": 120

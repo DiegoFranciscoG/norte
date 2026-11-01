@@ -4,11 +4,10 @@ import { ApplicationsService } from '../../core/applications.service';
 import { AuthService } from '../../core/auth.service';
 import { DataService } from '../../core/data.service';
 import { APPLICATION_STATUSES, type Application, type ApplicationStatus } from '../../core/models';
-import { Icon } from '../../shared/icon';
 
 @Component({
   selector: 'app-applications-page',
-  imports: [RouterLink, Icon],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="container page">
@@ -58,9 +57,9 @@ import { Icon } from '../../shared/icon';
                   <textarea [id]="'nt-' + a.id" rows="2" placeholder="Notas (quién respondió, próximos pasos…)" [value]="a.notes" (change)="apps.update(a.id, { notes: $any($event.target).value })"></textarea>
                   <div class="links">
                     @if (a.url) {
-                      <a [href]="a.url" target="_blank" rel="noopener">Ver en la fuente <app-icon name="external" [size]="14" /></a>
+                      <a [href]="a.url" target="_blank" rel="noopener">Ver en la fuente</a>
                     }
-                    <button type="button" class="btn ghost small-btn" (click)="apps.remove(a.id)" [attr.aria-label]="'Eliminar ' + a.title"><app-icon name="trash" [size]="16" /></button>
+                    <button type="button" class="btn ghost small-btn" (click)="apps.remove(a.id)" [attr.aria-label]="'Eliminar ' + a.title">Eliminar</button>
                   </div>
                 </article>
               }

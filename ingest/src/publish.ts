@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { searchOptions, type Job, type SearchDocument } from '@norte/core';
 import MiniSearch from 'minisearch';
@@ -16,6 +16,8 @@ export interface PublishOptions {
   commit: string | null;
   /** Archivos adicionales (estadísticas, CSV, informes) con ruta relativa al directorio de salida. */
   extraFiles?: Record<string, string | object>;
+  /** Archivos binarios ya validados (logos): ruta publicada → archivo local. */
+  assets?: Map<string, string>;
 }
 
 export const DATA_LICENSE = {
@@ -141,6 +143,10 @@ export async function publish(opts: PublishOptions): Promise<string[]> {
 
   await mkdir(outDir, { recursive: true });
   for (const [rel, content] of Object.entries(files)) await write(outDir, rel, content);
+  for (const [rel, source] of opts.assets ?? []) {
+    await mkdir(dirname(join(outDir, rel)), { recursive: true });
+    await copyFile(source, join(outDir, rel));
+  }
   await write(outDir, 'index.json', index);
   return ['index.json', ...Object.keys(files)];
 }

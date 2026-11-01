@@ -94,9 +94,9 @@ h1 {
 }
 .mode {
   position: relative;
-  display: grid;
-  justify-items: start;
-  gap: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   padding: 16px;
   border: 2px solid transparent;
   border-radius: var(--radius);
@@ -112,18 +112,6 @@ h1 {
 .mode.on {
   border-color: var(--brand);
   background: var(--brand-soft);
-}
-.tick {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--brand);
-  color: var(--on-brand);
 }
 .salary {
   margin-top: 14px;
@@ -144,4 +132,22 @@ h1 {
   .two {
     grid-template-columns: 1fr;
   }
+}
+.mode input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--brand);
+  flex: none;
+}
+.mode-text {
+  display: grid;
+  gap: 4px;
+}
+.tag .x {
+  width: auto;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
 }

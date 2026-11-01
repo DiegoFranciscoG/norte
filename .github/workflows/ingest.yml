@@ -37,10 +37,12 @@ jobs:
       - run: npm ci
       - id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-      - name: Restaurar caché HTTP (ETag)
+      - name: Restaurar caché HTTP (ETag) y logos ya validados
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: .cache/http
+          path: |
+            .cache/http
+            .cache/logos
           key: http-cache-${{ github.run_id }}
           restore-keys: http-cache-
       - name: Ingesta (el estado anterior se lee del sitio publicado)

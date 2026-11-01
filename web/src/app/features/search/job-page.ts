@@ -3,19 +3,18 @@ import { RouterLink } from '@angular/router';
 import { DataService } from '../../core/data.service';
 import { ProfileService } from '../../core/profile.service';
 import { SearchService } from '../../core/search.service';
-import { Icon } from '../../shared/icon';
 import { JobCard } from './job-card';
 import { JobDetail } from './job-detail';
 
 /** Ficha de vacante: el detalle a la izquierda y, al lado, más vacantes parecidas que le sirven a la persona. */
 @Component({
   selector: 'app-job-page',
-  imports: [JobDetail, JobCard, RouterLink, Icon],
+  imports: [JobDetail, JobCard, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="layout">
       <div class="main">
-        <a routerLink="/" class="back"><app-icon name="arrowLeft" [size]="18" /> Volver</a>
+        <a routerLink="/" class="back">Volver a los empleos</a>
         @if (job(); as j) {
           <app-job-detail [job]="j" [score]="score()" />
         } @else {

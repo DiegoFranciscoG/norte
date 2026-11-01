@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -31,7 +31,8 @@ function repoFiles(): string[] {
 }
 
 describe('T-01 ninguna fuente prohibida', () => {
-  const files = repoFiles().filter((f) => CODE_EXT.test(f) && !f.startsWith('docs/'));
+  // Un archivo borrado aún sin commit sigue en el índice de git: se ignora.
+  const files = repoFiles().filter((f) => CODE_EXT.test(f) && !f.startsWith('docs/') && existsSync(join(ROOT, f)));
 
   it('ningún archivo de código o configuración menciona LinkedIn, Multitrabajos o Computrabajo fuera de las listas permitidas', () => {
     const offenders = files.filter((f) => !ALLOWED.has(f) && FORBIDDEN.test(readFileSync(join(ROOT, f), 'utf8')));
