@@ -1,0 +1,59 @@
+# NORTE en local con datos de demostración: docker compose up --build
+# Copia .env.example a .env y completa DB_PASSWORD, JWT_SECRET y ALERTS_TRIGGER_TOKEN (sin ellos no arranca).
+name: norte
+
+services:
+  db:
+    image: postgres:18.6-alpine
+    environment:
+      POSTGRES_DB: norte
+      POSTGRES_USER: ${DB_USER:-norte}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-norte} -d norte']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    # Buzón de prueba para ver los correos de alertas en http://localhost:8025
+    image: axllent/mailpit:v1.29.7
+    ports:
+      - '8025:8025'
+
+  api:
+    build: ./api
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/norte
+      DB_USER: ${DB_USER:-norte}
+      DB_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET en .env (openssl rand -base64 48)}
+      ALERTS_TRIGGER_TOKEN: ${ALERTS_TRIGGER_TOKEN:?Define ALERTS_TRIGGER_TOKEN en .env (openssl rand -hex 32)}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:8081}
+      NORTE_INDEX_BASE_URL: http://web:8080/data/v1
+      NORTE_SITE_URL: ${NORTE_SITE_URL:-http://localhost:8081}
+      SMTP_HOST: mailpit
+      SMTP_PORT: '1025'
+      ALERTS_FROM: ${ALERTS_FROM:-alertas@norte.local}
+      OPENAPI_ENABLED: ${OPENAPI_ENABLED:-true}
+    ports:
+      - '8080:8080'
+
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    environment:
+      NORTE_API_URL: ${NORTE_API_URL:-http://localhost:8080}
+    ports:
+      - '8081:8080'
+
+volumes:
+  db-data:
