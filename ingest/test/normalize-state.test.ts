@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createGeoResolver, createJobClassifier, createSkillMatcher } from '@norte/core';
@@ -82,6 +82,7 @@ describe('estado entre ejecuciones', () => {
     expect(await loadPreviousState(join(dir, 'no-existe'), () => undefined)).toBeNull();
     expect(await loadPreviousState(null, () => undefined)).toBeNull();
     expect(JSON.parse(await readFile(join(dir, 'jobs.json'), 'utf8')).jobs).toHaveLength(1);
+    await rm(dir, { recursive: true, force: true });
   });
 });
 

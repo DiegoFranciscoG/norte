@@ -1,4 +1,4 @@
-import { mkdtemp, readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -80,5 +80,6 @@ describe('T-08 atribución presente en toda vacante que la exija', async () => {
     expect(missing).toEqual([]);
     const raw = await readFile(join(out, 'jobs.json'), 'utf8');
     expect(raw).not.toContain('JobPosting');
+    await rm(out, { recursive: true, force: true });
   });
 });
