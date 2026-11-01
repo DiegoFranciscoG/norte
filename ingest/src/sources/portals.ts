@@ -57,6 +57,7 @@ export const mapHimalayas: PortalMapper = (data, def) =>
       externalId: asStr(j['guid']),
       title: asStr(j['title']).trim(),
       company: asStr(j['companyName']).trim(),
+      companyLogoUrl: asStr(j['companyLogo']) || null,
       locationTexts: restrictions.length ? [] : ['Worldwide'],
       structuredCountries: restrictions,
       employmentText: asStr(j['employmentType']) || null,
@@ -115,6 +116,7 @@ export const mapJobicy: PortalMapper = (data, def) =>
       externalId: asStr(j['id']),
       title: asStr(j['jobTitle']).trim(),
       company: asStr(j['companyName']).trim(),
+      // Sin logo: Jobicy los sirve desde su propio servidor, que pide como máximo una consulta por hora.
       locationTexts: [asStr(j['jobGeo'])],
       employmentText: asArr(j['jobType']).map(asStr).join(' ') || null,
       seniorityTexts: [asStr(j['jobLevel'])].filter(Boolean),
@@ -145,6 +147,7 @@ export const mapGetOnBoard: PortalMapper = (data, def) =>
       externalId: asStr(item['id']),
       title: asStr(a['title']).trim(),
       company: asStr(asObj(rel('company')['attributes'])['name']).trim(),
+      companyLogoUrl: asStr(asObj(rel('company')['attributes'])['logo']) || null,
       locationTexts: [...cities.map((c) => `${asStr(c['name'])}, ${asStr(c['country'])}`), ...countries, asStr(a['remote_zone'])],
       city: asStr(cities[0]?.['name']) || null,
       structuredCountries: remoteModality === 'fully_remote' ? [] : [...new Set([...countries, ...cityCountries])],

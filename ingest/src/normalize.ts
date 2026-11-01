@@ -89,7 +89,7 @@ export function normalizePosting(raw: RawPosting, task: SourceTask, deps: Normal
     externalKey: `${task.sourceId}#${raw.externalId}`,
     sourceKind: task.kind,
     title,
-    company: { name: company, slug: companySlug(company) },
+    company: { name: company, slug: companySlug(company), logo: /^https:\/\/[^\s"<>]+$/.test(raw.companyLogoUrl ?? '') ? raw.companyLogoUrl! : null },
     location,
     modality,
     remoteScope,

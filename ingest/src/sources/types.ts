@@ -27,6 +27,8 @@ export interface RawPosting {
   applyUrl?: string | null;
   tags?: string[];
   remoteOnlySource?: boolean;
+  /** Logo de la empresa que entrega la propia fuente (solo fuentes que lo permiten). */
+  companyLogoUrl?: string | null;
 }
 
 export interface FetchContext {

@@ -7,6 +7,7 @@ import { FileHttpCache } from './http/cache.js';
 import { HttpClient } from './http/client.js';
 import { buildTasks, runPipeline } from './pipeline.js';
 import { publish } from './publish.js';
+import { attachLogos } from './logos.js';
 import { buildObservatory } from './stats/observatory.js';
 import { loadPreviousState } from './state.js';
 
@@ -18,6 +19,7 @@ async function main(): Promise<void> {
       out: { type: 'string', default: process.env['NORTE_OUT_DIR'] ?? 'site/data/v1' },
       previous: { type: 'string', default: process.env['NORTE_PREVIOUS_URL'] ?? '' },
       cache: { type: 'string', default: process.env['NORTE_CACHE_DIR'] ?? '.cache/http' },
+      logos: { type: 'string', default: process.env['NORTE_LOGOS_DIR'] ?? '.cache/logos' },
       only: { type: 'string', default: '' },
       demo: { type: 'boolean', default: false },
     },
@@ -41,6 +43,7 @@ async function main(): Promise<void> {
     tasks: values.demo ? [demoTask()] : only ? buildTasks(data).filter((t) => only.has(t.sourceId)) : undefined,
   });
 
+  const logos = values.demo ? new Map<string, string>() : await attachLogos(result.jobs, http, { cacheDir: resolve(values.logos), ...data.ingest.logos, log });
   const observatory = buildObservatory({ jobs: result.jobs, data, now, previousDays: previous?.history ?? [], previousMonths: previous?.months ?? [], demo: values.demo });
   const files = await publish({
     outDir,
@@ -51,6 +54,7 @@ async function main(): Promise<void> {
     buildVersion: process.env['NORTE_BUILD_VERSION'] ?? now.toISOString().replace(/[-:]/g, '').slice(0, 13),
     commit: process.env['GITHUB_SHA']?.slice(0, 7) ?? null,
     extraFiles: observatory,
+    assets: logos,
   });
 
   const runs = Object.values(result.sourceRuns);

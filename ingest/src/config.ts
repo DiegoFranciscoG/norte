@@ -75,6 +75,7 @@ export interface IngestConfig {
   smartrecruitersDetailOnlyForTechTitles: boolean;
   salary: SalaryConfig;
   classification: ClassificationConfig;
+  logos: { maxBytes: number; maxNewPerRun: number };
 }
 
 export interface LoadedData {

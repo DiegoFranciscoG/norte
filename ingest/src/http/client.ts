@@ -116,6 +116,38 @@ export class HttpClient {
     return run;
   }
 
+  /**
+   * Descarga binaria (logos) con el mismo turno, ritmo y presupuesto por host que las demás peticiones.
+   * Sin reintentos ni caché HTTP: un logo que falla simplemente no se muestra en esta ejecución.
+   */
+  async getBytes(url: string, maxBytes: number): Promise<Uint8Array | null> {
+    const host = new URL(url).host;
+    const bucket = this.bucketFor(host);
+    const previous = this.queues.get(bucket) ?? Promise.resolve();
+    const run = previous.catch(() => undefined).then(async () => {
+      const policy = this.policyFor(host);
+      const stats = this.stat(bucket);
+      if (stats.requests >= policy.maxRequestsPerRun) return null;
+      await this.waitTurn(bucket, policy);
+      stats.requests++;
+      this.lastRequestAt.set(bucket, this.now());
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), policy.timeoutMs);
+      try {
+        const res = await this.fetchImpl(url, { headers: { 'User-Agent': this.opts.userAgent, Accept: 'image/png,image/jpeg,image/webp,image/gif' }, signal: controller.signal, redirect: 'follow' });
+        if (!res.ok || Number(res.headers.get('content-length') ?? '0') > maxBytes) return null;
+        const bytes = new Uint8Array(await res.arrayBuffer());
+        return bytes.length > maxBytes ? null : bytes;
+      } catch {
+        return null;
+      } finally {
+        clearTimeout(timer);
+      }
+    });
+    this.queues.set(bucket, run);
+    return run;
+  }
+
   private stat(bucket: string): HostStats {
     let s = this.hostStats.get(bucket);
     if (!s) {
