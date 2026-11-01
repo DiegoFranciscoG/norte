@@ -3,7 +3,6 @@ import { RouterLink } from '@angular/router';
 import { DataService } from '../../core/data.service';
 import { stamp } from '../../core/format';
 import { BarChart, ColumnChart, DeltaBars, fmt, type ChartRow } from '../../shared/charts';
-import { Icon } from '../../shared/icon';
 import { STATS, type MonthlyFile, type ReportIndex, type SalaryStat, type Summary } from './models';
 
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -19,7 +18,7 @@ const CSV = [
 /** Observatorio público del mercado tecnológico accesible desde Ecuador: todo sale de los JSON estáticos de la ingesta. */
 @Component({
   selector: 'app-observatory-page',
-  imports: [BarChart, ColumnChart, DeltaBars, RouterLink, Icon],
+  imports: [BarChart, ColumnChart, DeltaBars, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './observatory-page.html',
   styleUrl: './observatory-page.scss',

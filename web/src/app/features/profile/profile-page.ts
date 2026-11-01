@@ -8,7 +8,6 @@ import { CvService } from '../../core/cv.service';
 import { DataService } from '../../core/data.service';
 import { GithubService } from '../../core/github.service';
 import { ProfileService } from '../../core/profile.service';
-import { Icon } from '../../shared/icon';
 import { LocationPicker } from '../../shared/location-picker';
 import type { WorkMode } from '../../core/models';
 
@@ -24,7 +23,7 @@ const WEIGHT_LABEL: Record<keyof Weights, string> = {
 
 @Component({
   selector: 'app-profile-page',
-  imports: [RouterLink, Icon, LocationPicker],
+  imports: [RouterLink, LocationPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.scss',

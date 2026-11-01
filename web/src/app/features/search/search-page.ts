@@ -5,14 +5,13 @@ import { DataService } from '../../core/data.service';
 import { GROUP_LABEL, SENIORITY_LABEL, countryName, slug } from '../../core/format';
 import { ProfileService } from '../../core/profile.service';
 import { FEEDS, SearchService, type Feed } from '../../core/search.service';
-import { Icon } from '../../shared/icon';
 import { JobCard } from './job-card';
 
 const PAGE = 24;
 
 @Component({
   selector: 'app-search-page',
-  imports: [JobCard, Icon, RouterLink],
+  imports: [JobCard, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './search-page.html',
   styleUrl: './search-page.scss',

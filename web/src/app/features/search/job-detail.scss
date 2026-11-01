@@ -57,14 +57,21 @@ h1 {
 .match h2 span.good {
   color: var(--brand);
 }
-.match .ring {
-  width: 64px;
-  height: 64px;
-  font-size: 1.15rem;
+.meter {
+  height: 8px;
+  margin: 4px 0 8px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
 }
-.match .ring::before {
-  background: var(--surface-2);
-  inset: 6px;
+.meter span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--text-3);
+}
+.meter.good span {
+  background: var(--brand);
 }
 .toggle {
   margin-top: 6px;

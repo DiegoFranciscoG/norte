@@ -11,7 +11,6 @@
       <h1 id="onb-title" tabindex="-1">Empecemos por tu CV</h1>
       <p class="muted lead">Lo leemos aquí, en tu navegador: el archivo y su texto nunca se envían a ningún servidor. Solo guardamos las habilidades que detectamos.</p>
       <label class="drop" for="onb-cv" [class.busy]="cvState() === 'reading'">
-        <app-icon name="upload" [size]="28" />
         <strong>{{ cvState() === 'reading' ? 'Leyendo tu CV…' : 'Elige tu CV en PDF' }}</strong>
         <span class="small muted">o arrástralo aquí</span>
         <input id="onb-cv" type="file" accept="application/pdf,.pdf" (change)="onCv($event)" />
@@ -21,7 +20,6 @@
       }
       @if (found(); as f) {
         <div class="notice found" role="status">
-          <app-icon name="check" [size]="18" />
           <span>Detectamos {{ f.skills }} habilidades{{ f.years !== null ? ', unos ' + f.years + ' años de experiencia' : '' }}{{ f.english ? ' e inglés ' + f.english : '' }}. En el siguiente paso puedes corregirlo.</span>
         </div>
       }
@@ -41,7 +39,7 @@
             @for (s of skills(); track s.id) {
               <li class="tag">
                 {{ s.name }}
-                <button type="button" class="x" (click)="profiles.removeSkill(s.id)" [attr.aria-label]="'Quitar ' + s.name"><app-icon name="x" [size]="14" /></button>
+                <button type="button" class="x" (click)="profiles.removeSkill(s.id)" [attr.aria-label]="'Quitar ' + s.name">Quitar</button>
               </li>
             }
           </ul>
@@ -95,14 +93,13 @@
       <p class="muted lead">Elige una o varias. Puedes cambiarlo cuando quieras.</p>
       <div class="modes" role="group" aria-label="Modalidades">
         @for (m of modes; track m.id) {
-          <button type="button" class="mode" [class.on]="p().modalities.includes(m.id)" [attr.aria-pressed]="p().modalities.includes(m.id)" (click)="profiles.toggleMode(m.id)">
-            <app-icon [name]="m.icon" [size]="24" />
-            <strong>{{ m.title }}</strong>
-            <span class="small muted">{{ m.detail() }}</span>
-            @if (p().modalities.includes(m.id)) {
-              <span class="tick" aria-hidden="true"><app-icon name="check" [size]="16" /></span>
-            }
-          </button>
+          <label class="mode" [class.on]="p().modalities.includes(m.id)">
+            <input type="checkbox" [checked]="p().modalities.includes(m.id)" (change)="profiles.toggleMode(m.id)" />
+            <span class="mode-text">
+              <strong>{{ m.title }}</strong>
+              <span class="small muted">{{ m.detail() }}</span>
+            </span>
+          </label>
         }
       </div>
       <label class="check"><input type="checkbox" [checked]="p().acceptsRelocation" (change)="profiles.update({ acceptsRelocation: $any($event.target).checked })" /> Me mudaría a otra ciudad de mi país</label>

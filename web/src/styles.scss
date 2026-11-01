@@ -7,6 +7,7 @@
   --surface-2: #f3f3f1;
   --surface-3: #e8e8e5;
   --border: #e4e4e0;
+  --border-strong: #c9c9c4;
   --text: #0f0f0f;
   --text-2: #4f4f4c;
   --text-3: #686864;
@@ -42,6 +43,7 @@
   --surface-2: #242424;
   --surface-3: #2f2f2f;
   --border: #2e2e2e;
+  --border-strong: #454545;
   --text: #f1f1f1;
   --text-2: #bdbdbd;
   --text-3: #9e9e9e;
@@ -256,10 +258,14 @@ h3 {
 }
 .chip.active,
 .pill.active {
-  background: var(--brand-soft);
-  border-color: var(--brand);
-  color: var(--text);
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
   font-weight: 600;
+}
+.chip.active .count {
+  color: inherit;
+  opacity: 0.75;
 }
 .chip .count {
   color: var(--text-3);
@@ -285,17 +291,6 @@ h3 {
 .pill:focus-within {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-}
-.pill::after {
-  content: '';
-  width: 7px;
-  height: 7px;
-  margin: -3px 0 0 2px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg);
-  opacity: 0.7;
-  pointer-events: none;
 }
 .pill.active select option {
   color: var(--text);
@@ -413,36 +408,6 @@ label {
   color: #ffffff;
   font-size: 0.72rem;
   font-weight: 700;
-}
-
-/* Anillo de encaje: el número es el protagonista; el arco muestra la proporción. */
-.ring {
-  --p: 0;
-  --ring-color: var(--text-3);
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: conic-gradient(var(--ring-color) calc(var(--p) * 1%), var(--surface-3) 0);
-  font-weight: 700;
-  font-size: 0.95rem;
-  font-variant-numeric: tabular-nums;
-  flex: none;
-}
-.ring::before {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  background: var(--surface);
-}
-.ring > span {
-  position: relative;
-}
-.ring.good {
-  --ring-color: var(--brand);
 }
 
 .table {

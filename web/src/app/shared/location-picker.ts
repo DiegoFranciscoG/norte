@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, output, s
 import { countryName } from '../core/format';
 import { LocationService } from '../core/location.service';
 import { ProfileService } from '../core/profile.service';
-import { Icon } from './icon';
 
 /**
  * Elegir dónde vives: con el botón de ubicación (el navegador pide permiso y la ciudad más cercana se calcula aquí,
@@ -10,12 +9,10 @@ import { Icon } from './icon';
  */
 @Component({
   selector: 'app-location-picker',
-  imports: [Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="picker">
       <button type="button" class="btn locate" (click)="useMyLocation()" [disabled]="location.state() === 'locating'">
-        <app-icon name="target" [size]="18" />
         {{ location.state() === 'locating' ? 'Buscando tu ciudad…' : 'Usar mi ubicación' }}
       </button>
       <p class="small muted hint" aria-live="polite">

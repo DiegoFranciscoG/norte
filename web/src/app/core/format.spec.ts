@@ -1,5 +1,5 @@
 import type { Job } from '@norte/core';
-import { avatarColor, initials, locationLabel, salaryLabel, slug, timeAgo } from './format';
+import { locationLabel, salaryLabel, slug, stamp, timeAgo } from './format';
 
 const base = {
   location: { city: 'Cuenca', province: 'Azuay', country: 'EC', raw: '' },
@@ -32,9 +32,9 @@ describe('format', () => {
     expect(salaryLabel({ ...base, salary: { min: 5000000, max: null, currency: 'COP', period: 'month', usdMonthlyMin: null, usdMonthlyMax: null, convertible: false, fx: null } })).toContain('moneda no convertible');
   });
 
-  it('builds stable avatars and slugs', () => {
-    expect(initials('Kruger NearShore (Rekluti)')).toBe('KN');
-    expect(avatarColor('Devsu')).toBe(avatarColor('Devsu'));
+  it('builds slugs and readable timestamps', () => {
     expect(slug('Desarrollador Java Señor')).toBe('desarrollador-java-senor');
+    expect(stamp('2026-11-01T14:49:07.000Z')).toBe('2026-11-01 14:49 UTC');
+    expect(stamp(null)).toBe('');
   });
 });

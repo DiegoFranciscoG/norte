@@ -6,7 +6,6 @@ import { DataService } from '../../core/data.service';
 import { countryName } from '../../core/format';
 import type { WorkMode } from '../../core/models';
 import { ProfileService } from '../../core/profile.service';
-import { Icon } from '../../shared/icon';
 import { LocationPicker } from '../../shared/location-picker';
 
 type Step = 'cv' | 'data' | 'place' | 'modes';
@@ -18,7 +17,7 @@ const STEPS: Step[] = ['cv', 'data', 'place', 'modes'];
  */
 @Component({
   selector: 'app-onboarding-page',
-  imports: [Icon, LocationPicker, RouterLink],
+  imports: [LocationPicker, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './onboarding-page.html',
   styleUrl: './onboarding-page.scss',
@@ -40,10 +39,10 @@ export class OnboardingPage {
   protected readonly catalog = computed(() => (this.data.skills()?.skills ?? []).map((s) => ({ id: s.id, name: s.name })).sort((a, b) => a.name.localeCompare(b.name)));
   protected readonly skills = computed(() => [...new Set([...this.p().demonstrated.map((d) => d.id), ...this.p().declared])].map((id) => ({ id, name: this.data.skillName(id) })));
   protected readonly country = computed(() => countryName(this.p().homeCountry) || 'tu país');
-  protected readonly modes: { id: WorkMode; title: string; icon: string; detail: () => string }[] = [
-    { id: 'onsite', title: 'Presencial', icon: 'building', detail: () => `En ${this.country()}, primero cerca de tu ciudad.` },
-    { id: 'hybrid', title: 'Híbrido', icon: 'pin', detail: () => `En ${this.country()}: unos días en oficina.` },
-    { id: 'remote', title: 'Remoto', icon: 'laptop', detail: () => `Desde ${this.country()}, para empresas de cualquier país que te admitan.` },
+  protected readonly modes: { id: WorkMode; title: string; detail: () => string }[] = [
+    { id: 'onsite', title: 'Presencial', detail: () => `En ${this.country()}, primero cerca de tu ciudad.` },
+    { id: 'hybrid', title: 'Híbrido', detail: () => `En ${this.country()}: unos días en oficina.` },
+    { id: 'remote', title: 'Remoto', detail: () => `Desde ${this.country()}, para empresas de cualquier país que te admitan.` },
   ];
 
   async onCv(event: Event): Promise<void> {

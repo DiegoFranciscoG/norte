@@ -128,9 +128,9 @@
       <p class="small muted">Archivos estáticos de solo lectura, actualizados con cada ingesta. Licencia CC BY 4.0: cita «NORTE, observatorio del mercado laboral tecnológico de Ecuador» con enlace.</p>
       <ul class="chip-list">
         @for (c of csv; track c.file) {
-          <li><a class="chip" [href]="c.url" download><app-icon name="download" [size]="16" /> {{ c.label }} (CSV)</a></li>
+          <li><a class="chip" [href]="c.url" download>{{ c.label }} (CSV)</a></li>
         }
-        <li><a class="chip" [href]="apiUrl"><app-icon name="code" [size]="16" /> API JSON (índice de archivos)</a></li>
+        <li><a class="chip" [href]="apiUrl">API JSON (índice de archivos)</a></li>
       </ul>
       <details class="method">
         <summary>Metodología</summary>

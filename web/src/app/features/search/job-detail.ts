@@ -3,9 +3,9 @@ import { RouterLink } from '@angular/router';
 import { analyzeGap, profileSets, remoteEligibility, type Job, type ScoreResult } from '@norte/core';
 import { ApplicationsService } from '../../core/applications.service';
 import { DataService } from '../../core/data.service';
-import { EMPLOYMENT_LABEL, MODALITY_LABEL, SENIORITY_LABEL, avatarColor, countryName, initials, locationLabel, salaryLabel, slug, timeAgo } from '../../core/format';
+import { EMPLOYMENT_LABEL, MODALITY_LABEL, SENIORITY_LABEL, countryName, locationLabel, salaryLabel, slug, timeAgo } from '../../core/format';
 import { ProfileService } from '../../core/profile.service';
-import { Icon } from '../../shared/icon';
+import { CompanyLogo } from '../../shared/company-logo';
 
 const COMPONENT_LABEL: Record<string, string> = {
   demonstrated: 'Habilidades demostradas',
@@ -19,7 +19,7 @@ const COMPONENT_LABEL: Record<string, string> = {
 
 @Component({
   selector: 'app-job-detail',
-  imports: [Icon, RouterLink],
+  imports: [CompanyLogo, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './job-detail.html',
   styleUrl: './job-detail.scss',
@@ -34,14 +34,13 @@ export class JobDetail {
   protected readonly showBreakdown = signal(false);
   protected readonly labels = COMPONENT_LABEL;
 
-  protected readonly initials = computed(() => initials(this.job().company.name));
-  protected readonly color = computed(() => avatarColor(this.job().company.name));
   protected readonly location = computed(() => locationLabel(this.job()));
   protected readonly ago = computed(() => timeAgo(this.job().publishedAt));
   protected readonly salary = computed(() => salaryLabel(this.job()));
   protected readonly modality = computed(() => MODALITY_LABEL[this.job().modality]);
   protected readonly employment = computed(() => EMPLOYMENT_LABEL[this.job().employmentType]);
   protected readonly seniority = computed(() => SENIORITY_LABEL[this.job().seniority]);
+  protected readonly sourceName = computed(() => this.job().sources[0]?.sourceName ?? 'la fuente');
   protected readonly applyUrl = computed(() => this.job().sources[0]?.applyUrl ?? this.job().sources[0]?.url ?? '#');
   protected readonly saved = computed(() => this.apps.byJob().get(this.job().id) ?? null);
   protected readonly hasProfile = this.profiles.hasProfile;
@@ -93,13 +92,15 @@ export class JobDetail {
     return ids.map((id) => this.data.skillName(id)).join(', ');
   }
 
+  /** Decimales con coma, como se escriben en español. */
+  protected num(n: number): string {
+    return String(n).replace('.', ',');
+  }
+
   protected pct(points: number, max: number): number {
     return max > 0 ? Math.round((points / max) * 100) : 0;
   }
 
-  protected round(n: number): number {
-    return Math.round(n);
-  }
 
   protected save(): void {
     this.apps.save(this.job());

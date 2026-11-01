@@ -51,6 +51,19 @@ test.describe('NORTE global: ubicación, modalidades y recomendaciones', () => {
     expect(new Set(await companies(page))).toEqual(new Set(['Ibérica Cloud Demo']));
   });
 
+  test('sin íconos: todo es texto, y al pasar el cursor por una vacante aparece su descripción breve', async ({ page }) => {
+    await onboardInMadrid(page);
+    await expect(page.locator('svg')).toHaveCount(0);
+    const card = page.locator('app-job-card').first();
+    const preview = card.locator('.preview');
+    await expect(preview).toBeHidden();
+    await card.locator('h3').hover();
+    await expect(preview).toBeVisible();
+    await expect(preview).toContainText('Publicada en');
+    await expect(preview).toContainText('Pide');
+    await shot(page, '09-vista-previa');
+  });
+
   test('cambiar la ubicación desde la barra cambia las recomendaciones', async ({ page }) => {
     await onboardInMadrid(page);
     await page.getByRole('button', { name: /Tu ubicación: Madrid, España/ }).click();
@@ -91,7 +104,7 @@ test.describe('NORTE global: ubicación, modalidades y recomendaciones', () => {
     await reload.click();
     await expect(reload).toBeHidden();
     await page.getByRole('button', { name: 'Más recientes' }).click();
-    await expect(page.locator('app-job-card .tag.new').first()).toBeVisible();
+    await expect(page.locator('app-job-card .ago', { hasText: 'Nueva' }).first()).toBeVisible();
   });
 
   test('el observatorio publica cifras, gráficos e informes', async ({ page }) => {
