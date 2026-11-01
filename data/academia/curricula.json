@@ -1,0 +1,5 @@
+{
+  "version": "2026.10.31",
+  "description": "Mallas curriculares para la brecha academia–mercado. Vacío a propósito: cada malla debe cargarse desde su fuente oficial (sitio de la universidad), con fecha de obtención y licencia, según curricula.schema.json.",
+  "curricula": []
+}
