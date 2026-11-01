@@ -46,9 +46,9 @@ import { Icon } from '../../shared/icon';
                   <p class="small muted">{{ a.company }} · guardada {{ a.savedAt.slice(0, 10) }}{{ a.appliedAt ? ' · postulada ' + a.appliedAt : '' }}</p>
                   <div class="controls">
                     <label class="visually-hidden" [for]="'st-' + a.id">Estado</label>
-                    <select [id]="'st-' + a.id" [value]="a.status" (change)="setStatus(a, $any($event.target).value)">
+                    <select [id]="'st-' + a.id" (change)="setStatus(a, $any($event.target).value)">
                       @for (s of statuses; track s.id) {
-                        <option [value]="s.id">{{ s.label }}</option>
+                        <option [value]="s.id" [selected]="a.status === s.id">{{ s.label }}</option>
                       }
                     </select>
                     <label class="visually-hidden" [for]="'fu-' + a.id">Recordatorio de seguimiento</label>

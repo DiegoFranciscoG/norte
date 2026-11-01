@@ -128,22 +128,25 @@
 
     <div>
       <section class="card section" aria-labelledby="pref-title">
-        <h2 id="pref-title">Preferencias</h2>
-        <div class="field">
-          <label for="home">Tu ciudad</label>
-          <input id="home" type="text" [value]="p().homeCity" (change)="profiles.update({ homeCity: $any($event.target).value || data.homeCity() })" />
-        </div>
-        <label class="check"><input type="checkbox" [checked]="p().acceptsRelocation" (change)="profiles.update({ acceptsRelocation: $any($event.target).checked })" /> Acepto mudarme a otra ciudad de Ecuador</label>
+        <h2 id="pref-title">Dónde y cómo quieres trabajar</h2>
+        <app-location-picker />
+        <fieldset class="modes">
+          <legend>Modalidades que buscas</legend>
+          @for (m of modeOptions; track m.id) {
+            <label class="check"><input type="checkbox" [checked]="p().modalities.includes(m.id)" (change)="profiles.toggleMode(m.id)" /> {{ m.label }}</label>
+          }
+        </fieldset>
+        <label class="check"><input type="checkbox" [checked]="p().acceptsRelocation" (change)="profiles.update({ acceptsRelocation: $any($event.target).checked })" /> Me mudaría a otra ciudad de mi país</label>
         <div class="field">
           <label for="years">Años de experiencia</label>
           <input id="years" type="number" min="0" max="50" step="0.5" [value]="p().yearsOfExperience ?? ''" (change)="setNumber('yearsOfExperience', $any($event.target).value)" />
         </div>
         <div class="field">
           <label for="english">Nivel de inglés (MCER)</label>
-          <select id="english" [value]="p().englishLevel ?? ''" (change)="profiles.setEnglish($any($event.target).value || null)">
-            <option value="">No declarado</option>
+          <select id="english" (change)="profiles.setEnglish($any($event.target).value || null)">
+            <option value="" [selected]="!p().englishLevel">No declarado</option>
             @for (l of levels; track l) {
-              <option [value]="l">{{ l }}</option>
+              <option [value]="l" [selected]="p().englishLevel === l">{{ l }}</option>
             }
           </select>
         </div>

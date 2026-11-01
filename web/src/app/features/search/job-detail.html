@@ -24,8 +24,10 @@
       } @else {
         <li class="tag warn">Salario no declarado</li>
       }
-      @if (job().modality === 'remote' && job().remoteScope?.ecuadorEligible === null) {
-        <li class="tag warn">Confirma si aceptan Ecuador</li>
+      @if (eligibility() === null) {
+        <li class="tag warn">Confirma si admiten personas de {{ yourCountry() }}</li>
+      } @else if (eligibility() === false) {
+        <li class="tag warn">No admite personas de {{ yourCountry() }}</li>
       }
     </ul>
     <div class="actions">
@@ -46,7 +48,7 @@
           <h2 id="match-title">Tu encaje: <span [class.good]="s.fit === 'good'">{{ s.total }}</span>/100</h2>
           <p class="muted">{{ s.fit === 'good' ? 'Encajas con esta vacante.' : 'No encajas todavía: revisa lo que falta.' }}</p>
         </div>
-        <div class="ring" [class.good]="s.fit === 'good'" aria-hidden="true" [style.--p]="s.total">{{ round(s.total) }}</div>
+        <div class="ring" [class.good]="s.fit === 'good'" aria-hidden="true" [style.--p]="s.total"><span>{{ round(s.total) }}</span></div>
       </div>
       <button type="button" class="btn ghost toggle" (click)="showBreakdown.set(!showBreakdown())" [attr.aria-expanded]="showBreakdown()" aria-controls="breakdown">
         {{ showBreakdown() ? 'Ocultar desglose' : 'Ver desglose del puntaje' }}
@@ -69,7 +71,7 @@
     } @else {
       <h2 id="match-title">¿Encajas con esta vacante?</h2>
       <p class="muted">Sube tu CV (se lee en tu dispositivo) o conecta tu GitHub para ver tu puntaje, por qué encajas y qué te falta.</p>
-      <a class="btn" routerLink="/perfil">Completar mi perfil</a>
+      <a class="btn primary" routerLink="/bienvenida">Subir mi CV</a>
     }
   </section>
 
