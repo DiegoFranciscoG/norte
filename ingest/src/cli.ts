@@ -41,7 +41,7 @@ async function main(): Promise<void> {
     tasks: values.demo ? [demoTask()] : only ? buildTasks(data).filter((t) => only.has(t.sourceId)) : undefined,
   });
 
-  const observatory = buildObservatory({ jobs: result.jobs, data, now, previousHistory: previous?.history ?? [], fx, demo: values.demo });
+  const observatory = buildObservatory({ jobs: result.jobs, data, now, previousDays: previous?.history ?? [], previousMonths: previous?.months ?? [], demo: values.demo });
   const files = await publish({
     outDir,
     data,

@@ -17,11 +17,12 @@ export interface SourceRun {
   lastFetchedAt: string | null;
 }
 
-/** Lo que una ejecución hereda de la anterior: vacantes, última consulta por fuente y la serie diaria del observatorio. */
+/** Lo que una ejecución hereda de la anterior: vacantes, última consulta por fuente y las series del observatorio. */
 export interface PreviousState {
   jobs: Job[];
   sourceRuns: Record<string, SourceRun>;
   history: unknown[];
+  months?: unknown[];
 }
 
 export function stableJobId(externalKey: string): string {
@@ -128,6 +129,7 @@ export async function loadPreviousState(location: string | null, log: (m: string
   try {
     const [index, jobs] = await Promise.all([read('index.json'), read('jobs.json')]);
     const history = await read('stats/history.json').catch(() => ({ days: [] }));
+    const monthly = await read('stats/monthly.json').catch(() => ({ months: [] }));
     const idx = index as { sourceRuns?: Record<string, SourceRun>; demo?: boolean };
     if (idx.demo) {
       log('El estado anterior es de demostración: se ignora.');
@@ -137,6 +139,7 @@ export async function loadPreviousState(location: string | null, log: (m: string
       jobs: ((jobs as { jobs?: Job[] }).jobs ?? []),
       sourceRuns: idx.sourceRuns ?? {},
       history: ((history as { days?: unknown[] }).days ?? []),
+      months: ((monthly as { months?: unknown[] }).months ?? []),
     };
   } catch (err) {
     log(`Sin estado anterior utilizable (${err instanceof Error ? err.message : String(err)}): se empieza de cero.`);

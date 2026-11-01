@@ -1,0 +1,288 @@
+{
+  "version": "2026.10.31",
+  "description": "Parámetros del observatorio público. Cambiar un valor aquí cambia las estadísticas sin tocar código.",
+  "utcOffsetHours": -5,
+  "cities": [
+    "Cuenca",
+    "Quito",
+    "Guayaquil"
+  ],
+  "otherCitiesLabel": "Otras ciudades de Ecuador",
+  "minSample": 3,
+  "topSkills": 20,
+  "topCompanies": 10,
+  "topSkillsPerCity": 5,
+  "topCompaniesPerCity": 3,
+  "trend": {
+    "windowDays": 90,
+    "weeks": 13,
+    "skills": 10,
+    "minCount": 5,
+    "highlights": 5
+  },
+  "monthly": {
+    "keepMonths": 36,
+    "companiesPerMonth": 10,
+    "keepDays": 400
+  },
+  "academia": {
+    "demandTopSkills": 30
+  },
+  "roles": [
+    {
+      "id": "data",
+      "label": "Datos e IA",
+      "keywords": [
+        "data engineer",
+        "ingeniero de datos",
+        "ingeniera de datos",
+        "data scientist",
+        "cientifico de datos",
+        "cientifica de datos",
+        "data analyst",
+        "analista de datos",
+        "machine learning",
+        "ml engineer",
+        "inteligencia artificial",
+        "ai engineer",
+        "business intelligence",
+        "bi developer",
+        "power bi",
+        "analytics engineer",
+        "analitica"
+      ]
+    },
+    {
+      "id": "devops",
+      "label": "DevOps, nube e infraestructura",
+      "keywords": [
+        "devops",
+        "devsecops",
+        "sre",
+        "site reliability",
+        "cloud engineer",
+        "cloud architect",
+        "platform engineer",
+        "infraestructura",
+        "infrastructure",
+        "kubernetes",
+        "sysadmin",
+        "administrador de sistemas",
+        "network engineer",
+        "redes"
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Seguridad",
+      "keywords": [
+        "security engineer",
+        "security analyst",
+        "seguridad informatica",
+        "seguridad de la informacion",
+        "ciberseguridad",
+        "cybersecurity",
+        "pentester",
+        "soc analyst"
+      ]
+    },
+    {
+      "id": "qa",
+      "label": "Calidad (QA)",
+      "keywords": [
+        "qa",
+        "quality assurance",
+        "tester",
+        "testing",
+        "sdet",
+        "automation engineer",
+        "automatizacion de pruebas"
+      ]
+    },
+    {
+      "id": "mobile",
+      "label": "Móvil",
+      "keywords": [
+        "mobile",
+        "movil",
+        "android",
+        "ios",
+        "flutter",
+        "react native"
+      ]
+    },
+    {
+      "id": "fullstack",
+      "label": "Full stack",
+      "keywords": [
+        "full stack",
+        "fullstack",
+        "full-stack"
+      ]
+    },
+    {
+      "id": "frontend",
+      "label": "Frontend",
+      "keywords": [
+        "frontend",
+        "front-end",
+        "front end",
+        "ui developer",
+        "react developer",
+        "angular developer"
+      ]
+    },
+    {
+      "id": "backend",
+      "label": "Backend",
+      "keywords": [
+        "backend",
+        "back-end",
+        "back end",
+        "java developer",
+        "desarrollador java",
+        "python developer",
+        ".net developer",
+        "node developer",
+        "golang"
+      ]
+    },
+    {
+      "id": "erp",
+      "label": "ERP y CRM",
+      "keywords": [
+        "sap",
+        "abap",
+        "salesforce",
+        "odoo",
+        "erp",
+        "crm",
+        "dynamics 365"
+      ]
+    },
+    {
+      "id": "management",
+      "label": "Producto y gestión",
+      "keywords": [
+        "product owner",
+        "product manager",
+        "scrum master",
+        "project manager",
+        "gerente de proyectos",
+        "jefe de proyectos",
+        "engineering manager",
+        "tech lead",
+        "lider tecnico",
+        "cto"
+      ]
+    },
+    {
+      "id": "design",
+      "label": "Diseño UX/UI",
+      "keywords": [
+        "ux",
+        "ui designer",
+        "ux/ui",
+        "product designer",
+        "disenador ux",
+        "disenadora ux"
+      ]
+    },
+    {
+      "id": "support",
+      "label": "Soporte y mesa de ayuda",
+      "keywords": [
+        "soporte tecnico",
+        "soporte ti",
+        "technical support",
+        "it support",
+        "help desk",
+        "helpdesk",
+        "mesa de ayuda",
+        "service desk"
+      ]
+    },
+    {
+      "id": "software",
+      "label": "Desarrollo de software (general)",
+      "keywords": [
+        "developer",
+        "desarrollador",
+        "desarrolladora",
+        "programador",
+        "programadora",
+        "programmer",
+        "software engineer",
+        "ingeniero de software",
+        "ingeniera de software",
+        "software"
+      ]
+    }
+  ],
+  "otherRoleLabel": "Otros perfiles tecnológicos",
+  "seniorityLabels": {
+    "intern": "Pasante",
+    "junior": "Junior",
+    "mid": "Semi senior",
+    "senior": "Senior",
+    "lead": "Líder",
+    "unknown": "Nivel no indicado"
+  },
+  "marketLabels": {
+    "ecuador": "Empleos ubicados en Ecuador",
+    "internacional": "Remotos de empresas fuera de Ecuador"
+  },
+  "monthNames": [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre"
+  ],
+  "report": {
+    "headline": "En {month} NORTE registró {newJobs} vacantes tecnológicas nuevas accesibles desde Ecuador.",
+    "changeUp": "Son {change} % más que en {previousMonth} ({previousNewJobs}).",
+    "changeDown": "Son {change} % menos que en {previousMonth} ({previousNewJobs}).",
+    "changeFlat": "La misma cantidad que en {previousMonth}.",
+    "mix": "El {remoteShare} % fue remoto y el {ecuadorShare} % estaba ubicado en Ecuador.",
+    "salary": "Solo el {withSalaryShare} % publicó el salario.",
+    "topSkill": "La habilidad más pedida fue {skill}, presente en el {share} % de las vacantes nuevas.",
+    "rising": "La que más ganó presencia frente a {previousMonth} fue {skill} (+{delta} puntos).",
+    "partial": "Mes en curso: cifras hasta el {until}.",
+    "firstMonth": "Es el primer mes observado: incluye las vacantes que ya estaban publicadas cuando empezó el observatorio."
+  },
+  "methodology": [
+    "Cada vacante se cuenta una sola vez aunque aparezca en varias fuentes (deduplicación T-02).",
+    "Las series mensuales cuentan vacantes por el mes en que NORTE las vio por primera vez; un mes cerrado no se recalcula.",
+    "La tendencia de 90 días compara la presencia de cada habilidad entre la primera y la segunda mitad de la ventana; con menos de 90 días observados se marca como historial insuficiente.",
+    "Los salarios son los que publica cada vacante, convertidos a USD mensuales con la tasa del BCE de la fecha de obtención; se usa el punto medio del rango.",
+    "Las cifras con menos de {minSample} vacantes no se publican: una mediana de una o dos vacantes no representa al mercado.",
+    "No hay datos personales: solo conteos de vacantes, habilidades, ciudades y empresas."
+  ],
+  "academiaEmptyNote": "Todavía no hay mallas cargadas. La brecha se calcula en cuanto se agregue una malla con su fuente oficial en data/academia/curricula.json.",
+  "publicApi": {
+    "title": "API pública de solo lectura del observatorio NORTE",
+    "updateFrequency": "Cada 3 horas (GitHub Actions)",
+    "endpoints": {
+      "stats/summary.json": "Foto actual: habilidades, ciudades, remoto, salarios, empresas y tendencia de 90 días",
+      "stats/monthly.json": "Serie mensual de vacantes nuevas (los meses cerrados no cambian)",
+      "stats/history.json": "Serie diaria de vacantes abiertas",
+      "stats/reports/index.json": "Lista de informes mensuales disponibles",
+      "stats/reports/{AAAA-MM}.json": "Informe automático de un mes",
+      "stats/academia.json": "Brecha academia–mercado (vacía hasta cargar mallas oficiales)",
+      "stats/skills.csv": "Habilidades más pedidas hoy",
+      "stats/monthly.csv": "Vacantes nuevas por mes, remoto, salario publicado y ciudades",
+      "stats/monthly-skills.csv": "Vacantes nuevas por mes y habilidad",
+      "stats/cities.csv": "Comparación de ciudades",
+      "stats/salaries.csv": "Salarios publicados por mercado, rol y nivel",
+      "stats/companies.csv": "Empresas con más vacantes abiertas"
+    }
+  }
+}

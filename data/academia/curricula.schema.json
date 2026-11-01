@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:norte:esquema:curricula",
+  "title": "Mallas curriculares de NORTE",
+  "description": "Cada malla enlaza sus asignaturas con habilidades del catálogo (data/skills/catalog.json). Sin fuente oficial y fecha, una malla no se carga.",
+  "type": "object",
+  "required": ["version", "curricula"],
+  "properties": {
+    "version": { "type": "string" },
+    "description": { "type": "string" },
+    "curricula": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "university", "program", "city", "source", "courses"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "university": { "type": "string" },
+          "program": { "type": "string" },
+          "city": { "type": "string" },
+          "source": {
+            "type": "object",
+            "required": ["url", "retrievedAt"],
+            "additionalProperties": false,
+            "properties": {
+              "url": { "type": "string", "format": "uri" },
+              "retrievedAt": { "type": "string", "format": "date" },
+              "license": { "type": "string" }
+            }
+          },
+          "courses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "skills"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "semester": { "type": "integer", "minimum": 1, "maximum": 14 },
+                "skills": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

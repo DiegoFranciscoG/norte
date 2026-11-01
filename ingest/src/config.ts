@@ -3,6 +3,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ClassificationConfig, ExtractionConfig, GeoData, HomeConfig, Region, SalaryConfig, SkillCatalog } from '@norte/core';
 import type { HostPolicy } from './http/client.js';
+import type { ObservatoryConfig } from './stats/observatory.js';
 
 export type AtsId = 'greenhouse' | 'lever' | 'ashby' | 'workable' | 'recruitee' | 'smartrecruiters' | 'teamtailor';
 
@@ -82,6 +83,7 @@ export interface LoadedData {
   learning: object;
   dependencies: object;
   curricula: object;
+  observatory: ObservatoryConfig;
 }
 
 export function defaultDataDir(): string {
@@ -122,5 +124,6 @@ export function loadData(dataDir = defaultDataDir()): LoadedData {
     learning: readOptional(dataDir, { resources: [] }, 'skills', 'learning.json'),
     dependencies: readOptional(dataDir, {}, 'skills', 'dependencies.json'),
     curricula: readOptional(dataDir, { curricula: [] }, 'academia', 'curricula.json'),
+    observatory: readJson(dataDir, 'config', 'observatory.json'),
   };
 }
