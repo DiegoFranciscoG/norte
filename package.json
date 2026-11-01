@@ -17,8 +17,8 @@
   "scripts": {
     "build:core": "npm run build -w @norte/core",
     "build:ingest": "npm run build:core && npm run build -w @norte/ingest",
-    "ingest": "npm run build:ingest && npm run start -w @norte/ingest",
-    "ingest:demo": "npm run build:ingest && npm run demo -w @norte/ingest",
+    "ingest": "npm run build:ingest && node --enable-source-maps ingest/dist/cli.js",
+    "ingest:demo": "npm run build:ingest && node --enable-source-maps ingest/dist/cli.js --demo",
     "test": "npm run build:core && vitest run",
     "test:coverage": "npm run build:core && vitest run --coverage",
     "web:build": "npm run build:core && npm run build -w @norte/web",
