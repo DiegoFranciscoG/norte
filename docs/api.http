@@ -1,0 +1,121 @@
+### NORTE API — ejemplos (extensión REST Client de VS Code o cliente HTTP de JetBrains)
+### Levanta todo con `docker compose up --build` y usa correos de prueba inventados.
+
+@baseUrl = http://localhost:8080
+@email = ana.prueba@example.com
+@password = cambia-esta-clave-de-prueba
+
+### Textos de consentimiento vigentes (públicos)
+GET {{baseUrl}}/api/v1/consent-texts
+
+### Crear cuenta: cada finalidad se acepta por separado (o no se acepta)
+POST {{baseUrl}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "consents": [
+    { "purpose": "PROFILE_STORAGE", "granted": true, "textVersion": "2026-10" }
+  ]
+}
+
+### Iniciar sesión
+# @name login
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+###
+@access = {{login.response.body.accessToken}}
+@refresh = {{login.response.body.refreshToken}}
+
+### Guardar preferencias (requiere PROFILE_STORAGE)
+PUT {{baseUrl}}/api/v1/me/profile
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{
+  "homeCity": "Cuenca",
+  "acceptsRelocation": false,
+  "yearsOfExperience": 2,
+  "englishLevel": "B2",
+  "minSalaryUsd": 1000,
+  "weights": { "demonstrated": 35, "declared": 10, "experience": 15, "location": 15, "language": 10, "compensation": 10, "freshness": 5 }
+}
+
+### Habilidades: solo identificadores del catálogo y su origen (nunca el CV)
+PUT {{baseUrl}}/api/v1/me/skills
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+[
+  { "skillId": "java", "origin": "DEMONSTRATED", "repos": ["api-inventario"] },
+  { "skillId": "docker", "origin": "DECLARED" }
+]
+
+### Guardar una vacante para seguirla
+# @name created
+POST {{baseUrl}}/api/v1/me/applications
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{
+  "jobId": "j_ejemplo01",
+  "jobTitle": "Desarrollador Java",
+  "company": "Empresa Ficticia S.A.",
+  "jobUrl": "https://boards.greenhouse.io/ficticia/jobs/1",
+  "followUpAt": "2026-11-10"
+}
+
+### Marcarla como postulada (queda en el historial)
+PUT {{baseUrl}}/api/v1/me/applications/{{created.response.body.id}}
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{
+  "jobId": "j_ejemplo01",
+  "jobTitle": "Desarrollador Java",
+  "company": "Empresa Ficticia S.A.",
+  "status": "APPLIED",
+  "notes": "Envié el CV por el portal de la empresa."
+}
+
+### Mis postulaciones
+GET {{baseUrl}}/api/v1/me/applications
+Authorization: Bearer {{access}}
+
+### Activar alertas (requiere EMAIL_ALERTS y PROFILE_STORAGE)
+PUT {{baseUrl}}/api/v1/me/consents/EMAIL_ALERTS
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{ "granted": true, "textVersion": "2026-10" }
+
+###
+PUT {{baseUrl}}/api/v1/me/alerts
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{ "enabled": true, "minScore": 70 }
+
+### Exportar todos mis datos (acceso y portabilidad)
+GET {{baseUrl}}/api/v1/me/export
+Authorization: Bearer {{access}}
+
+### Rotar el token de refresco
+POST {{baseUrl}}/api/v1/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
+
+### Borrar la cuenta de verdad (pide la contraseña)
+DELETE {{baseUrl}}/api/v1/me
+Authorization: Bearer {{access}}
+Content-Type: application/json
+
+{ "password": "{{password}}" }
+
+### Estado de la API
+GET {{baseUrl}}/actuator/health
