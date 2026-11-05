@@ -20,7 +20,7 @@ export interface GeoData {
   /** Nombres de país que también son otra cosa («Georgia» es un estado de EE. UU.): no se buscan en texto libre. */
   ambiguousCountryNames: string[];
   regions: Record<RegionCode, string[]>;
-  remoteScopes: { worldwide: string[]; regions: Partial<Record<RegionCode, string[]>>; countryOnly: Record<string, string[]> };
+  remoteScopes: { worldwide: string[]; worldwideNotInTitle?: string[]; regions: Partial<Record<RegionCode, string[]>>; countryOnly: Record<string, string[]> };
   usStates: Record<string, string>;
   cities?: CityRow[];
 }
@@ -35,7 +35,7 @@ export interface LocationHints {
 
 export interface GeoResolver {
   parseLocation(texts: string[], hints?: LocationHints): JobLocation;
-  detectRemoteScope(texts: string[], structuredCountries?: string[]): RemoteScope;
+  detectRemoteScope(texts: string[], structuredCountries?: string[], title?: string): RemoteScope;
   isLatam(iso: string): boolean;
   countryName(iso: string): string;
   /** Acepta un código ISO alfa-2 o un nombre de país en español o inglés. */
@@ -122,6 +122,8 @@ export function createGeoResolver(geo: GeoData): GeoResolver {
   const stateNames = new Map(Object.values(geo.usStates).map((n) => [placeKey(n), 'US'] as const));
   const stateCodes = new Set(Object.keys(geo.usStates));
   const worldwide = phraseRegex(geo.remoteScopes.worldwide);
+  const notInTitle = new Set(geo.remoteScopes.worldwideNotInTitle ?? []);
+  const worldwideInTitle = phraseRegex(geo.remoteScopes.worldwide.filter((p) => !notInTitle.has(p)));
   const regionPhrases = Object.entries(geo.remoteScopes.regions).map(([region, phrases]) => ({ region: region as RegionCode, res: phraseRegex(phrases ?? []) }));
   const countryOnly = Object.entries(geo.remoteScopes.countryOnly).map(([iso, phrases]) => ({ iso, res: phraseRegex(phrases) }));
 
@@ -168,15 +170,30 @@ export function createGeoResolver(geo: GeoData): GeoResolver {
     return { city: city && city.country === country ? city.name : hintCity && country ? hintCity : null, province: null, country, raw };
   }
 
-  function detectRemoteScope(texts: string[], structuredCountries: string[] = []): RemoteScope {
-    const text = placeKey(texts.filter(Boolean).join(' | '));
-    const structured = [...new Set(structuredCountries.map((c) => toIso(c)).filter((c): c is string => c !== null))].sort();
-    if (structured.length > 0) return { type: 'countries', regions: [], countries: structured };
-    if (worldwide.some((r) => r.test(text))) return { type: 'worldwide', regions: [], countries: [] };
+  function restrictionIn(text: string): RemoteScope | null {
     const regions = regionPhrases.filter((p) => p.res.some((r) => r.test(text))).map((p) => p.region).sort();
     const countries = [...new Set([...countriesIn(text), ...countryOnly.filter((c) => c.res.some((r) => r.test(text))).map((c) => c.iso)])].sort();
     if (regions.length > 0) return { type: 'regions', regions, countries };
     if (countries.length > 0) return { type: 'countries', regions: [], countries };
+    return null;
+  }
+
+  /**
+   * Orden de confianza: países estructurados de la fuente, restricción en el título, ubicación y, por último, un «worldwide»
+   * en el título. El título manda sobre la ubicación porque los portales ponen etiquetas genéricas («Anywhere in the World»)
+   * a vacantes que dicen «United States» o «Remote in Europe». «Global» en un título no es alcance («Global Payments»).
+   */
+  function detectRemoteScope(texts: string[], structuredCountries: string[] = [], title = ''): RemoteScope {
+    const structured = [...new Set(structuredCountries.map((c) => toIso(c)).filter((c): c is string => c !== null))].sort();
+    if (structured.length > 0) return { type: 'countries', regions: [], countries: structured };
+    const inTitle = placeKey(title);
+    const fromTitle = restrictionIn(inTitle);
+    if (fromTitle) return fromTitle;
+    const text = placeKey(texts.filter(Boolean).join(' | '));
+    if (worldwide.some((r) => r.test(text))) return { type: 'worldwide', regions: [], countries: [] };
+    const fromLocation = restrictionIn(text);
+    if (fromLocation) return fromLocation;
+    if (worldwideInTitle.some((r) => r.test(inTitle))) return { type: 'worldwide', regions: [], countries: [] };
     return { type: 'unknown', regions: [], countries: [] };
   }
 

@@ -1,3 +1,5 @@
 {
-  "apiBaseUrl": ""
+  "apiBaseUrl": "",
+  "pollMinutes": 5,
+  "newJobsThreshold": 10
 }

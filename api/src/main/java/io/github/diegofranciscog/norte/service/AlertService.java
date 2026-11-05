@@ -13,6 +13,7 @@ import io.github.diegofranciscog.norte.repository.ProfileSkillRepository;
 import io.github.diegofranciscog.norte.repository.UserRepository;
 import io.github.diegofranciscog.norte.scoring.IndexModels.IndexInfo;
 import io.github.diegofranciscog.norte.scoring.IndexModels.Job;
+import io.github.diegofranciscog.norte.scoring.IndexModels.Location;
 import io.github.diegofranciscog.norte.scoring.IndexModels.SourceRef;
 import io.github.diegofranciscog.norte.scoring.Scorer;
 import io.github.diegofranciscog.norte.scoring.Scorer.ProfileSkill;
@@ -22,6 +23,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,9 +96,8 @@ public class AlertService {
                 }
                 Scorer.Result result = scorer.score(job, view, now);
                 if (result.total() >= alert.getMinScore()) {
-                    String where = "remote".equals(job.modality()) ? "remoto" : Optional.ofNullable(job.location()).map(l -> l.city()).orElse("Ecuador");
                     String url = source.get().applyUrl() != null ? source.get().applyUrl() : source.get().url();
-                    items.add(new AlertMailer.Item(job.title(), job.company().name(), where, result.total(), props.siteUrl() + "/vacante/" + job.id(), url, source.get().sourceName()));
+                    items.add(new AlertMailer.Item(job.title(), job.company().name(), where(job), result.total(), props.siteUrl() + "/vacante/" + job.id(), url, source.get().sourceName()));
                 }
             }
             items.sort(Comparator.comparingDouble(AlertMailer.Item::score).reversed());
@@ -109,12 +110,28 @@ public class AlertService {
                     sent++;
                     audit.record(alert.getUserId(), "ALERT_SENT", top.size() + " vacantes");
                 } catch (RuntimeException e) {
-                    log.warn("No se pudo enviar una alerta: {}", e.getMessage());
+                    // Solo el tipo de error: el mensaje del servidor de correo suele incluir la dirección de la persona.
+                    log.warn("No se pudo enviar una alerta ({})", e.getClass().getSimpleName());
                 }
             }
             alert.recordRun(version, delivered);
         }
         return new AlertRunSummary(version, checked, sent, jobs.size());
+    }
+
+    /** Dónde es la vacante, para el correo: nunca se supone un país. */
+    static String where(Job job) {
+        if ("remote".equals(job.modality())) {
+            return "remoto";
+        }
+        Location location = job.location();
+        if (location == null) {
+            return "ubicación no indicada";
+        }
+        if (location.city() != null && !location.city().isBlank()) {
+            return location.city();
+        }
+        return location.country() == null ? "ubicación no indicada" : Locale.of("", location.country()).getDisplayCountry(Locale.of("es"));
     }
 
     /** Solo lo que la persona busca: sus modalidades y vacantes que puede tomar desde su país. */

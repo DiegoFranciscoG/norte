@@ -1,12 +1,13 @@
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createGeoResolver, createJobClassifier, createSkillMatcher } from '@norte/core';
+import { createGeoResolver, createJobClassifier, createSkillMatcher, type Job } from '@norte/core';
 import { describe, expect, it } from 'vitest';
+import { dedupe } from '../src/dedupe.js';
 import { parseEcbXml } from '../src/fx.js';
-import { companySlug, normalizePosting, type NormalizeDeps } from '../src/normalize.js';
+import { cleanTitle, companySlug, normalizePosting, type NormalizeDeps } from '../src/normalize.js';
 import { loadPreviousState, mergeWithPrevious, stableJobId } from '../src/state.js';
-import { rawPosting, staticTask, testData } from './helpers.js';
+import { makePosting, rawPosting, staticTask, testData } from './helpers.js';
 
 const data = testData();
 const now = new Date('2026-10-31T12:00:00Z');
@@ -51,6 +52,23 @@ describe('normalización', () => {
     expect(r.publishedAt).toBe(now.toISOString());
   });
 
+  it('quita del título los números de referencia del tablero, sin tocar los que significan algo', () => {
+    expect(cleanTitle('(1615)  Quality Engineer')).toBe('Quality Engineer');
+    expect(cleanTitle('187. Senior Data Engineer')).toBe('Senior Data Engineer');
+    expect(cleanTitle('58- SAS Developer')).toBe('SAS Developer');
+    expect(cleanTitle('Full Stack Developer | Remote | LATAM Only | 90007')).toBe('Full Stack Developer | Remote | LATAM Only');
+    expect(cleanTitle('Mobile Engineer (iOS, Swift) -1057')).toBe('Mobile Engineer (iOS, Swift)');
+    expect(cleanTitle('1. Level Support Engineer')).toBe('1. Level Support Engineer');
+    expect(cleanTitle('Web3 Engineer 360')).toBe('Web3 Engineer 360');
+    expect(cleanTitle('Administrador de Windows Server - 2022')).toBe('Administrador de Windows Server - 2022');
+    expect(cleanTitle('12345')).toBe('12345');
+  });
+
+  it('una vacante «para todo el mundo» cuyo título dice otra cosa queda restringida', () => {
+    const us = normalizePosting(rawPosting({ title: 'Backend Engineer - United States', company: 'Ficticia', sourceId: 'portal:x', externalId: '1', locationTexts: ['Anywhere in the World'] }), staticTask('portal:x', []), deps);
+    expect(typeof us === 'object' && us.remoteScope).toEqual({ type: 'countries', regions: [], countries: ['US'] });
+  });
+
   it('normaliza el nombre de empresa sin sufijos societarios', () => {
     expect(companySlug('Thoughtworks Inc.')).toBe('thoughtworks');
     expect(companySlug('Ficticia S.A.')).toBe('ficticia');
@@ -83,6 +101,82 @@ describe('estado entre ejecuciones', () => {
     expect(await loadPreviousState(null, () => undefined)).toBeNull();
     expect(JSON.parse(await readFile(join(dir, 'jobs.json'), 'utf8')).jobs).toHaveLength(1);
     await rm(dir, { recursive: true, force: true });
+  });
+});
+
+describe('publicaciones repetidas por ciudad (mismo id en la fuente)', () => {
+  const SOURCE = 'ats:workable:ejemplo';
+  const retention = { closedDays: 90, maxAgeDays: 120 };
+  const ok = new Map([[SOURCE, 'ok' as const]]);
+  const dayOne = new Date('2026-11-01T00:00:00.000Z');
+  const dayTwo = new Date('2026-11-02T00:00:00.000Z');
+  const dedupeCfg = testData().ingest.dedupe;
+
+  const posting = (city: string, title = 'AI Solution Architect', externalId = 'ABC123') =>
+    makePosting({
+      title,
+      company: 'Ficticia',
+      sourceId: SOURCE,
+      externalKey: `${SOURCE}#${externalId}`,
+      modality: 'hybrid',
+      remoteScope: null,
+      location: { city, province: null, country: 'CA', raw: '' },
+      sources: [{ sourceId: SOURCE, externalId, sourceName: SOURCE, url: 'https://example.org/abc', applyUrl: null, attribution: null, allowInAlerts: true, fetchedAt: dayOne.toISOString() }],
+    });
+  const run = (postings: ReturnType<typeof posting>[], previous: Job[] | null, now: Date) =>
+    mergeWithPrevious(dedupe(postings, dedupeCfg), previous && { jobs: previous, sourceRuns: {}, history: [] }, ok, now, retention);
+  const idOf = (jobs: Job[], city: string) => jobs.find((j) => j.location.city === city && j.status === 'open')?.id;
+
+  it('cada ciudad es una vacante con su propio id, y repetir la misma ciudad no la duplica', () => {
+    const { jobs, opened } = run([posting('Toronto'), posting('Oakville'), posting('Toronto')], null, dayOne);
+    expect(jobs).toHaveLength(2);
+    expect(new Set(jobs.map((j) => j.id)).size).toBe(2);
+    expect(opened).toBe(2);
+  });
+
+  it('en la siguiente ejecución cada ciudad conserva su id y su fecha, y no cuenta como nueva', () => {
+    const first = run([posting('Toronto'), posting('Oakville')], null, dayOne);
+    const second = run([posting('Oakville'), posting('Toronto')], first.jobs, dayTwo);
+    expect(second.opened).toBe(0);
+    expect(second.closed).toBe(0);
+    expect(idOf(second.jobs, 'Toronto')).toBe(idOf(first.jobs, 'Toronto'));
+    expect(idOf(second.jobs, 'Oakville')).toBe(idOf(first.jobs, 'Oakville'));
+    expect(second.jobs.every((j) => j.firstSeenAt === dayOne.toISOString())).toBe(true);
+  });
+
+  it('si desaparece una ciudad se cierra solo esa', () => {
+    const first = run([posting('Toronto'), posting('Oakville')], null, dayOne);
+    const second = run([posting('Toronto')], first.jobs, dayTwo);
+    expect(second.closed).toBe(1);
+    expect(idOf(second.jobs, 'Toronto')).toBe(idOf(first.jobs, 'Toronto'));
+    expect(idOf(second.jobs, 'Oakville')).toBeUndefined();
+    expect(second.jobs.find((j) => j.location.city === 'Oakville')?.status).toBe('closed');
+  });
+
+  it('una ciudad nueva no le quita el id a la que ya existía', () => {
+    const first = run([posting('Toronto')], null, dayOne);
+    const second = run([posting('Oakville'), posting('Toronto')], first.jobs, dayTwo);
+    expect(second.opened).toBe(1);
+    expect(idOf(second.jobs, 'Toronto')).toBe(idOf(first.jobs, 'Toronto'));
+    expect(idOf(second.jobs, 'Oakville')).not.toBe(idOf(first.jobs, 'Toronto'));
+  });
+
+  it('una publicación editada en la fuente sigue siendo la misma vacante', () => {
+    const first = run([posting('Toronto', 'AI Solution Architect')], null, dayOne);
+    const second = run([posting('Toronto', 'Principal Platform Engineer')], first.jobs, dayTwo);
+    expect(second.opened).toBe(0);
+    expect(second.jobs).toHaveLength(1);
+    expect(second.jobs[0]!.id).toBe(first.jobs[0]!.id);
+    expect(second.jobs[0]!.title).toBe('Principal Platform Engineer');
+  });
+
+  it('dos vacantes que apuntan a la misma anterior nunca comparten id', () => {
+    const first = run([posting('Toronto', 'Backend Engineer', 'VIEJA')], null, dayOne);
+    const reopened = (externalId: string, publishedAt: string) => ({ ...posting('Toronto', 'Backend Engineer', externalId), publishedAt });
+    const second = run([reopened('NUEVA1', '2026-06-01T00:00:00.000Z'), reopened('NUEVA2', '2026-10-30T00:00:00.000Z')], first.jobs, dayTwo);
+    const open = second.jobs.filter((j) => j.status === 'open');
+    expect(open).toHaveLength(2);
+    expect(new Set(open.map((j) => j.id)).size).toBe(2);
   });
 });
 

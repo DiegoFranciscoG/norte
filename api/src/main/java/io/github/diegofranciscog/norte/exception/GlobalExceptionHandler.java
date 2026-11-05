@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -74,6 +75,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
     ResponseEntity<ProblemDetail> unreadable(Exception ex) {
         return ResponseEntity.badRequest().body(problem(HttpStatus.BAD_REQUEST, "malformed", "La solicitud no tiene el formato esperado."));
+    }
+
+    /** Dos peticiones a la vez, como un doble clic al registrarse. No se registra el detalle: PostgreSQL incluye los valores, como el correo. */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ProblemDetail> conflict(DataIntegrityViolationException ex) {
+        log.warn("Conflicto de datos ({})", ex.getClass().getSimpleName());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem(HttpStatus.CONFLICT, "conflict", "La operación entra en conflicto con datos existentes."));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

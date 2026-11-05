@@ -2,7 +2,7 @@
   "name": "norte",
   "version": "0.1.0",
   "private": true,
-  "description": "Buscador de empleo con análisis de brecha y observatorio público del mercado laboral tecnológico de Ecuador.",
+  "description": "Buscador global de empleo tech con encaje explicado, análisis de brecha y observatorio público del mercado accesible desde Ecuador.",
   "license": "MIT",
   "author": "Diego Francisco Granda Zhingre",
   "type": "module",
@@ -23,7 +23,9 @@
     "test:coverage": "npm run build:core && vitest run --coverage",
     "web:build": "npm run build:core && npm run build -w @norte/web",
     "web:test": "npm run build:core && npm run test -w @norte/web",
-    "e2e": "npm run e2e -w @norte/web"
+    "pages:build": "node web/scripts/build-pages.mjs",
+    "e2e": "npm run e2e -w @norte/web",
+    "e2e:pages": "npm run e2e:pages -w @norte/web"
   },
   "devDependencies": {
     "@types/node": "26.6.6",

@@ -72,6 +72,7 @@ public class AuthService {
             }
         }
         audit.record(user.getId(), "REGISTER", null);
+        limiter.recordAttempt(ip);
     }
 
     @Transactional
