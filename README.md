@@ -175,8 +175,8 @@ El observatorio tiene su propia API pública de solo lectura (archivos estático
 | Suite | Qué cubre | Resultado |
 |---|---|---|
 | Vitest (núcleo + ingesta) | T-01 fuentes prohibidas, T-02 deduplicación, T-03 puntaje con casos calculados a mano, T-04 brecha (300 combinaciones), T-06 límites, T-07 fuente caída, T-08 atribución, T-10 sin datos personales en estadísticas, alcance remoto y publicaciones repetidas por ciudad | 181 pruebas · 93 % de sentencias |
-| JUnit 5 | Los mismos casos de puntaje que TypeScript, límite de intentos, IP detrás de un proxy, JWT, correo escapado | 29 pruebas |
-| Testcontainers (PostgreSQL 18 real) | Autenticación y reuso de tokens, seguridad y cabeceras, consentimientos, postulaciones, alertas, **T-09 borrado real**, servidor real detrás de un proxy | 24 pruebas · servicios 92 %, puntaje 96 % |
+| JUnit 5 | Los mismos casos de puntaje que TypeScript, límite de intentos, IP detrás de un proxy, JWT, correo escapado | 30 pruebas |
+| Testcontainers (PostgreSQL 18 real) | Autenticación y reuso de tokens, seguridad y cabeceras, consentimientos, postulaciones, alertas, **T-09 borrado real**, servidor real detrás de un proxy, registros simultáneos | 25 pruebas · servicios 92 %, puntaje 96 % |
 | Playwright | **T-05 el CV no sale del navegador**, flujo global (Madrid y Cuenca), aviso de recarga, observatorio. Se repiten contra el build que se publica, con subruta, CSP, service worker y sin conexión | 8 pruebas en desarrollo y 13 contra el sitio publicable |
 | Vitest (Angular) | Formatos de la interfaz | 4 pruebas |
 
