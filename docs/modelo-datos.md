@@ -170,7 +170,7 @@ erDiagram
         object license
     }
     JOB {
-        string id PK "hash estable"
+        string id PK "hash estable de publicación y huella"
         string title
         string company_name
         string city "INEC DPA"

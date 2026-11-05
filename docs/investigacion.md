@@ -31,7 +31,7 @@ Fuentes oficiales o primarias consultadas para decidir qué datos entran, con qu
 | 25 | npm — @angular/core | https://www.npmjs.com/package/@angular/core | 2026-10-31 | Angular 22.2.4; exige TypeScript >=6.0 <6.1 y Node ^22.22.3 \|\| ^24.15.0 \|\| >=26 |
 | 26 | Node.js — índice de versiones | https://nodejs.org/dist/index.json | 2026-10-31 | Node 26.13.0 «Lithium» es la LTS vigente (2026-10-28) |
 | 27 | Docker Hub — imágenes oficiales | https://hub.docker.com/_/postgres | 2026-10-31 | postgres 18.6-alpine, eclipse-temurin 25.0.5_8-jre, nginx-unprivileged 1.29.8, mailpit v1.29.7 |
-| 28 | Ley Orgánica de Protección de Datos Personales (Registro Oficial Suplemento 459, 26-05-2021), copia publicada por la SEPS | https://seps.gob.ec/wp-content/uploads/Ley-Orgánica-de-Protección-de-Datos-Personales-2022.pdf | 2026-10-31 | Consentimiento explícito (art. 8) y otras bases (art. 7); derechos de acceso, rectificación, eliminación, oposición, portabilidad y a no ser objeto de decisiones solo automatizadas (ver legal.md) |
+| 28 | Ley Orgánica de Protección de Datos Personales (Registro Oficial, Quinto Suplemento 459, 26-05-2021), copia del Registro Oficial en FAOLEX; ficha oficial en https://www.gob.ec/regulaciones/ley-organica-proteccion-datos-personales-0 | https://faolex.fao.org/docs/pdf/ecu213345.pdf | 2026-11-04 | Consentimiento explícito (art. 8) y otras bases (art. 7); derechos de acceso, rectificación, eliminación, oposición, portabilidad y a no ser objeto de decisiones solo automatizadas (ver legal.md) |
 
 | 29 | GitHub Docs — eventos que disparan workflows (schedule) | https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows | 2026-11-01 | El intervalo mínimo programable es de 5 minutos y los programados pueden retrasarse al inicio de cada hora → ingesta cada 30 minutos en los minutos 7 y 37 |
 | 30 | GitHub Docs — límites de GitHub Pages | https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits | 2026-11-01 | Límite blando de 10 compilaciones por hora que no aplica a workflows propios; 100 GB/mes de ancho de banda; 1 GB por sitio |
@@ -39,6 +39,11 @@ Fuentes oficiales o primarias consultadas para decidir qué datos entran, con qu
 | 32 | Unicode CLDR (vía Intl.DisplayNames) | https://cldr.unicode.org/ | 2026-11-01 | Nombres de países en español e inglés; licencia Unicode |
 | 33 | Himalayas — búsqueda sin país | https://himalayas.app/jobs/api/search?sort=recent&page=1 | 2026-11-01 | Llamada verificada: vacantes de todo el mundo con `locationRestrictions` por país |
 | 34 | Jobicy — API sin filtro geográfico | https://jobicy.com/api/v2/remote-jobs?count=50 | 2026-11-01 | Llamada verificada: remotos de todas las regiones con su `jobGeo` |
+| 35 | GitHub Docs — API REST de Pages | https://docs.github.com/en/rest/pages/pages | 2026-11-04 | `POST /repos/{owner}/{repo}/pages` acepta `build_type=workflow` para publicar con un workflow propio |
+| 36 | GitHub Docs — Deshabilitar y habilitar workflows | https://docs.github.com/en/actions/how-tos/manage-workflow-runs/disable-and-enable-workflows | 2026-11-04 | En repositorios públicos, los workflows programados se apagan tras 60 días sin actividad; se reactivan con `gh workflow enable` |
+| 37 | Spring Boot — Embedded Web Servers | https://docs.spring.io/spring-boot/how-to/webserver.html | 2026-11-04 | `server.forward-headers-strategy=native` y los proxies internos en los que confía Tomcat |
+| 38 | Cloudflare — Cabeceras HTTP | https://developers.cloudflare.com/fundamentals/reference/http-headers/ | 2026-11-04 | `CF-Connecting-IP` lleva hacia el origen la IP de quien conectó a Cloudflare |
+| 39 | Render — foro de solicitudes (no es documentación) | https://feedback.render.com/features/p/send-the-correct-xforwardedfor | 2026-11-04 | Personal de Render: la primera IP de `X-Forwarded-For` es la del cliente; un usuario reporta que no se limpia lo que envía el cliente. Ver S-10 |
 
 ## Supuestos (no verificados)
 - **S-01** La página de licencia propia de ESCO no se localizó; se asume la política general de reutilización de la Comisión (Decisión 2011/833/EU) y se atribuye.
@@ -49,3 +54,5 @@ Fuentes oficiales o primarias consultadas para decidir qué datos entran, con qu
 - **S-06** Un remoto sin alcance declarado pero ubicado en un país («Remote — Spain») exige residir en ese país.
 - **S-07** La pertenencia de países a regiones (Latinoamérica, Américas, Europa, EMEA, Asia-Pacífico…) es una agrupación propia y configurable; no hay una norma oficial para esos términos de las vacantes.
 - **S-08** En Himalayas, una vacante sin restricciones de ubicación admite a todo el mundo (así la presenta su sitio).
+- **S-09** Si el título de un remoto menciona un país o una región, esa es su restricción aunque el portal diga «Anywhere in the World». Es una regla propia, revisada a mano sobre 45 títulos de la ingesta real del 2026-11-04.
+- **S-10** En Render, `CF-Connecting-IP` trae la IP real del visitante. Render no lo documenta: sale de su foro y de la documentación de Cloudflare, así que hay que confirmarlo al desplegar la API. Por eso `CLIENT_IP_HEADER` es configurable; si queda vacía, el límite por IP usa la IP que resuelve Tomcat, que no se puede falsificar pero podría ser la de un nodo de Cloudflare compartido.
