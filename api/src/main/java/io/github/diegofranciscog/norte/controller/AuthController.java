@@ -5,6 +5,7 @@ import io.github.diegofranciscog.norte.dto.AuthDtos.LoginRequest;
 import io.github.diegofranciscog.norte.dto.AuthDtos.RefreshRequest;
 import io.github.diegofranciscog.norte.dto.AuthDtos.RegisterRequest;
 import io.github.diegofranciscog.norte.dto.AuthDtos.TokenResponse;
+import io.github.diegofranciscog.norte.security.ClientIpResolver;
 import io.github.diegofranciscog.norte.service.AuthService;
 import io.github.diegofranciscog.norte.service.ConsentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,23 +26,25 @@ public class AuthController {
 
     private final AuthService auth;
     private final ConsentService consents;
+    private final ClientIpResolver clientIp;
 
-    public AuthController(AuthService auth, ConsentService consents) {
+    public AuthController(AuthService auth, ConsentService consents, ClientIpResolver clientIp) {
         this.auth = auth;
         this.consents = consents;
+        this.clientIp = clientIp;
     }
 
     @PostMapping("/api/v1/auth/register")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Crear cuenta con consentimientos opcionales y separados por finalidad")
     public void register(@Valid @RequestBody RegisterRequest req, HttpServletRequest http) {
-        auth.register(req, http.getRemoteAddr());
+        auth.register(req, clientIp.resolve(http));
     }
 
     @PostMapping("/api/v1/auth/login")
     @Operation(summary = "Iniciar sesión: token de acceso corto y token de refresco rotativo")
     public TokenResponse login(@Valid @RequestBody LoginRequest req, HttpServletRequest http) {
-        return auth.login(req.email(), req.password(), http.getRemoteAddr());
+        return auth.login(req.email(), req.password(), clientIp.resolve(http));
     }
 
     @PostMapping("/api/v1/auth/refresh")

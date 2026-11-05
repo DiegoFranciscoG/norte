@@ -23,7 +23,7 @@ class AlertMailerTest {
     private static NorteProperties props() {
         return new NorteProperties(new NorteProperties.Jwt("no-se-usa-en-esta-prueba", "norte-api", Duration.ofMinutes(15), Duration.ofDays(7)),
                 List.of("http://localhost:4200"), new NorteProperties.Alerts("no-se-usa-en-esta-prueba-tampoco-0000", "alertas@norte.test", 10, 72),
-                "http://localhost:8080/data/v1", "https://norte.example", new NorteProperties.RateLimit(5, Duration.ofMinutes(15)));
+                "http://localhost:8080/data/v1", "https://norte.example", new NorteProperties.RateLimit(5, 20, Duration.ofMinutes(15), null));
     }
 
     private static void collectText(Part part, List<String> out) throws Exception {

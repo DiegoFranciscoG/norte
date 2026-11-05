@@ -39,7 +39,7 @@ class LoginRateLimiterTest {
     }
 
     private final ManualClock clock = new ManualClock();
-    private final LoginRateLimiter limiter = new LoginRateLimiter(3, Duration.ofMinutes(15), clock);
+    private final LoginRateLimiter limiter = new LoginRateLimiter(3, 5, Duration.ofMinutes(15), clock);
 
     @Test
     void bloqueaTrasElMaximoDeFallosEIndicaCuantoEsperar() {
@@ -61,15 +61,44 @@ class LoginRateLimiterTest {
     }
 
     @Test
-    void cuentaPorCorreoAunqueCambieLaIpYPorIpAunqueCambieElCorreo() {
+    void cuentaPorCorreoAunqueCambieLaIp() {
         for (int i = 0; i < 3; i++) {
             limiter.recordFailure("10.0.0.1", "Ana@Example.com ");
         }
         assertThatThrownBy(() -> limiter.check("10.0.0.2", "ana@example.com")).isInstanceOf(TooManyRequestsException.class);
-        assertThatThrownBy(() -> limiter.check("10.0.0.1", "otra@example.com")).isInstanceOf(TooManyRequestsException.class);
 
         limiter.reset("ana@example.com");
         assertThatCode(() -> limiter.check("10.0.0.2", "ana@example.com")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void unaIpTieneUnLimiteMasHolgadoPorqueUnaRedEnteraPuedeCompartirla() {
+        for (int i = 0; i < 4; i++) {
+            limiter.recordFailure("10.0.0.1", "persona" + i + "@example.com");
+        }
+        assertThatCode(() -> limiter.check("10.0.0.1", "otra@example.com")).doesNotThrowAnyException();
+        limiter.recordFailure("10.0.0.1", "persona4@example.com");
         assertThatThrownBy(() -> limiter.check("10.0.0.1", "otra@example.com")).isInstanceOf(TooManyRequestsException.class);
+        assertThatCode(() -> limiter.check("10.0.0.2", "otra@example.com")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void lasCuentasNuevasCuentanContraLaIpPeroNoContraElCorreo() {
+        for (int i = 0; i < 5; i++) {
+            limiter.recordAttempt("10.0.0.1");
+        }
+        assertThatThrownBy(() -> limiter.check("10.0.0.1", "ana@example.com")).isInstanceOf(TooManyRequestsException.class);
+        assertThatCode(() -> limiter.check("10.0.0.2", "ana@example.com")).doesNotThrowAnyException();
+    }
+
+    @Test
+    void olvidaLoVencidoParaNoCrecerSinLimite() {
+        for (int i = 0; i < 100; i++) {
+            limiter.recordFailure("10.0." + i + ".1", "persona" + i + "@example.com");
+        }
+        assertThat(limiter.trackedKeys()).isEqualTo(200);
+        clock.advance(Duration.ofMinutes(16));
+        limiter.check("10.0.0.9", "ana@example.com");
+        assertThat(limiter.trackedKeys()).isZero();
     }
 }

@@ -28,6 +28,6 @@ public record NorteProperties(
     public record Alerts(@NotBlank String triggerToken, @NotBlank String from, @Min(1) @Max(50) int maxJobsPerEmail, @Min(1) int lookbackHoursFirstRun) {
     }
 
-    public record RateLimit(@Min(1) int maxAttempts, @NotNull Duration window) {
+    public record RateLimit(@Min(1) int maxAttempts, @Min(1) int maxAttemptsPerIp, @NotNull Duration window, String clientIpHeader) {
     }
 }

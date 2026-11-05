@@ -23,6 +23,8 @@ spring:
 
 server:
   port: ${APP_PORT:8080}
+  # Detrás de un proxy (Render): IP y esquema reales. Tomcat solo los acepta si quien conecta está en una red privada.
+  forward-headers-strategy: native
   error:
     include-stacktrace: never
     include-message: never
@@ -62,5 +64,9 @@ norte:
   index-base-url: ${NORTE_INDEX_BASE_URL}
   site-url: ${NORTE_SITE_URL:http://localhost:4200}
   rate-limit:
+    # Por correo protege una cuenta. Por IP es más holgado: una oficina o una universidad comparten IP.
     max-attempts: 5
+    max-attempts-per-ip: 20
     window: PT15M
+    # Cabecera con la IP real del visitante, solo si un proxy de confianza la sobrescribe siempre (ver docs/investigacion.md, S-10).
+    client-ip-header: ${CLIENT_IP_HEADER:}

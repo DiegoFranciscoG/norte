@@ -75,6 +75,15 @@ class AuthFlowIT extends IntegrationTest {
     }
 
     @Test
+    void limitaLasCuentasNuevasDesdeUnaMismaIp() throws Exception {
+        for (int i = 0; i < 20; i++) {
+            register(newEmail(), newPassword());
+        }
+        mvc.perform(jsonPost("/api/v1/auth/register", Map.of("email", newEmail(), "password", newPassword())))
+                .andExpect(status().isTooManyRequests());
+    }
+
+    @Test
     void validaLosDatosDeEntrada() throws Exception {
         mvc.perform(jsonPost("/api/v1/auth/register", Map.of("email", "no-es-correo", "password", "corta")))
                 .andExpect(status().isBadRequest())
