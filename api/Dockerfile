@@ -7,7 +7,7 @@ COPY src ./src
 # Las pruebas corren en CI (necesitan Docker para PostgreSQL real y los datos del repositorio).
 RUN mvn -B -q -DskipTests package && cp target/norte-api-*.jar /src/app.jar
 
-FROM eclipse-temurin:25.0.5_8-jre-alpine-3.24
+FROM eclipse-temurin:27-jre-alpine-3.24
 RUN addgroup -S norte && adduser -S -G norte -H norte
 WORKDIR /app
 COPY --from=build --chown=norte:norte /src/app.jar app.jar
