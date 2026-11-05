@@ -14,7 +14,7 @@ COPY web ./web
 COPY data ./data
 RUN npm run ingest:demo && npm run web:build
 
-FROM nginxinc/nginx-unprivileged:1.29.8-alpine
+FROM nginxinc/nginx-unprivileged:1.31.7-alpine
 COPY --chown=nginx:nginx web/nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build --chown=nginx:nginx /repo/web/dist/norte/browser /usr/share/nginx/html
 COPY --from=build --chown=nginx:nginx /repo/site/data /usr/share/nginx/html/data
