@@ -25,8 +25,8 @@ export interface PreviousState {
   months?: unknown[];
 }
 
-export function stableJobId(externalKey: string): string {
-  return `j_${createHash('sha256').update(externalKey).digest('hex').slice(0, 12)}`;
+export function stableJobId(identity: string): string {
+  return `j_${createHash('sha256').update(identity).digest('hex').slice(0, 12)}`;
 }
 
 const DAY = 86400000;
@@ -41,6 +41,7 @@ export interface MergeResult {
 /**
  * Une la cosecha actual con el estado anterior:
  * - reutiliza el id y la fecha de primera aparición si cualquier origen ya se conocía;
+ * - si un tablero repite la publicación por ciudad con el mismo id, cada ciudad es una vacante y la huella dice cuál es cuál;
  * - marca como cerrada (sin borrarla) la vacante que desaparece de una fuente consultada con éxito;
  * - conserva intacta la que venía de una fuente caída u omitida en esta ejecución (T-07);
  * - descarta las cerradas que superan la retención.
@@ -54,17 +55,29 @@ export function mergeWithPrevious(
 ): MergeResult {
   const nowIso = now.toISOString();
   const prevJobs = previous?.jobs ?? [];
-  const prevByKey = new Map<string, Job>();
-  for (const job of prevJobs) for (const s of job.sources) prevByKey.set(`${s.sourceId}#${s.externalId}`, job);
+  const prevByKey = new Map<string, Job[]>();
+  for (const job of prevJobs) {
+    for (const s of job.sources) {
+      const key = `${s.sourceId}#${s.externalId}`;
+      prevByKey.set(key, [...(prevByKey.get(key) ?? []), job]);
+    }
+  }
+  const repeatedBefore = (job: Job) => job.sources.some((s) => (prevByKey.get(`${s.sourceId}#${s.externalId}`)?.length ?? 0) > 1);
+
+  const currentPerKey = new Map<string, number>();
+  for (const m of current) for (const k of new Set(m.externalKeys)) currentPerKey.set(k, (currentPerKey.get(k) ?? 0) + 1);
 
   const prevOpenByFingerprint = new Map<string, Job>();
   for (const job of prevJobs) if (job.status === 'open') prevOpenByFingerprint.set(job.fingerprint, job);
 
   const usedPrev = new Set<string>();
+  const takenIds = new Set<string>();
   const jobs: Job[] = [];
   let opened = 0;
   for (const m of current) {
-    let matches = m.externalKeys.map((k) => prevByKey.get(k)).filter((j): j is Job => j !== undefined);
+    const known = [...new Set(m.externalKeys.flatMap((k) => prevByKey.get(k) ?? []))];
+    const repeatedNow = m.externalKeys.some((k) => (currentPerKey.get(k) ?? 0) > 1);
+    let matches = known.filter((j) => j.fingerprint === m.fingerprint || (!repeatedNow && !repeatedBefore(j)));
     let carriedSources: Job['sources'] = [];
     if (matches.length === 0) {
       // Misma vacante que sigue viva en una fuente omitida o caída: se une por huella para no duplicarla.
@@ -74,15 +87,17 @@ export function mergeWithPrevious(
         carriedSources = byFingerprint.sources.filter((s) => sourceStatus.get(s.sourceId) !== 'ok');
       }
     }
-    const prev = matches.sort((a, b) => a.firstSeenAt.localeCompare(b.firstSeenAt))[0];
+    const prev = matches.filter((p) => !takenIds.has(p.id)).sort((a, b) => a.firstSeenAt.localeCompare(b.firstSeenAt))[0];
     for (const p of matches) usedPrev.add(p.id);
     if (!prev) opened++;
     const { externalKeys, externalKey: _k, sourceKind: _s, ...rest } = m;
-    const known = new Set(rest.sources.map((s) => `${s.sourceId}#${s.externalId}`));
+    const ownSources = new Set(rest.sources.map((s) => `${s.sourceId}#${s.externalId}`));
+    const id = prev?.id ?? stableJobId(`${externalKeys[0]!}|${m.fingerprint}`);
+    takenIds.add(id);
     jobs.push({
       ...rest,
-      sources: [...rest.sources, ...carriedSources.filter((s) => !known.has(`${s.sourceId}#${s.externalId}`))],
-      id: prev?.id ?? stableJobId(externalKeys[0]!),
+      sources: [...rest.sources, ...carriedSources.filter((s) => !ownSources.has(`${s.sourceId}#${s.externalId}`))],
+      id,
       firstSeenAt: prev?.firstSeenAt ?? nowIso,
       lastSeenAt: nowIso,
       status: 'open',

@@ -75,6 +75,8 @@ const DAY = 86400000;
  */
 export function isDuplicate(a: NormalizedPosting, b: NormalizedPosting, cfg: DedupeConfig): boolean {
   if (a.company.slug !== b.company.slug) return false;
+  // La misma publicación de la fuente en el mismo lugar lo es siempre, aunque cambien su título o su fecha.
+  if (a.externalKey === b.externalKey && locationKey(a) === locationKey(b)) return true;
   const gap = Math.abs(Date.parse(a.publishedAt) - Date.parse(b.publishedAt));
   if (gap > cfg.windowDays * DAY) return false;
   if (cfg.strictSeniority && seniorityToken(a.title) !== seniorityToken(b.title)) return false;
