@@ -53,6 +53,12 @@ jobs:
         run: npm run e2e
         env:
           CI: 'true'
+      - name: Las mismas pruebas contra lo que se publica (subruta, CSP y service worker)
+        run: |
+          npm run pages:build -- /norte/ site
+          npm run e2e:pages
+        env:
+          CI: 'true'
 
   api:
     name: API (Java 25, PostgreSQL real con Testcontainers)

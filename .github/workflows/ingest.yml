@@ -51,12 +51,11 @@ jobs:
           NORTE_OUT_DIR: site/data/v1
           NORTE_BUILD_VERSION: ${{ github.run_number }}
         run: npm run ingest
-      - name: Construir el frontend
-        if: hashFiles('web/package.json') != ''
-        run: |
-          npm run web:build -- --base-href "${{ steps.pages.outputs.base_path }}/"
-          cp -r web/dist/norte/browser/. site/
-          cp site/index.html site/404.html
+      - name: Construir la web y armar el sitio (subruta, CSP y URL de la API)
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NORTE_API_URL: ${{ vars.NORTE_API_URL }}
+        run: npm run pages:build -- "${BASE_PATH}/" site
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
@@ -73,4 +72,6 @@ jobs:
         env:
           ALERTS_URL: ${{ secrets.NORTE_ALERTS_URL }}
           ALERTS_TOKEN: ${{ secrets.NORTE_ALERTS_TRIGGER_TOKEN }}
-        run: curl -fsS --max-time 120 -X POST -H "Authorization: Bearer ${ALERTS_TOKEN}" "${ALERTS_URL}" || echo "::warning::La API no respondió; las alertas se enviarán en la próxima ejecución."
+        run: |
+          curl -fsS --max-time 120 -X POST -H "Authorization: Bearer ${ALERTS_TOKEN}" "${ALERTS_URL}" \
+            || echo "::warning::La API no respondió; las alertas se enviarán en la próxima ejecución."

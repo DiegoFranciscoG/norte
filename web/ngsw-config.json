@@ -16,8 +16,13 @@
   ],
   "dataGroups": [
     {
+      "name": "logos",
+      "urls": ["data/v1/logos/**"],
+      "cacheConfig": { "strategy": "performance", "maxSize": 300, "maxAge": "30d" }
+    },
+    {
       "name": "indice",
-      "urls": ["/data/v1/**", "/config.json"],
+      "urls": ["data/v1/**", "config.json"],
       "cacheConfig": { "strategy": "freshness", "maxSize": 40, "maxAge": "7d", "timeout": "4s" }
     }
   ]
