@@ -1,11 +1,11 @@
 {
-  "name": "NORTE — empleo tecnológico en Ecuador",
+  "name": "NORTE — empleos de tecnología que encajan contigo",
   "short_name": "NORTE",
   "description": "Empleos de tecnología cerca de ti, en tu país o remotos que te admiten, con tu encaje explicado y lo que te falta.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f3ef",
+  "background_color": "#ffffff",
   "theme_color": "#0b7a66",
   "lang": "es",
   "icons": [
