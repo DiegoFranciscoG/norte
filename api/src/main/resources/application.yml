@@ -30,6 +30,11 @@ server:
     include-message: never
     include-binding-errors: never
 
+logging:
+  level:
+    # Hibernate copiaría en el log el detalle de PostgreSQL, que incluye valores como el correo.
+    org.hibernate.orm.jdbc.error: "OFF"
+
 management:
   # El correo es opcional (solo alertas): si el SMTP falla, la API sigue sana.
   health:

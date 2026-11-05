@@ -1,13 +1,24 @@
 package io.github.diegofranciscog.norte.it;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
 import tools.jackson.databind.JsonNode;
 
+@ExtendWith(OutputCaptureExtension.class)
 class AuthFlowIT extends IntegrationTest {
 
     @Test
@@ -72,6 +83,24 @@ class AuthFlowIT extends IntegrationTest {
                 .andExpect(status().isTooManyRequests())
                 .andExpect(header().exists("Retry-After"))
                 .andExpect(jsonPath("$.code").value("too-many-attempts"));
+    }
+
+    @Test
+    void dosRegistrosSimultaneosDelMismoCorreoNoDanError500NiDejanElCorreoEnElLog(CapturedOutput output) throws Exception {
+        for (int round = 0; round < 5; round++) {
+            Map<String, String> body = Map.of("email", newEmail(), "password", newPassword());
+            List<Integer> statuses;
+            try (ExecutorService pool = Executors.newFixedThreadPool(2)) {
+                Callable<Integer> attempt = () -> mvc.perform(jsonPost("/api/v1/auth/register", body)).andReturn().getResponse().getStatus();
+                List<Future<Integer>> futures = pool.invokeAll(List.of(attempt, attempt));
+                statuses = new ArrayList<>();
+                for (Future<Integer> f : futures) {
+                    statuses.add(f.get());
+                }
+            }
+            assertThat(statuses).containsExactlyInAnyOrder(201, 409);
+        }
+        assertThat(output.getAll()).doesNotContain("Detail: Key");
     }
 
     @Test
