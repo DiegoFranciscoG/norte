@@ -5,7 +5,7 @@ import { createGeoResolver, createJobClassifier, createSkillMatcher, type Job } 
 import { describe, expect, it } from 'vitest';
 import { dedupe } from '../src/dedupe.js';
 import { parseEcbXml } from '../src/fx.js';
-import { companySlug, normalizePosting, type NormalizeDeps } from '../src/normalize.js';
+import { cleanTitle, companySlug, normalizePosting, type NormalizeDeps } from '../src/normalize.js';
 import { loadPreviousState, mergeWithPrevious, stableJobId } from '../src/state.js';
 import { makePosting, rawPosting, staticTask, testData } from './helpers.js';
 
@@ -50,6 +50,23 @@ describe('normalización', () => {
     if (typeof r === 'string') throw new Error(r);
     expect(r.remoteScope).toEqual({ type: 'countries', regions: [], countries: ['EC'] });
     expect(r.publishedAt).toBe(now.toISOString());
+  });
+
+  it('quita del título los números de referencia del tablero, sin tocar los que significan algo', () => {
+    expect(cleanTitle('(1615)  Quality Engineer')).toBe('Quality Engineer');
+    expect(cleanTitle('187. Senior Data Engineer')).toBe('Senior Data Engineer');
+    expect(cleanTitle('58- SAS Developer')).toBe('SAS Developer');
+    expect(cleanTitle('Full Stack Developer | Remote | LATAM Only | 90007')).toBe('Full Stack Developer | Remote | LATAM Only');
+    expect(cleanTitle('Mobile Engineer (iOS, Swift) -1057')).toBe('Mobile Engineer (iOS, Swift)');
+    expect(cleanTitle('1. Level Support Engineer')).toBe('1. Level Support Engineer');
+    expect(cleanTitle('Web3 Engineer 360')).toBe('Web3 Engineer 360');
+    expect(cleanTitle('Administrador de Windows Server - 2022')).toBe('Administrador de Windows Server - 2022');
+    expect(cleanTitle('12345')).toBe('12345');
+  });
+
+  it('una vacante «para todo el mundo» cuyo título dice otra cosa queda restringida', () => {
+    const us = normalizePosting(rawPosting({ title: 'Backend Engineer - United States', company: 'Ficticia', sourceId: 'portal:x', externalId: '1', locationTexts: ['Anywhere in the World'] }), staticTask('portal:x', []), deps);
+    expect(typeof us === 'object' && us.remoteScope).toEqual({ type: 'countries', regions: [], countries: ['US'] });
   });
 
   it('normaliza el nombre de empresa sin sufijos societarios', () => {

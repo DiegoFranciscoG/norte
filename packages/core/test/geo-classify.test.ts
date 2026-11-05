@@ -60,6 +60,25 @@ describe('location parsing', () => {
     expect(geo.detectRemoteScope(['Remote'])).toEqual({ type: 'unknown', regions: [], countries: [] });
   });
 
+  it('lets the title rule over a generic location tag, but never over structured countries', () => {
+    const world = ['Anywhere in the World'];
+    const unitedStates = { type: 'countries', regions: [], countries: ['US'] };
+    const worldwide = { type: 'worldwide', regions: [], countries: [] };
+    expect(geo.detectRemoteScope(world, [], 'Remote AI Training - $20/hr - United States')).toEqual(unitedStates);
+    expect(geo.detectRemoteScope(world, [], 'Web Developer: WordPress (U.S. Based, Remote Contractor)')).toEqual(unitedStates);
+    expect(geo.detectRemoteScope(world, [], 'Head of Design (Remote in Europe)')).toEqual({ type: 'regions', regions: ['europe'], countries: [] });
+    expect(geo.detectRemoteScope(['Remote, Global'], [], 'Platform Security Engineer (AMER/APAC)')).toEqual({ type: 'regions', regions: ['americas', 'apac'], countries: [] });
+    expect(geo.detectRemoteScope(world, [], 'Backend Engineer')).toEqual(worldwide);
+    expect(geo.detectRemoteScope(['Remote'], [], 'Backend Engineer (Worldwide)')).toEqual(worldwide);
+    expect(geo.detectRemoteScope(world, ['CO'], 'Backend Engineer - United States')).toEqual({ type: 'countries', regions: [], countries: ['CO'] });
+  });
+
+  it('does not read «global» in a title as a remote scope', () => {
+    expect(geo.detectRemoteScope(['Remote'], [], 'DevOps Engineer - Global Strategy Consultancy')).toEqual({ type: 'unknown', regions: [], countries: [] });
+    expect(geo.detectRemoteScope(['LatAm'], [], 'DevOps Engineer - Global Payments')).toEqual({ type: 'regions', regions: ['latam'], countries: [] });
+    expect(geo.detectRemoteScope(['Remote, Global'], [], 'DevOps Engineer')).toEqual({ type: 'worldwide', regions: [], countries: [] });
+  });
+
   it("decides remote eligibility for the person's country", () => {
     const latam = geo.detectRemoteScope(['LATAM']);
     const europe = geo.detectRemoteScope(['Europe']);

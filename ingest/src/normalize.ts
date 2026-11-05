@@ -45,8 +45,19 @@ export function companySlug(name: string): string {
   return slugify(s);
 }
 
+/** Quita los números de referencia internos que algunos tableros pegan al título: «(1615) QA», «187. QA», «QA | 90007», «QA - 1058». */
+export function cleanTitle(raw: string): string {
+  const title = raw.replace(/\s+/g, ' ').trim();
+  const cleaned = title
+    .replace(/^\(\d{2,6}\)\s*/, '')
+    .replace(/^\d{2,4}\s?[.-]\s+/, '')
+    .replace(/\s*[|–—-]\s*(?!(?:19|20)\d{2}$)\d{3,6}$/, '')
+    .trim();
+  return cleaned || title;
+}
+
 export function normalizePosting(raw: RawPosting, task: SourceTask, deps: NormalizeDeps): NormalizedPosting | DropReason {
-  const title = raw.title.replace(/\s+/g, ' ').trim();
+  const title = cleanTitle(raw.title);
   const company = raw.company.replace(/\s+/g, ' ').trim();
   if (!title || !company || !raw.url) return 'invalid';
   if (!deps.classifier.isTechTitle(title)) return 'not-tech';
@@ -62,7 +73,7 @@ export function normalizePosting(raw: RawPosting, task: SourceTask, deps: Normal
   const structured = (raw.structuredCountries ?? []).map((c) => deps.geo.toIso(c)).filter((c): c is string => c !== null);
   let remoteScope = null;
   if (modality === 'remote') {
-    remoteScope = deps.geo.detectRemoteScope([...locationTexts, title], structured);
+    remoteScope = deps.geo.detectRemoteScope(locationTexts, structured, title);
     // Un remoto sin alcance declarado pero ubicado en un país suele exigir residir en ese país.
     if (remoteScope.type === 'unknown' && location.country) remoteScope = { type: 'countries' as const, regions: [], countries: [location.country] };
   }
