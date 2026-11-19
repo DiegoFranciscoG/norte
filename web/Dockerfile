@@ -1,6 +1,6 @@
 # Web de NORTE con un índice de demostración (datos ficticios). Se construye desde la raíz del repositorio:
 #   docker build -f web/Dockerfile .
-FROM node:26.13.0-alpine3.24 AS build
+FROM node:26.13.1-alpine3.24 AS build
 WORKDIR /repo
 COPY package.json package-lock.json ./
 COPY packages/core/package.json packages/core/
